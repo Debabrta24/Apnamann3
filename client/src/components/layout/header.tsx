@@ -74,6 +74,7 @@ export default function Header() {
                     { href: "/screening", label: "Screening", testId: "nav-screening-mobile" },
                     { href: "/resources", label: "Resources", testId: "nav-resources-mobile" },
                     { href: "/community", label: "Community", testId: "nav-community-mobile" },
+                    { href: "/peer-calling", label: "Peer Calls", testId: "nav-peer-calling-mobile" },
                   ].map((item) => (
                     <Button
                       key={item.href}

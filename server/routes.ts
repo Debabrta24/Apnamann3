@@ -380,6 +380,128 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Peer Calling Routes
+  app.get("/api/peer-calling/available-peers/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      
+      // Mock available peers with anxiety compatibility
+      const mockPeers = [
+        {
+          id: "peer-1",
+          firstName: "Anonymous",
+          lastName: "Student",
+          institution: "Delhi University",
+          year: 2,
+          anxietyLevel: "moderate",
+          isOnline: true,
+          matchScore: 92,
+          languages: ["English", "Hindi"],
+          interests: ["Study stress", "Social anxiety"],
+          lastOnline: new Date().toISOString(),
+        },
+        {
+          id: "peer-2", 
+          firstName: "Anonymous",
+          lastName: "Peer",
+          institution: "IIT Mumbai",
+          year: 3,
+          anxietyLevel: "high",
+          isOnline: true,
+          matchScore: 87,
+          languages: ["English", "Marathi"],
+          interests: ["Exam stress", "Career anxiety"],
+          lastOnline: new Date().toISOString(),
+        },
+        {
+          id: "peer-3",
+          firstName: "Anonymous",
+          lastName: "Helper",
+          institution: "Chennai College",
+          year: 1,
+          anxietyLevel: "mild",
+          isOnline: true,
+          matchScore: 78,
+          languages: ["English", "Tamil"],
+          interests: ["Social anxiety", "Family pressure"],
+          lastOnline: new Date().toISOString(),
+        }
+      ];
+      
+      res.json(mockPeers);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/peer-calling/find-peer", async (req, res) => {
+    try {
+      const { userId, type, anxietyLevel } = req.body;
+      
+      // Simulate finding a peer
+      setTimeout(() => {
+        const mockSession = {
+          sessionId: `session-${Date.now()}`,
+          partnerId: `peer-${Math.floor(Math.random() * 1000)}`,
+          partnerName: "Anonymous Student",
+          type: type,
+        };
+        
+        res.json(mockSession);
+      }, 1000); // Simulate search time
+      
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/peer-calling/end-call/:sessionId", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      
+      // Mock ending call
+      res.json({ 
+        success: true, 
+        message: "Call ended successfully",
+        duration: Math.floor(Math.random() * 30) + 5 // 5-35 minutes
+      });
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/peer-calling/history/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      
+      // Mock call history
+      const mockHistory = [
+        {
+          date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // Yesterday
+          duration: 15,
+          type: "audio",
+          partnerId: "anonymous",
+        },
+        {
+          date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
+          duration: 22,
+          type: "video", 
+          partnerId: "anonymous",
+        },
+        {
+          date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 1 week ago
+          duration: 8,
+          type: "audio",
+          partnerId: "anonymous",
+        }
+      ];
+      
+      res.json(mockHistory);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
   // Analytics routes (admin only)
   app.get("/api/analytics", async (req, res) => {
     try {

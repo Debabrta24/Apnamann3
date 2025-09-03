@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, MessageCircle, Heart, Calendar, Users, Phone, X } from "lucide-react";
+import { Plus, MessageCircle, Heart, Calendar, Users, Phone, X, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -43,6 +43,16 @@ export default function QuickActionsFAB() {
         setIsOpen(false);
       },
       color: "bg-secondary hover:bg-secondary/90 text-secondary-foreground",
+    },
+    {
+      id: "peer-calling",
+      label: "Peer Calling",
+      icon: Video,
+      action: () => {
+        setLocation("/peer-calling");
+        setIsOpen(false);
+      },
+      color: "bg-green-600 hover:bg-green-700 text-white",
     },
     {
       id: "community",

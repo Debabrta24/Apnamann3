@@ -7,6 +7,7 @@ const navItems = [
   { href: "/screening", label: "Screening", testId: "nav-screening" },
   { href: "/resources", label: "Resources", testId: "nav-resources" },
   { href: "/community", label: "Community", testId: "nav-community" },
+  { href: "/peer-calling", label: "Peer Calls", testId: "nav-peer-calling" },
 ];
 
 export default function Navigation() {

@@ -16,6 +16,7 @@ import Resources from "@/pages/resources";
 import Community from "@/pages/community";
 import Admin from "@/pages/admin";
 import Profile from "@/pages/profile";
+import PeerCalling from "@/pages/peer-calling";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -49,6 +50,7 @@ function Router() {
         <Route path="/screening" component={Screening} />
         <Route path="/resources" component={Resources} />
         <Route path="/community" component={Community} />
+        <Route path="/peer-calling" component={PeerCalling} />
         <Route path="/admin" component={Admin} />
         <Route path="/profile" component={Profile} />
         <Route component={NotFound} />
