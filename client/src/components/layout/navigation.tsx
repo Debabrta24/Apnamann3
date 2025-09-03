@@ -2,7 +2,7 @@ import { useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/", label: "Dashboard", testId: "nav-dashboard" },
+  { href: "/", label: "Home", testId: "nav-home" },
   { href: "/chat", label: "AI Support", testId: "nav-chat" },
   { href: "/screening", label: "Screening", testId: "nav-screening" },
   { href: "/resources", label: "Resources", testId: "nav-resources" },

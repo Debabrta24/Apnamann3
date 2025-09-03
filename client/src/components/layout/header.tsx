@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, Brain, ChevronDown, Globe } from "lucide-react";
+import { Bell, Brain, ChevronDown, Globe, Moon, Sun, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
@@ -7,7 +7,15 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { useAppContext } from "@/context/AppContext";
+import { useLocation } from "wouter";
 import Navigation from "./navigation";
 
 const languages = [
@@ -18,8 +26,10 @@ const languages = [
 ];
 
 export default function Header() {
-  const { currentUser } = useAppContext();
+  const { currentUser, theme, toggleTheme } = useAppContext();
+  const [, setLocation] = useLocation();
   const [selectedLanguage, setSelectedLanguage] = useState("en");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const getInitials = (firstName?: string, lastName?: string) => {
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
@@ -40,7 +50,45 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Navigation */}
+          {/* Mobile Navigation */}
+          <div className="md:hidden">
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="sm" data-testid="button-mobile-menu">
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[280px] sm:w-[350px]">
+                <SheetHeader>
+                  <SheetTitle className="text-left">Navigation</SheetTitle>
+                </SheetHeader>
+                <nav className="flex flex-col space-y-4 mt-8">
+                  {[
+                    { href: "/", label: "Home", testId: "nav-home-mobile" },
+                    { href: "/chat", label: "AI Support", testId: "nav-chat-mobile" },
+                    { href: "/screening", label: "Screening", testId: "nav-screening-mobile" },
+                    { href: "/resources", label: "Resources", testId: "nav-resources-mobile" },
+                    { href: "/community", label: "Community", testId: "nav-community-mobile" },
+                  ].map((item) => (
+                    <Button
+                      key={item.href}
+                      variant="ghost"
+                      className="justify-start h-12"
+                      onClick={() => {
+                        setLocation(item.href);
+                        setMobileMenuOpen(false);
+                      }}
+                      data-testid={item.testId}
+                    >
+                      {item.label}
+                    </Button>
+                  ))}
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
+
+          {/* Desktop Navigation */}
           <Navigation />
 
           {/* User menu */}
@@ -53,6 +101,15 @@ export default function Header() {
             >
               <Bell className="h-4 w-4" />
               <span className="absolute -top-1 -right-1 w-3 h-3 bg-destructive rounded-full"></span>
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleTheme}
+              data-testid="button-theme-toggle"
+            >
+              {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
             </Button>
 
             <DropdownMenu>
