@@ -5,12 +5,14 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppProvider } from "@/context/AppContext";
 import Header from "@/components/layout/header";
+import QuickActionsFAB from "@/components/quick-actions-fab";
 import Dashboard from "@/pages/dashboard";
 import Chat from "@/pages/chat";
 import Screening from "@/pages/screening";
 import Resources from "@/pages/resources";
 import Community from "@/pages/community";
 import Admin from "@/pages/admin";
+import Profile from "@/pages/profile";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -22,6 +24,7 @@ function Router() {
       <Route path="/resources" component={Resources} />
       <Route path="/community" component={Community} />
       <Route path="/admin" component={Admin} />
+      <Route path="/profile" component={Profile} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -35,6 +38,7 @@ function App() {
           <AppProvider>
             <Header />
             <Router />
+            <QuickActionsFAB />
           </AppProvider>
         </div>
         <Toaster />

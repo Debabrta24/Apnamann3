@@ -17,6 +17,8 @@ import {
 import { useAppContext } from "@/context/AppContext";
 import { useLocation } from "wouter";
 import Navigation from "./navigation";
+import GlobalSearch from "@/components/global-search";
+import NotificationCenter from "@/components/notifications/notification-center";
 
 const languages = [
   { code: "en", name: "English" },
@@ -62,7 +64,10 @@ export default function Header() {
                 <SheetHeader>
                   <SheetTitle className="text-left">Navigation</SheetTitle>
                 </SheetHeader>
-                <nav className="flex flex-col space-y-4 mt-8">
+                <div className="mb-6">
+                  <GlobalSearch />
+                </div>
+                <nav className="flex flex-col space-y-4">
                   {[
                     { href: "/", label: "Home", testId: "nav-home-mobile" },
                     { href: "/chat", label: "AI Support", testId: "nav-chat-mobile" },
@@ -88,20 +93,17 @@ export default function Header() {
             </Sheet>
           </div>
 
+          {/* Global Search - Desktop */}
+          <div className="hidden md:flex flex-1 max-w-md mx-8">
+            <GlobalSearch />
+          </div>
+
           {/* Desktop Navigation */}
           <Navigation />
 
           {/* User menu */}
           <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="relative"
-              data-testid="button-notifications"
-            >
-              <Bell className="h-4 w-4" />
-              <span className="absolute -top-1 -right-1 w-3 h-3 bg-destructive rounded-full"></span>
-            </Button>
+            <NotificationCenter />
 
             <Button
               variant="ghost"
@@ -133,11 +135,30 @@ export default function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <div className="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
-              <span className="text-accent-foreground text-sm font-medium" data-testid="text-user-initials">
-                {getInitials(currentUser?.firstName, currentUser?.lastName)}
-              </span>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="w-8 h-8 bg-accent rounded-full p-0" data-testid="button-user-menu">
+                  <span className="text-accent-foreground text-sm font-medium">
+                    {getInitials(currentUser?.firstName, currentUser?.lastName)}
+                  </span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={() => setLocation("/profile")}
+                  data-testid="menu-item-profile"
+                >
+                  Profile & Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setLocation("/admin")}
+                  data-testid="menu-item-admin"
+                  className={currentUser?.isAdmin ? "" : "hidden"}
+                >
+                  Admin Dashboard
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
