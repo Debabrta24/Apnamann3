@@ -28,7 +28,7 @@ const languages = [
 ];
 
 export default function Header() {
-  const { currentUser, theme, toggleTheme } = useAppContext();
+  const { currentUser, theme, toggleTheme, logout } = useAppContext();
   const [, setLocation] = useLocation();
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -156,6 +156,12 @@ export default function Header() {
                   className={currentUser?.isAdmin ? "" : "hidden"}
                 >
                   Admin Dashboard
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={logout}
+                  data-testid="menu-item-logout"
+                >
+                  Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
