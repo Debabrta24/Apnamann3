@@ -8,9 +8,11 @@ interface AppContextType {
   toggleTheme: () => void;
   isAuthenticated: boolean;
   isOnboarding: boolean;
+  showStartupPopup: boolean;
   login: (email: string) => void;
   logout: () => void;
   completeOnboarding: (data: OnboardingData) => void;
+  closeStartupPopup: () => void;
 }
 
 interface OnboardingData {
@@ -45,6 +47,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isOnboarding, setIsOnboarding] = useState(false);
+  const [showStartupPopup, setShowStartupPopup] = useState(true);
   const [tempEmail, setTempEmail] = useState<string | null>(null);
 
   const [theme, setTheme] = useState<"light" | "dark">(() => {
@@ -99,14 +102,25 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     localStorage.setItem("user", JSON.stringify(newUser));
   };
 
+  const closeStartupPopup = () => {
+    setShowStartupPopup(false);
+    localStorage.setItem("startupPopupSeen", "true");
+  };
+
   // Load user from localStorage on app start
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
+    const startupPopupSeen = localStorage.getItem("startupPopupSeen");
+    
     if (savedUser) {
       const user = JSON.parse(savedUser);
       setCurrentUser(user);
       setIsAuthenticated(true);
       setIsOnboarding(false);
+    }
+    
+    if (startupPopupSeen === "true") {
+      setShowStartupPopup(false);
     }
   }, []);
 
@@ -118,9 +132,11 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       toggleTheme,
       isAuthenticated,
       isOnboarding,
+      showStartupPopup,
       login,
       logout,
-      completeOnboarding
+      completeOnboarding,
+      closeStartupPopup
     }}>
       {children}
     </AppContext.Provider>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Brain, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { FaGoogle } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -51,6 +52,32 @@ export default function Login() {
   const handleDemoLogin = () => {
     setEmail("demo@student.edu");
     setPassword("demo123");
+  };
+
+  const handleGoogleLogin = async () => {
+    setIsLoading(true);
+    
+    try {
+      // Simulate Google OAuth flow
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate OAuth redirect time
+      
+      // Simulate successful Google login with fake user data
+      const fakeGoogleEmail = "user@gmail.com";
+      login(fakeGoogleEmail);
+      
+      toast({
+        title: "Welcome!",
+        description: "Successfully signed in with Google. Please complete your profile setup",
+      });
+    } catch (error) {
+      toast({
+        title: "Google Sign-in failed",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -128,6 +155,26 @@ export default function Login() {
           </form>
 
           <div className="mt-6 space-y-4">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+              </div>
+            </div>
+
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={handleGoogleLogin}
+              disabled={isLoading}
+              data-testid="button-google-login"
+            >
+              <FaGoogle className="h-4 w-4 mr-2 text-red-500" />
+              {isLoading ? "Signing in..." : "Sign in with Google"}
+            </Button>
+
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t" />

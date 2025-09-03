@@ -7,6 +7,7 @@ import { AppProvider, useAppContext } from "@/context/AppContext";
 import Header from "@/components/layout/header";
 import QuickActionsFAB from "@/components/quick-actions-fab";
 import OnboardingPopup from "@/components/onboarding/onboarding-popup";
+import StartupPopup from "@/components/startup-popup";
 import Login from "@/pages/login";
 import Dashboard from "@/pages/dashboard";
 import Chat from "@/pages/chat";
@@ -18,7 +19,20 @@ import Profile from "@/pages/profile";
 import NotFound from "@/pages/not-found";
 
 function Router() {
-  const { isAuthenticated, isOnboarding, completeOnboarding } = useAppContext();
+  const { isAuthenticated, isOnboarding, showStartupPopup, completeOnboarding, closeStartupPopup } = useAppContext();
+
+  // Show startup popup first (if not seen before)
+  if (showStartupPopup && !isAuthenticated) {
+    return (
+      <>
+        <Login />
+        <StartupPopup 
+          isOpen={showStartupPopup} 
+          onClose={closeStartupPopup}
+        />
+      </>
+    );
+  }
 
   // Show login if not authenticated
   if (!isAuthenticated) {
