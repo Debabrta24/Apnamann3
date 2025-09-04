@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ChatInterface from "@/components/chat/chat-interface";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Wind, PenTool, Waves, AlertTriangle, Bot, Heart, Brain, Lightbulb, Target, Plus, Upload } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Wind, PenTool, Waves, AlertTriangle, Bot, Heart, Brain, Lightbulb, Target, Plus, Upload, FileText, File, X } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -99,6 +101,9 @@ export default function Chat() {
     description: '',
     chatData: ''
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [activeTab, setActiveTab] = useState('text');
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { currentUser } = useAppContext();
   const { toast } = useToast();
 
@@ -112,26 +117,76 @@ export default function Chat() {
     setShowPersonalities(false);
   };
 
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const allowedTypes = ['text/plain', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'];
+      
+      if (!allowedTypes.includes(file.type)) {
+        toast({
+          title: "Invalid File Type",
+          description: "Please upload a PDF, TXT, or Word document",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit
+        toast({
+          title: "File Too Large",
+          description: "File size must be less than 10MB",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      setSelectedFile(file);
+    }
+  };
+
   const handleCreateCustomPersonality = async () => {
-    if (!newCustomPersonality.name.trim() || !newCustomPersonality.chatData.trim()) {
+    if (!newCustomPersonality.name.trim()) {
       toast({
         title: "Missing Information",
-        description: "Please provide both a name and chat data for your custom AI",
+        description: "Please provide a name for your custom AI",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (activeTab === 'text' && !newCustomPersonality.chatData.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please provide chat data for your custom AI",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (activeTab === 'file' && !selectedFile) {
+      toast({
+        title: "Missing Information",
+        description: "Please select a file to upload",
         variant: "destructive"
       });
       return;
     }
 
     try {
+      const formData = new FormData();
+      formData.append('userId', currentUser?.id || '');
+      formData.append('name', newCustomPersonality.name);
+      formData.append('description', newCustomPersonality.description);
+      
+      if (activeTab === 'file' && selectedFile) {
+        formData.append('file', selectedFile);
+      } else {
+        formData.append('chatData', newCustomPersonality.chatData);
+      }
+
       const response = await fetch('/api/chat/custom-personality', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: currentUser?.id,
-          name: newCustomPersonality.name,
-          description: newCustomPersonality.description,
-          chatData: newCustomPersonality.chatData
-        })
+        body: formData
       });
 
       if (response.ok) {
@@ -141,13 +196,18 @@ export default function Chat() {
           description: `${newCustomPersonality.name} has been trained and is ready to chat`
         });
         setNewCustomPersonality({ name: '', description: '', chatData: '' });
+        setSelectedFile(null);
+        setActiveTab('text');
         setShowCreateCustom(false);
         loadCustomPersonalities();
+      } else {
+        const error = await response.json();
+        throw new Error(error.message);
       }
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to create custom AI. Please try again.",
+        description: error.message || "Failed to create custom AI. Please try again.",
         variant: "destructive"
       });
     }
@@ -265,31 +325,106 @@ export default function Chat() {
                   
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium mb-2 block">AI Name</label>
+                      <Label htmlFor="ai-name" className="text-sm font-medium">AI Name</Label>
                       <Input
+                        id="ai-name"
                         value={newCustomPersonality.name}
                         onChange={(e) => setNewCustomPersonality(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder="e.g., My Girlfriend AI, Best Friend Bot"
+                        placeholder="e.g., My Friend AI, Study Buddy Bot"
+                        className="mt-2"
                       />
                     </div>
                     
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Description (optional)</label>
+                      <Label htmlFor="ai-description" className="text-sm font-medium">Description (optional)</Label>
                       <Input
+                        id="ai-description"
                         value={newCustomPersonality.description}
                         onChange={(e) => setNewCustomPersonality(prev => ({ ...prev, description: e.target.value }))}
                         placeholder="Brief description of this AI personality"
+                        className="mt-2"
                       />
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Chat Conversations</label>
-                      <Textarea
-                        value={newCustomPersonality.chatData}
-                        onChange={(e) => setNewCustomPersonality(prev => ({ ...prev, chatData: e.target.value }))}
-                        placeholder="Paste chat conversations here...\n\nExample:\nYou: How was your day?\nThem: Amazing! I went to the beach and saw the most beautiful sunset\nYou: That sounds lovely\nThem: You should come with me next time, I'd love to share it with you\n\n(Include as many conversations as possible for better training)"
-                        className="min-h-[200px]"
-                      />
+                      <Label className="text-sm font-medium">Training Data</Label>
+                      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-2">
+                        <TabsList className="grid w-full grid-cols-2">
+                          <TabsTrigger value="text">
+                            <FileText className="w-4 h-4 mr-2" />
+                            Paste Text
+                          </TabsTrigger>
+                          <TabsTrigger value="file">
+                            <Upload className="w-4 h-4 mr-2" />
+                            Upload File
+                          </TabsTrigger>
+                        </TabsList>
+                        
+                        <TabsContent value="text" className="space-y-2">
+                          <Textarea
+                            value={newCustomPersonality.chatData}
+                            onChange={(e) => setNewCustomPersonality(prev => ({ ...prev, chatData: e.target.value }))}
+                            placeholder="Paste chat conversations here...\n\nExample:\nYou: How was your day?\nThem: Amazing! I went to the beach and saw the most beautiful sunset\nYou: That sounds lovely\nThem: You should come with me next time, I'd love to share it with you\n\n(Include as many conversations as possible for better training)"
+                            className="min-h-[200px]"
+                          />
+                        </TabsContent>
+                        
+                        <TabsContent value="file" className="space-y-2">
+                          <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
+                            <input
+                              ref={fileInputRef}
+                              type="file"
+                              accept=".txt,.pdf,.doc,.docx"
+                              onChange={handleFileSelect}
+                              className="hidden"
+                              data-testid="file-input"
+                            />
+                            {selectedFile ? (
+                              <div className="space-y-2">
+                                <File className="w-12 h-12 text-blue-500 mx-auto" />
+                                <div className="flex items-center justify-center gap-2">
+                                  <span className="text-sm font-medium">{selectedFile.name}</span>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => setSelectedFile(null)}
+                                    data-testid="remove-file"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                  {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+                                </p>
+                              </div>
+                            ) : (
+                              <div className="space-y-2">
+                                <Upload className="w-12 h-12 text-gray-400 mx-auto" />
+                                <div>
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => fileInputRef.current?.click()}
+                                    data-testid="upload-file-button"
+                                  >
+                                    <Upload className="w-4 h-4 mr-2" />
+                                    Upload File
+                                  </Button>
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                  Support: PDF, TXT, Word documents (max 10MB)
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                          {selectedFile && (
+                            <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg">
+                              <p className="text-sm text-blue-800 dark:text-blue-200">
+                                ✓ File selected. The AI will be trained on the content from this document.
+                              </p>
+                            </div>
+                          )}
+                        </TabsContent>
+                      </Tabs>
                     </div>
                   </div>
 

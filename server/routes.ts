@@ -1,6 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
+import multer from "multer";
+import mammoth from "mammoth";
 import { storage } from "./storage";
 import { aiService } from "./services/ai-service";
 import { ScreeningService } from "./services/screening";
@@ -11,9 +13,49 @@ import {
   insertAppointmentSchema,
   insertForumPostSchema,
   insertForumReplySchema,
-  insertMoodEntrySchema
+  insertMoodEntrySchema,
+  insertCustomPersonalitySchema
 } from "@shared/schema";
 import { z } from "zod";
+
+// Configure multer for file uploads
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['text/plain', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type. Only PDF, TXT, and Word documents are allowed.'));
+    }
+  }
+});
+
+// File processing function
+async function processUploadedFile(file: Express.Multer.File): Promise<string> {
+  let extractedText = '';
+  
+  if (file.mimetype === 'text/plain') {
+    extractedText = file.buffer.toString('utf-8');
+  } else if (file.mimetype === 'application/pdf') {
+    // Dynamic import to avoid pdf-parse test file issue
+    const pdfParse = await import('pdf-parse');
+    const pdfData = await pdfParse.default(file.buffer);
+    extractedText = pdfData.text;
+  } else if (file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    const result = await mammoth.extractRawText({ buffer: file.buffer });
+    extractedText = result.value;
+  } else if (file.mimetype === 'application/msword') {
+    // For older .doc files, mammoth can still try to extract text
+    const result = await mammoth.extractRawText({ buffer: file.buffer });
+    extractedText = result.value;
+  }
+  
+  return extractedText.trim();
+}
 
 // WebSocket connection management
 const wsConnections = new Map<string, WebSocket>();
@@ -268,14 +310,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Custom AI Personality Routes
-  app.post("/api/chat/custom-personality", async (req, res) => {
+  app.post("/api/chat/custom-personality", upload.single('file'), async (req, res) => {
     try {
-      const { userId, name, chatData, description } = req.body;
+      const { userId, name, description, chatData } = req.body;
+      const file = req.file;
       
-      // Process chat data to create personality
-      const customPrompt = `Based on this chat conversation, adopt the personality and speech patterns shown:
+      let trainingData = '';
+      let sourceType = 'text';
+      let originalFileName = '';
       
-${chatData}
+      // Process file if uploaded
+      if (file) {
+        trainingData = await processUploadedFile(file);
+        sourceType = 'file';
+        originalFileName = file.originalname;
+      } else if (chatData) {
+        trainingData = chatData;
+        sourceType = 'text';
+      } else {
+        return res.status(400).json({ message: "Either file or chat data is required" });
+      }
+      
+      // Create personality prompt from training data
+      const customPrompt = `Based on this ${sourceType === 'file' ? 'document/conversation' : 'chat conversation'}, adopt the personality and speech patterns shown:
+      
+${trainingData}
 
 Key traits to emulate:
 - Speaking style and tone
@@ -285,21 +344,23 @@ Key traits to emulate:
 
 Maintain the core therapeutic and supportive role while incorporating this personality style.`;
 
-      const personality = {
-        id: `custom_${Date.now()}`,
+      // Validate input
+      const personalityData = insertCustomPersonalitySchema.parse({
+        userId,
         name: name || "Custom AI",
         description: description || "AI trained on uploaded conversations",
         customPrompt,
-        userId,
-        createdAt: new Date()
-      };
+        sourceType,
+        originalFileName,
+        trainingData
+      });
 
-      // Save to storage (you might want to add this to your database schema)
-      await storage.createCustomPersonality?.(personality) || 
-            console.log("Custom personality created:", personality.id);
+      // Save to database
+      const personality = await storage.createCustomPersonality(personalityData);
       
       res.json({ success: true, personality });
     } catch (error: any) {
+      console.error("Error creating custom personality:", error);
       res.status(400).json({ message: error.message });
     }
   });
@@ -308,11 +369,30 @@ Maintain the core therapeutic and supportive role while incorporating this perso
     try {
       const { userId } = req.params;
       
-      // Get custom personalities for user (placeholder - implement based on your storage)
-      const personalities = await storage.getUserCustomPersonalities?.(userId) || [];
+      // Get custom personalities for user from database
+      const personalities = await storage.getUserCustomPersonalities(userId);
       
       res.json(personalities);
     } catch (error: any) {
+      console.error("Error fetching custom personalities:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.delete("/api/chat/custom-personality/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { userId } = req.body;
+      
+      if (!userId) {
+        return res.status(400).json({ message: "User ID is required" });
+      }
+      
+      await storage.deleteCustomPersonality(id, userId);
+      
+      res.json({ success: true, message: "Custom personality deleted" });
+    } catch (error: any) {
+      console.error("Error deleting custom personality:", error);
       res.status(400).json({ message: error.message });
     }
   });

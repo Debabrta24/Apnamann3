@@ -144,6 +144,21 @@ export const crisisAlerts = pgTable("crisis_alerts", {
   resolvedAt: timestamp("resolved_at"),
 });
 
+// Custom AI personalities
+export const customPersonalities = pgTable("custom_personalities", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  description: text("description"),
+  customPrompt: text("custom_prompt").notNull(),
+  sourceType: text("source_type").notNull().default("text"), // 'text', 'file'
+  originalFileName: text("original_file_name"),
+  trainingData: text("training_data"), // Processed text content
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   screeningAssessments: many(screeningAssessments),
@@ -153,6 +168,14 @@ export const usersRelations = relations(users, ({ many }) => ({
   forumReplies: many(forumReplies),
   moodEntries: many(moodEntries),
   crisisAlerts: many(crisisAlerts),
+  customPersonalities: many(customPersonalities),
+}));
+
+export const customPersonalitiesRelations = relations(customPersonalities, ({ one }) => ({
+  user: one(users, {
+    fields: [customPersonalities.userId],
+    references: [users.id],
+  }),
 }));
 
 export const screeningAssessmentsRelations = relations(screeningAssessments, ({ one }) => ({
@@ -235,6 +258,12 @@ export const insertCrisisAlertSchema = createInsertSchema(crisisAlerts).omit({
   resolvedAt: true,
 });
 
+export const insertCustomPersonalitySchema = createInsertSchema(customPersonalities).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -253,3 +282,5 @@ export type CrisisAlert = typeof crisisAlerts.$inferSelect;
 export type InsertCrisisAlert = z.infer<typeof insertCrisisAlertSchema>;
 export type Counselor = typeof counselors.$inferSelect;
 export type ChatSession = typeof chatSessions.$inferSelect;
+export type CustomPersonality = typeof customPersonalities.$inferSelect;
+export type InsertCustomPersonality = z.infer<typeof insertCustomPersonalitySchema>;

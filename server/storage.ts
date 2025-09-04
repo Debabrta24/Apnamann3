@@ -9,6 +9,7 @@ import {
   crisisAlerts,
   counselors,
   chatSessions,
+  customPersonalities,
   type User,
   type InsertUser,
   type ScreeningAssessment,
@@ -26,6 +27,8 @@ import {
   type InsertCrisisAlert,
   type Counselor,
   type ChatSession,
+  type CustomPersonality,
+  type InsertCustomPersonality,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, gte, sql, count } from "drizzle-orm";
@@ -78,8 +81,10 @@ export interface IStorage {
   getChatSession(id: string): Promise<ChatSession | undefined>;
 
   // Custom AI Personalities
-  createCustomPersonality?(personality: any): Promise<any>;
-  getUserCustomPersonalities?(userId: string): Promise<any[]>;
+  createCustomPersonality(personality: InsertCustomPersonality): Promise<CustomPersonality>;
+  getUserCustomPersonalities(userId: string): Promise<CustomPersonality[]>;
+  updateCustomPersonality(id: string, updates: Partial<CustomPersonality>): Promise<CustomPersonality>;
+  deleteCustomPersonality(id: string, userId: string): Promise<void>;
 
   // Analytics (anonymized)
   getAnalytics(): Promise<any>;
@@ -335,20 +340,33 @@ export class DatabaseStorage implements IStorage {
     return session || undefined;
   }
 
-  // Simple in-memory storage for custom AI personalities (development feature)
-  private customPersonalities: any[] = [];
-
-  async createCustomPersonality(personality: any): Promise<any> {
-    const newPersonality = {
-      ...personality,
-      id: personality.id || `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-    };
-    this.customPersonalities.push(newPersonality);
-    return newPersonality;
+  async createCustomPersonality(personality: InsertCustomPersonality): Promise<CustomPersonality> {
+    const [result] = await db.insert(customPersonalities).values(personality).returning();
+    return result;
   }
 
-  async getUserCustomPersonalities(userId: string): Promise<any[]> {
-    return this.customPersonalities.filter(p => p.userId === userId);
+  async getUserCustomPersonalities(userId: string): Promise<CustomPersonality[]> {
+    return await db
+      .select()
+      .from(customPersonalities)
+      .where(and(eq(customPersonalities.userId, userId), eq(customPersonalities.isActive, true)))
+      .orderBy(desc(customPersonalities.createdAt));
+  }
+
+  async updateCustomPersonality(id: string, updates: Partial<CustomPersonality>): Promise<CustomPersonality> {
+    const [personality] = await db
+      .update(customPersonalities)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(customPersonalities.id, id))
+      .returning();
+    return personality;
+  }
+
+  async deleteCustomPersonality(id: string, userId: string): Promise<void> {
+    await db
+      .update(customPersonalities)
+      .set({ isActive: false, updatedAt: new Date() })
+      .where(and(eq(customPersonalities.id, id), eq(customPersonalities.userId, userId)));
   }
 
   async getAnalytics(): Promise<any> {
