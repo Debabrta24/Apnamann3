@@ -77,6 +77,10 @@ export interface IStorage {
   updateChatSession(id: string, messages: any[]): Promise<ChatSession>;
   getChatSession(id: string): Promise<ChatSession | undefined>;
 
+  // Custom AI Personalities
+  createCustomPersonality?(personality: any): Promise<any>;
+  getUserCustomPersonalities?(userId: string): Promise<any[]>;
+
   // Analytics (anonymized)
   getAnalytics(): Promise<any>;
 }
@@ -329,6 +333,22 @@ export class DatabaseStorage implements IStorage {
   async getChatSession(id: string): Promise<ChatSession | undefined> {
     const [session] = await db.select().from(chatSessions).where(eq(chatSessions.id, id));
     return session || undefined;
+  }
+
+  // Simple in-memory storage for custom AI personalities (development feature)
+  private customPersonalities: any[] = [];
+
+  async createCustomPersonality(personality: any): Promise<any> {
+    const newPersonality = {
+      ...personality,
+      id: personality.id || `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    };
+    this.customPersonalities.push(newPersonality);
+    return newPersonality;
+  }
+
+  async getUserCustomPersonalities(userId: string): Promise<any[]> {
+    return this.customPersonalities.filter(p => p.userId === userId);
   }
 
   async getAnalytics(): Promise<any> {
