@@ -109,7 +109,7 @@ Response format: Always respond with JSON containing:
       }
     } catch (error) {
       console.error("AI API error:", error);
-      return this.getFallbackResponse();
+      return this.getFallbackResponse(personality);
     }
   }
 
@@ -187,9 +187,15 @@ Response format: Always respond with JSON containing:
     };
   }
 
-  private getFallbackResponse(): PsychologicalResponse {
+  private getFallbackResponse(personality?: any): PsychologicalResponse {
+    let message = "I'm here to listen and support you. Sometimes our systems need a moment to respond, but I want you to know that your feelings are valid and you're not alone. Can you tell me a bit about what's on your mind today?";
+    
+    if (personality?.name && personality.customPrompt) {
+      message = `Hey there! I'm ${personality.name}, your personalized AI companion. I'm still learning from the conversations you shared with me, but I'm here to support you. What's on your mind today?`;
+    }
+
     return {
-      message: "I'm here to listen and support you. Sometimes our systems need a moment to respond, but I want you to know that your feelings are valid and you're not alone. Can you tell me a bit about what's on your mind today?",
+      message,
       supportiveActions: [
         "Take a few deep, calming breaths",
         "Consider talking to someone you trust",

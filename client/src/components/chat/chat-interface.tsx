@@ -9,9 +9,10 @@ import type { ChatMessage } from "@/types";
 
 interface ChatInterfaceProps {
   selectedAction?: string | null;
+  selectedPersonality?: any;
 }
 
-export default function ChatInterface({ selectedAction }: ChatInterfaceProps) {
+export default function ChatInterface({ selectedAction, selectedPersonality }: ChatInterfaceProps) {
   const { currentUser } = useAppContext();
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -65,6 +66,7 @@ export default function ChatInterface({ selectedAction }: ChatInterfaceProps) {
       type: "chat_message",
       message: inputMessage,
       chatHistory: messages,
+      personality: selectedPersonality,
     });
 
     setInputMessage("");
@@ -108,9 +110,9 @@ export default function ChatInterface({ selectedAction }: ChatInterfaceProps) {
               <Bot className="text-primary-foreground h-5 w-5" />
             </div>
             <div>
-              <CardTitle className="text-lg">DPIS Assistant</CardTitle>
+              <CardTitle className="text-lg">{selectedPersonality?.name || "DPIS Assistant"}</CardTitle>
               <p className="text-sm text-secondary">
-                {isConnected ? "Online • Here to help" : "Connecting..."}
+                {isConnected ? (selectedPersonality?.role || "Online • Here to help") : "Connecting..."}
               </p>
             </div>
           </div>

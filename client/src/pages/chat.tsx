@@ -343,7 +343,7 @@ export default function Chat() {
                 </Button>
               </div>
             </div>
-            <ChatInterface selectedAction={selectedAction} />
+            <ChatInterface selectedAction={selectedAction} selectedPersonality={selectedPersonality} />
           </div>
 
           {/* Chat Options Sidebar */}
