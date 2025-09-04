@@ -20,7 +20,13 @@ import {
   Brain,
   Target,
   Zap,
-  Trophy
+  Trophy,
+  Users,
+  Crown,
+  Gamepad,
+  ExternalLink,
+  Mouse,
+  Sparkles
 } from "lucide-react";
 
 // Game 1: Bubble Pop
@@ -1098,6 +1104,314 @@ function NumberConnect() {
   );
 }
 
+// Classic Game 1: Tic Tac Toe vs Computer
+function TicTacToe() {
+  const [board, setBoard] = useState<(string | null)[]>(Array(9).fill(null));
+  const [isPlayerTurn, setIsPlayerTurn] = useState(true);
+  const [gameStatus, setGameStatus] = useState<'playing' | 'win' | 'lose' | 'draw'>('playing');
+
+  const checkWinner = (squares: (string | null)[]) => {
+    const lines = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+      [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+      [0, 4, 8], [2, 4, 6] // diagonals
+    ];
+    
+    for (let line of lines) {
+      const [a, b, c] = line;
+      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+        return squares[a];
+      }
+    }
+    return null;
+  };
+
+  const makeMove = (index: number, player: string) => {
+    if (board[index] || gameStatus !== 'playing') return false;
+    
+    const newBoard = [...board];
+    newBoard[index] = player;
+    setBoard(newBoard);
+    
+    const winner = checkWinner(newBoard);
+    if (winner) {
+      setGameStatus(winner === 'X' ? 'win' : 'lose');
+      return true;
+    }
+    
+    if (newBoard.every(cell => cell !== null)) {
+      setGameStatus('draw');
+      return true;
+    }
+    
+    return false;
+  };
+
+  const playerMove = (index: number) => {
+    if (!isPlayerTurn) return;
+    
+    const gameEnded = makeMove(index, 'X');
+    if (!gameEnded) {
+      setIsPlayerTurn(false);
+      // Computer move after delay
+      setTimeout(() => {
+        computerMove();
+      }, 500);
+    }
+  };
+
+  const computerMove = () => {
+    const availableSpots = board.map((spot, index) => spot === null ? index : null).filter(val => val !== null) as number[];
+    
+    if (availableSpots.length > 0) {
+      const randomSpot = availableSpots[Math.floor(Math.random() * availableSpots.length)];
+      const gameEnded = makeMove(randomSpot, 'O');
+      if (!gameEnded) {
+        setIsPlayerTurn(true);
+      }
+    }
+  };
+
+  const resetGame = () => {
+    setBoard(Array(9).fill(null));
+    setIsPlayerTurn(true);
+    setGameStatus('playing');
+  };
+
+  return (
+    <div className="h-64 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900 dark:to-indigo-900 rounded-lg p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h4 className="font-semibold text-blue-800 dark:text-blue-200">Tic Tac Toe</h4>
+        <div className="flex gap-2">
+          {gameStatus === 'win' && <Badge className="bg-green-500">You Win!</Badge>}
+          {gameStatus === 'lose' && <Badge className="bg-red-500">Computer Wins!</Badge>}
+          {gameStatus === 'draw' && <Badge variant="secondary">Draw!</Badge>}
+          <Button size="sm" onClick={resetGame} data-testid="button-reset-tictactoe">
+            <RotateCcw className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+      <div className="grid grid-cols-3 gap-2 w-36 h-36 mx-auto">
+        {board.map((cell, index) => (
+          <button
+            key={index}
+            className="w-10 h-10 bg-white dark:bg-gray-700 rounded border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center text-xl font-bold hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+            onClick={() => playerMove(index)}
+            disabled={!isPlayerTurn || cell !== null || gameStatus !== 'playing'}
+            data-testid={`tictactoe-${index}`}
+          >
+            {cell}
+          </button>
+        ))}
+      </div>
+      <p className="text-center mt-3 text-sm text-blue-600 dark:text-blue-300">
+        {gameStatus === 'playing' ? (isPlayerTurn ? "Your turn (X)" : "Computer's turn (O)") : "Game Over"}
+      </p>
+    </div>
+  );
+}
+
+// Single Player Game: Bubble Wrap
+function BubbleWrap() {
+  const [bubbles, setBubbles] = useState<boolean[]>(Array(48).fill(true));
+  const [poppedCount, setPoppedCount] = useState(0);
+
+  const popBubble = (index: number) => {
+    if (!bubbles[index]) return;
+    
+    const newBubbles = [...bubbles];
+    newBubbles[index] = false;
+    setBubbles(newBubbles);
+    setPoppedCount(prev => prev + 1);
+  };
+
+  const resetBubbles = () => {
+    setBubbles(Array(48).fill(true));
+    setPoppedCount(0);
+  };
+
+  return (
+    <div className="h-64 bg-gradient-to-br from-pink-100 to-rose-100 dark:from-pink-900 dark:to-rose-900 rounded-lg p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h4 className="font-semibold text-pink-800 dark:text-pink-200">Bubble Wrap</h4>
+        <div className="flex gap-2">
+          <Badge variant="secondary">Popped: {poppedCount}/48</Badge>
+          <Button size="sm" onClick={resetBubbles} data-testid="button-reset-bubbles">
+            <RotateCcw className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+      <div className="grid grid-cols-8 gap-1 w-64 h-48 mx-auto overflow-hidden">
+        {bubbles.map((isIntact, index) => (
+          <div
+            key={index}
+            className={`w-6 h-6 rounded-full cursor-pointer transition-all duration-200 ${
+              isIntact 
+                ? 'bg-gradient-to-br from-blue-200 to-blue-300 dark:from-blue-600 dark:to-blue-700 hover:scale-110 shadow-md' 
+                : 'bg-gray-200 dark:bg-gray-700 scale-75 opacity-50'
+            }`}
+            onClick={() => popBubble(index)}
+            style={{
+              boxShadow: isIntact ? 'inset 0 1px 2px rgba(255,255,255,0.3), 0 2px 4px rgba(0,0,0,0.1)' : 'none'
+            }}
+          />
+        ))}
+      </div>
+      {poppedCount === 48 && (
+        <p className="text-center mt-2 text-sm text-green-600 dark:text-green-400 font-semibold">
+          All bubbles popped! 🎉
+        </p>
+      )}
+    </div>
+  );
+}
+
+// External Game Links Component
+function ExternalGameLinks() {
+  const externalGames = [
+    {
+      name: "Chess.com",
+      description: "Play chess against AI or online players",
+      url: "https://www.chess.com/play/computer",
+      color: "from-amber-100 to-yellow-100 dark:from-amber-900 dark:to-yellow-900"
+    },
+    {
+      name: "Ludo King",
+      description: "Classic Ludo game with computer opponents",
+      url: "https://www.ludoking.com/",
+      color: "from-green-100 to-emerald-100 dark:from-green-900 dark:to-emerald-900"
+    },
+    {
+      name: "Poki Games",
+      description: "Thousands of free online games",
+      url: "https://poki.com/",
+      color: "from-purple-100 to-violet-100 dark:from-purple-900 dark:to-violet-900"
+    },
+    {
+      name: "2048 Game",
+      description: "Addictive number puzzle game",
+      url: "https://play2048.co/",
+      color: "from-orange-100 to-red-100 dark:from-orange-900 dark:to-red-900"
+    }
+  ];
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {externalGames.map((game, index) => (
+        <Card key={index} className="overflow-hidden">
+          <CardContent className="p-4">
+            <div className={`h-32 bg-gradient-to-br ${game.color} rounded-lg p-4 flex flex-col justify-between`}>
+              <div>
+                <h4 className="font-semibold text-lg mb-2">{game.name}</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-300">{game.description}</p>
+              </div>
+              <div className="flex justify-end">
+                <Button 
+                  size="sm" 
+                  onClick={() => window.open(game.url, '_blank')}
+                  data-testid={`button-external-${game.name.toLowerCase().replace(/\s+/g, '-')}`}
+                >
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Play Now
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+// Simple Rock Paper Scissors vs Computer
+function RockPaperScissors() {
+  const [playerChoice, setPlayerChoice] = useState<string | null>(null);
+  const [computerChoice, setComputerChoice] = useState<string | null>(null);
+  const [result, setResult] = useState<string | null>(null);
+  const [scores, setScores] = useState({ player: 0, computer: 0 });
+
+  const choices = ['🪨', '📄', '✂️'];
+  const choiceNames = ['Rock', 'Paper', 'Scissors'];
+
+  const playGame = (playerPick: number) => {
+    const computerPick = Math.floor(Math.random() * 3);
+    
+    setPlayerChoice(choices[playerPick]);
+    setComputerChoice(choices[computerPick]);
+    
+    let gameResult = '';
+    if (playerPick === computerPick) {
+      gameResult = 'Draw!';
+    } else if (
+      (playerPick === 0 && computerPick === 2) ||
+      (playerPick === 1 && computerPick === 0) ||
+      (playerPick === 2 && computerPick === 1)
+    ) {
+      gameResult = 'You Win!';
+      setScores(prev => ({ ...prev, player: prev.player + 1 }));
+    } else {
+      gameResult = 'Computer Wins!';
+      setScores(prev => ({ ...prev, computer: prev.computer + 1 }));
+    }
+    
+    setResult(gameResult);
+  };
+
+  const resetGame = () => {
+    setPlayerChoice(null);
+    setComputerChoice(null);
+    setResult(null);
+    setScores({ player: 0, computer: 0 });
+  };
+
+  return (
+    <div className="h-64 bg-gradient-to-br from-cyan-100 to-blue-100 dark:from-cyan-900 dark:to-blue-900 rounded-lg p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h4 className="font-semibold text-cyan-800 dark:text-cyan-200">Rock Paper Scissors</h4>
+        <div className="flex gap-2">
+          <Badge variant="secondary">You: {scores.player}</Badge>
+          <Badge variant="secondary">Computer: {scores.computer}</Badge>
+          <Button size="sm" onClick={resetGame} data-testid="button-reset-rps">
+            <RotateCcw className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+      <div className="text-center">
+        <div className="flex justify-center gap-8 mb-4">
+          <div className="text-center">
+            <p className="text-sm font-medium mb-2">You</p>
+            <div className="w-16 h-16 bg-white dark:bg-gray-700 rounded-lg flex items-center justify-center text-2xl">
+              {playerChoice || '?'}
+            </div>
+          </div>
+          <div className="text-center">
+            <p className="text-sm font-medium mb-2">Computer</p>
+            <div className="w-16 h-16 bg-white dark:bg-gray-700 rounded-lg flex items-center justify-center text-2xl">
+              {computerChoice || '?'}
+            </div>
+          </div>
+        </div>
+        {result && (
+          <p className="text-lg font-bold mb-3 text-cyan-700 dark:text-cyan-300">{result}</p>
+        )}
+        <div className="flex justify-center gap-2">
+          {choices.map((choice, index) => (
+            <Button
+              key={index}
+              variant="outline"
+              size="sm"
+              onClick={() => playGame(index)}
+              data-testid={`button-rps-${choiceNames[index].toLowerCase()}`}
+            >
+              {choice}
+            </Button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Games() {
   const relaxationGames = [
     { id: 1, title: "Bubble Pop", icon: CircleDot, component: BubblePop, description: "Pop colorful bubbles for instant satisfaction!" },
@@ -1120,6 +1434,15 @@ export default function Games() {
     { id: 15, title: "Number Connect", icon: Zap, component: NumberConnect, description: "Connect matching numbers to complete the puzzle." },
   ];
 
+  const classicGames = [
+    { id: 16, title: "Tic Tac Toe", icon: Grid3x3, component: TicTacToe, description: "Classic game vs computer - get 3 in a row!" },
+    { id: 17, title: "Rock Paper Scissors", icon: Users, component: RockPaperScissors, description: "Beat the computer in this classic game." },
+  ];
+
+  const singlePlayerGames = [
+    { id: 18, title: "Bubble Wrap", icon: CircleDot, component: BubbleWrap, description: "Pop all the bubbles for ultimate satisfaction!" },
+  ];
+
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
@@ -1130,14 +1453,22 @@ export default function Games() {
       </div>
 
       <Tabs defaultValue="relaxation" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="relaxation" data-testid="tab-relaxation">
             <Heart className="w-4 h-4 mr-2" />
-            Relaxation Games
+            Relaxation
           </TabsTrigger>
           <TabsTrigger value="puzzles" data-testid="tab-puzzles">
             <Brain className="w-4 h-4 mr-2" />
-            Brain Puzzles
+            Puzzles
+          </TabsTrigger>
+          <TabsTrigger value="classic" data-testid="tab-classic">
+            <Crown className="w-4 h-4 mr-2" />
+            Classic
+          </TabsTrigger>
+          <TabsTrigger value="single" data-testid="tab-single">
+            <Mouse className="w-4 h-4 mr-2" />
+            Single Player
           </TabsTrigger>
         </TabsList>
 
@@ -1202,6 +1533,104 @@ export default function Games() {
                 </Card>
               );
             })}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="classic" className="space-y-6">
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
+              <Crown className="w-5 h-5 text-yellow-500" />
+              Classic Games vs Computer
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              Timeless games with AI opponents. Perfect for quick competitive fun between study sessions!
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {classicGames.map((game) => {
+              const GameComponent = game.component;
+              const IconComponent = game.icon;
+              
+              return (
+                <Card key={game.id} className="overflow-hidden border-l-4 border-l-yellow-500">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <IconComponent className="h-5 w-5 text-yellow-600" />
+                      {game.title}
+                      <Badge variant="secondary" className="ml-auto">vs Computer</Badge>
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground">{game.description}</p>
+                  </CardHeader>
+                  <CardContent>
+                    <GameComponent />
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          <div className="mt-8">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <ExternalLink className="w-5 h-5 text-blue-500" />
+              More Classic Games
+            </h3>
+            <p className="text-muted-foreground text-sm mb-4">
+              Links to popular external games - Chess, Ludo, and more!
+            </p>
+            <ExternalGameLinks />
+          </div>
+        </TabsContent>
+
+        <TabsContent value="single" className="space-y-6">
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-pink-500" />
+              Single Player Satisfaction
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              Solo games for maximum satisfaction and stress relief. No competition, just pure enjoyment!
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {singlePlayerGames.map((game) => {
+              const GameComponent = game.component;
+              const IconComponent = game.icon;
+              
+              return (
+                <Card key={game.id} className="overflow-hidden border-l-4 border-l-pink-500">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <IconComponent className="h-5 w-5 text-pink-600" />
+                      {game.title}
+                      <Badge variant="secondary" className="ml-auto">Solo</Badge>
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground">{game.description}</p>
+                  </CardHeader>
+                  <CardContent>
+                    <GameComponent />
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          <div className="mt-8">
+            <Card className="border-dashed border-2 border-gray-300 dark:border-gray-600">
+              <CardContent className="p-6 text-center">
+                <Mouse className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Want More Single Player Games?</h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  Check out Poki.com for thousands of free single-player games including bubble games, satisfying puzzles, and more!
+                </p>
+                <Button 
+                  onClick={() => window.open('https://poki.com/en/g/bubble-shooter', '_blank')}
+                  data-testid="button-more-single-games"
+                >
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Explore More Games
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
       </Tabs>
