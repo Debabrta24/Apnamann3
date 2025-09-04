@@ -154,6 +154,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   };
 
   const triggerQuoteOverlay = () => {
+    console.log("triggerQuoteOverlay called"); // Debug log
     setShowQuoteOverlay(true);
   };
 

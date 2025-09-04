@@ -38,7 +38,11 @@ function Router() {
   const [previousLocation, setPreviousLocation] = useState(location);
   
   useEffect(() => {
+    console.log("Location changed:", previousLocation, "->", location); // Debug log
+    console.log("Auth status:", isAuthenticated, "Onboarding:", isOnboarding); // Debug log
+    
     if (previousLocation !== location && isAuthenticated && !isOnboarding) {
+      console.log("Triggering quote overlay"); // Debug log
       triggerQuoteOverlay();
     }
     setPreviousLocation(location);
