@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   RotateCcw, 
   Play, 
@@ -13,7 +14,13 @@ import {
   Droplets,
   CircleDot,
   Palette,
-  Wind
+  Wind,
+  Grid3x3,
+  Puzzle,
+  Brain,
+  Target,
+  Zap,
+  Trophy
 } from "lucide-react";
 
 // Game 1: Bubble Pop
@@ -623,8 +630,476 @@ function Kaleidoscope() {
   );
 }
 
+// Puzzle Game 1: Sliding Puzzle
+function SlidingPuzzle() {
+  const [tiles, setTiles] = useState<number[]>([]);
+  const [moves, setMoves] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
+
+  const initializePuzzle = () => {
+    let newTiles = Array.from({ length: 15 }, (_, i) => i + 1);
+    newTiles.push(0); // Empty space
+    
+    // Shuffle
+    for (let i = 0; i < 1000; i++) {
+      const emptyIndex = newTiles.indexOf(0);
+      const neighbors = [];
+      if (emptyIndex % 4 !== 0) neighbors.push(emptyIndex - 1);
+      if (emptyIndex % 4 !== 3) neighbors.push(emptyIndex + 1);
+      if (emptyIndex >= 4) neighbors.push(emptyIndex - 4);
+      if (emptyIndex < 12) neighbors.push(emptyIndex + 4);
+      
+      const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+      [newTiles[emptyIndex], newTiles[randomNeighbor]] = [newTiles[randomNeighbor], newTiles[emptyIndex]];
+    }
+    
+    setTiles(newTiles);
+    setMoves(0);
+    setIsComplete(false);
+  };
+
+  const moveTile = (index: number) => {
+    const emptyIndex = tiles.indexOf(0);
+    const isAdjacent = 
+      (Math.abs(index - emptyIndex) === 1 && Math.floor(index / 4) === Math.floor(emptyIndex / 4)) ||
+      Math.abs(index - emptyIndex) === 4;
+
+    if (isAdjacent) {
+      const newTiles = [...tiles];
+      [newTiles[index], newTiles[emptyIndex]] = [newTiles[emptyIndex], newTiles[index]];
+      setTiles(newTiles);
+      setMoves(prev => prev + 1);
+      
+      // Check if completed
+      const isWin = newTiles.slice(0, 15).every((tile, i) => tile === i + 1);
+      setIsComplete(isWin);
+    }
+  };
+
+  useEffect(() => {
+    initializePuzzle();
+  }, []);
+
+  return (
+    <div className="h-64 bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 rounded-lg p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h4 className="font-semibold text-indigo-800 dark:text-indigo-200">15-Puzzle</h4>
+        <div className="flex gap-2">
+          <Badge variant="secondary">Moves: {moves}</Badge>
+          {isComplete && <Badge className="bg-green-500">Complete!</Badge>}
+          <Button size="sm" onClick={initializePuzzle} data-testid="button-new-puzzle">
+            <Shuffle className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+      <div className="grid grid-cols-4 gap-1 w-48 h-48 mx-auto">
+        {tiles.map((tile, index) => (
+          <div
+            key={index}
+            className={`h-11 flex items-center justify-center text-sm font-bold rounded cursor-pointer transition-all ${
+              tile === 0 
+                ? 'bg-transparent' 
+                : 'bg-white dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-gray-600 shadow-md'
+            }`}
+            onClick={() => moveTile(index)}
+          >
+            {tile !== 0 && tile}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Puzzle Game 2: Mini Sudoku
+function MiniSudoku() {
+  const [grid, setGrid] = useState<number[][]>([]);
+  const [solution, setSolution] = useState<number[][]>([]);
+  const [selectedCell, setSelectedCell] = useState<{row: number, col: number} | null>(null);
+
+  const generateSudoku = () => {
+    // Simple 6x6 Sudoku for mobile-friendly play
+    const newGrid = Array(6).fill(null).map(() => Array(6).fill(0));
+    const solutionGrid = Array(6).fill(null).map(() => Array(6).fill(0));
+    
+    // Fill with a valid pattern (simplified)
+    const pattern = [
+      [1, 2, 3, 4, 5, 6],
+      [4, 5, 6, 1, 2, 3],
+      [2, 3, 1, 5, 6, 4],
+      [5, 6, 4, 2, 3, 1],
+      [3, 1, 2, 6, 4, 5],
+      [6, 4, 5, 3, 1, 2]
+    ];
+    
+    // Copy solution and remove some numbers for puzzle
+    for (let i = 0; i < 6; i++) {
+      for (let j = 0; j < 6; j++) {
+        solutionGrid[i][j] = pattern[i][j];
+        newGrid[i][j] = Math.random() < 0.4 ? pattern[i][j] : 0;
+      }
+    }
+    
+    setGrid(newGrid);
+    setSolution(solutionGrid);
+    setSelectedCell(null);
+  };
+
+  const setCellValue = (row: number, col: number, value: number) => {
+    const newGrid = grid.map(r => [...r]);
+    newGrid[row][col] = value;
+    setGrid(newGrid);
+  };
+
+  useEffect(() => {
+    generateSudoku();
+  }, []);
+
+  return (
+    <div className="h-64 bg-gradient-to-br from-green-100 to-teal-100 dark:from-green-900 dark:to-teal-900 rounded-lg p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h4 className="font-semibold text-green-800 dark:text-green-200">Mini Sudoku</h4>
+        <Button size="sm" onClick={generateSudoku} data-testid="button-new-sudoku">
+          <Shuffle className="w-4 h-4" />
+        </Button>
+      </div>
+      <div className="flex gap-4">
+        <div className="grid grid-cols-6 gap-1 w-36 h-36">
+          {grid.map((row, rowIndex) =>
+            row.map((cell, colIndex) => (
+              <div
+                key={`${rowIndex}-${colIndex}`}
+                className={`w-5 h-5 flex items-center justify-center text-xs font-bold rounded cursor-pointer border ${
+                  selectedCell?.row === rowIndex && selectedCell?.col === colIndex
+                    ? 'bg-blue-200 dark:bg-blue-800 border-blue-400'
+                    : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
+                }`}
+                onClick={() => setSelectedCell({ row: rowIndex, col: colIndex })}
+              >
+                {cell !== 0 && cell}
+              </div>
+            ))
+          )}
+        </div>
+        <div className="flex flex-col gap-1">
+          {[1, 2, 3, 4, 5, 6].map(num => (
+            <Button
+              key={num}
+              size="sm"
+              variant="outline"
+              className="w-8 h-6 p-0 text-xs"
+              onClick={() => {
+                if (selectedCell) {
+                  setCellValue(selectedCell.row, selectedCell.col, num);
+                }
+              }}
+              data-testid={`button-sudoku-${num}`}
+            >
+              {num}
+            </Button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Puzzle Game 3: Memory Grid
+function MemoryGrid() {
+  const [pattern, setPattern] = useState<boolean[]>([]);
+  const [userPattern, setUserPattern] = useState<boolean[]>([]);
+  const [showPattern, setShowPattern] = useState(false);
+  const [level, setLevel] = useState(1);
+  const [gameState, setGameState] = useState<'waiting' | 'showing' | 'input' | 'success' | 'fail'>('waiting');
+
+  const startLevel = () => {
+    const gridSize = 16;
+    const numToShow = Math.min(level + 2, 8);
+    const newPattern = Array(gridSize).fill(false);
+    
+    // Randomly select cells to show
+    const indices = Array.from({ length: gridSize }, (_, i) => i);
+    for (let i = 0; i < numToShow; i++) {
+      const randomIndex = Math.floor(Math.random() * indices.length);
+      newPattern[indices[randomIndex]] = true;
+      indices.splice(randomIndex, 1);
+    }
+    
+    setPattern(newPattern);
+    setUserPattern(Array(gridSize).fill(false));
+    setGameState('showing');
+    setShowPattern(true);
+    
+    setTimeout(() => {
+      setShowPattern(false);
+      setGameState('input');
+    }, 2000 + level * 500);
+  };
+
+  const toggleCell = (index: number) => {
+    if (gameState !== 'input') return;
+    
+    const newUserPattern = [...userPattern];
+    newUserPattern[index] = !newUserPattern[index];
+    setUserPattern(newUserPattern);
+  };
+
+  const checkPattern = () => {
+    const isCorrect = pattern.every((cell, index) => cell === userPattern[index]);
+    if (isCorrect) {
+      setGameState('success');
+      setLevel(prev => prev + 1);
+      setTimeout(() => setGameState('waiting'), 1500);
+    } else {
+      setGameState('fail');
+      setLevel(1);
+      setTimeout(() => setGameState('waiting'), 1500);
+    }
+  };
+
+  return (
+    <div className="h-64 bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900 dark:to-pink-900 rounded-lg p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h4 className="font-semibold text-purple-800 dark:text-purple-200">Memory Grid</h4>
+        <div className="flex gap-2">
+          <Badge variant="secondary">Level: {level}</Badge>
+          {gameState === 'waiting' && (
+            <Button size="sm" onClick={startLevel} data-testid="button-start-memory">
+              <Play className="w-4 h-4" />
+            </Button>
+          )}
+          {gameState === 'input' && (
+            <Button size="sm" onClick={checkPattern} data-testid="button-check-memory">
+              <Target className="w-4 h-4" />
+            </Button>
+          )}
+        </div>
+      </div>
+      <div className="grid grid-cols-4 gap-2 w-32 h-32 mx-auto">
+        {Array.from({ length: 16 }, (_, index) => (
+          <div
+            key={index}
+            className={`w-6 h-6 rounded cursor-pointer transition-all ${
+              showPattern && pattern[index]
+                ? 'bg-yellow-400'
+                : userPattern[index]
+                  ? 'bg-blue-400'
+                  : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
+            }`}
+            onClick={() => toggleCell(index)}
+          />
+        ))}
+      </div>
+      <div className="text-center mt-2">
+        {gameState === 'showing' && <p className="text-sm text-purple-600 dark:text-purple-300">Memorize the pattern!</p>}
+        {gameState === 'input' && <p className="text-sm text-purple-600 dark:text-purple-300">Click to recreate the pattern</p>}
+        {gameState === 'success' && <p className="text-sm text-green-600 dark:text-green-400">Correct! Next level!</p>}
+        {gameState === 'fail' && <p className="text-sm text-red-600 dark:text-red-400">Try again!</p>}
+      </div>
+    </div>
+  );
+}
+
+// Puzzle Game 4: Block Stacker
+function BlockStacker() {
+  const [blocks, setBlocks] = useState<number[][]>([]);
+  const [currentBlock, setCurrentBlock] = useState<{x: number, y: number, shape: number[][]}>();
+  const [score, setScore] = useState(0);
+  const [gameActive, setGameActive] = useState(false);
+
+  const shapes = [
+    [[1, 1], [1, 1]], // Square
+    [[1, 1, 1, 1]], // Line
+    [[1, 1, 1], [0, 1, 0]], // T-shape
+    [[1, 1, 0], [0, 1, 1]], // Z-shape
+  ];
+
+  const initializeGame = () => {
+    const newGrid = Array(10).fill(null).map(() => Array(8).fill(0));
+    setBlocks(newGrid);
+    setScore(0);
+    setGameActive(true);
+    spawnBlock();
+  };
+
+  const spawnBlock = () => {
+    const shape = shapes[Math.floor(Math.random() * shapes.length)];
+    setCurrentBlock({
+      x: 3,
+      y: 0,
+      shape
+    });
+  };
+
+  const moveBlock = (dx: number) => {
+    if (!currentBlock || !gameActive) return;
+    
+    const newX = currentBlock.x + dx;
+    if (newX >= 0 && newX + currentBlock.shape[0].length <= 8) {
+      setCurrentBlock(prev => prev ? { ...prev, x: newX } : undefined);
+    }
+  };
+
+  const dropBlock = () => {
+    if (!currentBlock || !gameActive) return;
+    
+    // Place block on grid
+    const newBlocks = blocks.map(row => [...row]);
+    currentBlock.shape.forEach((row, rowIndex) => {
+      row.forEach((cell, colIndex) => {
+        if (cell && currentBlock.y + rowIndex < 10) {
+          newBlocks[currentBlock.y + rowIndex][currentBlock.x + colIndex] = 1;
+        }
+      });
+    });
+    
+    setBlocks(newBlocks);
+    setScore(prev => prev + 10);
+    
+    // Check for full rows
+    const fullRows = newBlocks.map((row, index) => 
+      row.every(cell => cell === 1) ? index : -1
+    ).filter(index => index !== -1);
+    
+    if (fullRows.length > 0) {
+      fullRows.forEach(rowIndex => {
+        newBlocks.splice(rowIndex, 1);
+        newBlocks.unshift(Array(8).fill(0));
+      });
+      setBlocks(newBlocks);
+      setScore(prev => prev + fullRows.length * 100);
+    }
+    
+    spawnBlock();
+  };
+
+  return (
+    <div className="h-64 bg-gradient-to-br from-orange-100 to-red-100 dark:from-orange-900 dark:to-red-900 rounded-lg p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h4 className="font-semibold text-orange-800 dark:text-orange-200">Block Stacker</h4>
+        <div className="flex gap-2">
+          <Badge variant="secondary">Score: {score}</Badge>
+          <Button size="sm" onClick={initializeGame} data-testid="button-start-blocks">
+            <Play className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+      <div className="flex gap-4">
+        <div className="grid grid-cols-8 gap-px bg-gray-400 dark:bg-gray-600 p-1 rounded">
+          {blocks.map((row, rowIndex) =>
+            row.map((cell, colIndex) => (
+              <div
+                key={`${rowIndex}-${colIndex}`}
+                className={`w-3 h-3 ${
+                  cell ? 'bg-blue-500' : 'bg-white dark:bg-gray-800'
+                }`}
+              />
+            ))
+          )}
+        </div>
+        {gameActive && (
+          <div className="flex flex-col gap-1">
+            <Button size="sm" onClick={() => moveBlock(-1)} data-testid="button-move-left">←</Button>
+            <Button size="sm" onClick={() => moveBlock(1)} data-testid="button-move-right">→</Button>
+            <Button size="sm" onClick={dropBlock} data-testid="button-drop">↓</Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Puzzle Game 5: Number Connect
+function NumberConnect() {
+  const [grid, setGrid] = useState<number[][]>([]);
+  const [connections, setConnections] = useState<Array<{from: {row: number, col: number}, to: {row: number, col: number}}>>([]);
+  const [selectedCell, setSelectedCell] = useState<{row: number, col: number} | null>(null);
+  const [completed, setCompleted] = useState(false);
+
+  const generatePuzzle = () => {
+    const newGrid = Array(6).fill(null).map(() => Array(6).fill(0));
+    const numbers = [1, 2, 3, 4];
+    
+    // Place pairs of numbers randomly
+    numbers.forEach(num => {
+      for (let i = 0; i < 2; i++) {
+        let row, col;
+        do {
+          row = Math.floor(Math.random() * 6);
+          col = Math.floor(Math.random() * 6);
+        } while (newGrid[row][col] !== 0);
+        newGrid[row][col] = num;
+      }
+    });
+    
+    setGrid(newGrid);
+    setConnections([]);
+    setSelectedCell(null);
+    setCompleted(false);
+  };
+
+  const selectCell = (row: number, col: number) => {
+    if (grid[row][col] === 0) return;
+    
+    if (!selectedCell) {
+      setSelectedCell({ row, col });
+    } else if (selectedCell.row === row && selectedCell.col === col) {
+      setSelectedCell(null);
+    } else if (grid[selectedCell.row][selectedCell.col] === grid[row][col]) {
+      // Same number - create connection
+      setConnections(prev => [...prev, { from: selectedCell, to: { row, col } }]);
+      setSelectedCell(null);
+      
+      // Check if all numbers are connected
+      const uniqueNumbers = Array.from(new Set(grid.flat().filter(n => n > 0)));
+      if (connections.length + 1 >= uniqueNumbers.length) {
+        setCompleted(true);
+      }
+    } else {
+      setSelectedCell({ row, col });
+    }
+  };
+
+  useEffect(() => {
+    generatePuzzle();
+  }, []);
+
+  return (
+    <div className="h-64 bg-gradient-to-br from-cyan-100 to-blue-100 dark:from-cyan-900 dark:to-blue-900 rounded-lg p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h4 className="font-semibold text-cyan-800 dark:text-cyan-200">Number Connect</h4>
+        <div className="flex gap-2">
+          {completed && <Badge className="bg-green-500">Complete!</Badge>}
+          <Button size="sm" onClick={generatePuzzle} data-testid="button-new-connect">
+            <Shuffle className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+      <div className="grid grid-cols-6 gap-1 w-36 h-36 mx-auto">
+        {grid.map((row, rowIndex) =>
+          row.map((cell, colIndex) => (
+            <div
+              key={`${rowIndex}-${colIndex}`}
+              className={`w-5 h-5 flex items-center justify-center text-xs font-bold rounded cursor-pointer ${
+                selectedCell?.row === rowIndex && selectedCell?.col === colIndex
+                  ? 'bg-yellow-300 border-2 border-yellow-500'
+                  : cell > 0
+                    ? 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
+                    : 'bg-gray-100 dark:bg-gray-800'
+              }`}
+              onClick={() => selectCell(rowIndex, colIndex)}
+            >
+              {cell > 0 && cell}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function Games() {
-  const games = [
+  const relaxationGames = [
     { id: 1, title: "Bubble Pop", icon: CircleDot, component: BubblePop, description: "Pop colorful bubbles for instant satisfaction!" },
     { id: 2, title: "Stress Ball", icon: Heart, component: StressBall, description: "Squeeze away your stress with a virtual stress ball." },
     { id: 3, title: "Color Mixer", icon: Palette, component: ColorMixer, description: "Mix beautiful colors and create new shades." },
@@ -637,36 +1112,99 @@ export default function Games() {
     { id: 10, title: "Kaleidoscope", icon: CircleDot, component: Kaleidoscope, description: "Enjoy mesmerizing kaleidoscope patterns." },
   ];
 
+  const puzzleGames = [
+    { id: 11, title: "15-Puzzle", icon: Grid3x3, component: SlidingPuzzle, description: "Classic sliding number puzzle - arrange tiles 1-15!" },
+    { id: 12, title: "Mini Sudoku", icon: Brain, component: MiniSudoku, description: "6x6 Sudoku puzzle perfect for quick brain training." },
+    { id: 13, title: "Memory Grid", icon: Target, component: MemoryGrid, description: "Remember and recreate the pattern - levels get harder!" },
+    { id: 14, title: "Block Stacker", icon: Puzzle, component: BlockStacker, description: "Tetris-style block stacking game." },
+    { id: 15, title: "Number Connect", icon: Zap, component: NumberConnect, description: "Connect matching numbers to complete the puzzle." },
+  ];
+
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Satisfaction Games</h1>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Games & Puzzles</h1>
         <p className="text-muted-foreground">
-          Relax and de-stress with these colorful, satisfying mini-games designed to help calm your mind.
+          Relax, challenge your mind, and have fun with games designed for college students. Choose between relaxing games or challenging puzzles!
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {games.map((game) => {
-          const GameComponent = game.component;
-          const IconComponent = game.icon;
-          
-          return (
-            <Card key={game.id} className="overflow-hidden">
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <IconComponent className="h-5 w-5 text-primary" />
-                  {game.title}
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">{game.description}</p>
-              </CardHeader>
-              <CardContent>
-                <GameComponent />
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+      <Tabs defaultValue="relaxation" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="relaxation" data-testid="tab-relaxation">
+            <Heart className="w-4 h-4 mr-2" />
+            Relaxation Games
+          </TabsTrigger>
+          <TabsTrigger value="puzzles" data-testid="tab-puzzles">
+            <Brain className="w-4 h-4 mr-2" />
+            Brain Puzzles
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="relaxation" className="space-y-6">
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold mb-2">Stress Relief & Satisfaction</h2>
+            <p className="text-muted-foreground text-sm">
+              Perfect for quick mental breaks between study sessions. These games help reduce stress and provide instant satisfaction.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {relaxationGames.map((game) => {
+              const GameComponent = game.component;
+              const IconComponent = game.icon;
+              
+              return (
+                <Card key={game.id} className="overflow-hidden">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <IconComponent className="h-5 w-5 text-primary" />
+                      {game.title}
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground">{game.description}</p>
+                  </CardHeader>
+                  <CardContent>
+                    <GameComponent />
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="puzzles" className="space-y-6">
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-yellow-500" />
+              Challenge Your Mind
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              Engaging puzzles designed for 18+ students. Perfect for improving cognitive skills, memory, and problem-solving abilities while having fun!
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {puzzleGames.map((game) => {
+              const GameComponent = game.component;
+              const IconComponent = game.icon;
+              
+              return (
+                <Card key={game.id} className="overflow-hidden border-l-4 border-l-blue-500">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <IconComponent className="h-5 w-5 text-blue-600" />
+                      {game.title}
+                      <Badge variant="secondary" className="ml-auto">Challenge</Badge>
+                    </CardTitle>
+                    <p className="text-sm text-muted-foreground">{game.description}</p>
+                  </CardHeader>
+                  <CardContent>
+                    <GameComponent />
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </TabsContent>
+      </Tabs>
     </main>
   );
 }
