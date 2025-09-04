@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { 
   Video, 
   VideoOff, 
@@ -57,10 +57,15 @@ export default function PeerCalling() {
   const [isVideoEnabled, setIsVideoEnabled] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
   const [waitingTime, setWaitingTime] = useState(0);
+  const [connectionStatus, setConnectionStatus] = useState<'disconnected' | 'connecting' | 'connected'>('disconnected');
+  const [mediaError, setMediaError] = useState<string | null>(null);
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const callIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
+  const localStreamRef = useRef<MediaStream | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
 
   // Fetch available peers
   const { data: availablePeers = [], isLoading: isLoadingPeers } = useQuery<PeerUser[]>({
@@ -82,18 +87,32 @@ export default function PeerCalling() {
         ...preferences,
       });
     },
-    onSuccess: (data: any) => {
-      setActiveCall({
-        id: data.sessionId || 'fake-session-' + Date.now(),
+    onSuccess: (data: any, variables) => {
+      const callId = `call-${Date.now()}`;
+      const newCall = {
+        id: callId,
         partnerId: data.partnerId || 'peer-' + Date.now(),
         partnerName: data.partnerName || 'Anonymous Student',
-        status: "connecting",
+        status: "connecting" as const,
         startTime: new Date().toISOString(),
-        type: isVideoEnabled ? "video" : "audio",
-      });
+        type: variables.type,
+      };
+      
+      setActiveCall(newCall);
+      
+      // Initiate call through WebSocket
+      if (wsRef.current?.readyState === WebSocket.OPEN) {
+        wsRef.current.send(JSON.stringify({
+          type: 'initiate_call',
+          targetUserId: data.partnerId,
+          callType: variables.type,
+          callId
+        }));
+      }
+      
       toast({
         title: "Found a peer!",
-        description: `Connecting with ${data.partnerName || 'Anonymous Student'}...`,
+        description: `Calling ${data.partnerName || 'Anonymous Student'}...`,
       });
     },
     onError: () => {
@@ -161,24 +180,278 @@ export default function PeerCalling() {
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
-  const startCall = (type: "audio" | "video") => {
+  const startCall = async (type: "audio" | "video") => {
+    if (connectionStatus !== 'connected') {
+      toast({ title: "Connection Error", description: "Please wait for connection to establish.", variant: "destructive" });
+      return;
+    }
+    
     setIsVideoEnabled(type === "video");
-    findPeerMutation.mutate({ type });
+    
+    try {
+      // Test media access first
+      await getUserMedia(type === "video");
+      
+      // Now find a peer
+      findPeerMutation.mutate({ type });
+    } catch (error) {
+      toast({ 
+        title: "Media Error", 
+        description: "Could not access camera/microphone. Please check permissions.", 
+        variant: "destructive" 
+      });
+    }
+  };
+
+  // WebSocket setup for signaling
+  const setupWebSocket = useCallback(() => {
+    if (!currentUser?.id) return;
+    
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const wsUrl = `${protocol}//${window.location.host}/ws?userId=${currentUser.id}`;
+    
+    wsRef.current = new WebSocket(wsUrl);
+    
+    wsRef.current.onopen = () => {
+      setConnectionStatus('connected');
+      console.log('WebSocket connected for peer calling');
+    };
+    
+    wsRef.current.onmessage = async (event) => {
+      const data = JSON.parse(event.data);
+      
+      if (data.type === 'webrtc_signal') {
+        await handleSignal(data.signal, data.fromUserId, data.callId);
+      } else if (data.type === 'incoming_call') {
+        handleIncomingCall(data.fromUserId, data.callType, data.callId);
+      } else if (data.type === 'call_response') {
+        if (data.accepted) {
+          await startWebRTCCall(data.fromUserId, data.callId, false);
+        } else {
+          toast({ title: "Call declined", description: "The peer declined your call." });
+          setActiveCall(null);
+        }
+      } else if (data.type === 'call_ended') {
+        endCall();
+      }
+    };
+    
+    wsRef.current.onclose = () => {
+      setConnectionStatus('disconnected');
+    };
+    
+    wsRef.current.onerror = (error) => {
+      console.error('WebSocket error:', error);
+      setConnectionStatus('disconnected');
+    };
+  }, [currentUser?.id]);
+
+  // Get user media
+  const getUserMedia = async (video: boolean) => {
+    try {
+      setMediaError(null);
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: video
+      });
+      
+      localStreamRef.current = stream;
+      
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+      
+      return stream;
+    } catch (error) {
+      console.error('Error accessing media devices:', error);
+      setMediaError('Could not access camera/microphone. Please check permissions.');
+      throw error;
+    }
+  };
+
+  // Create WebRTC peer connection
+  const createPeerConnection = (callId: string, targetUserId: string) => {
+    const config = {
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' }
+      ]
+    };
+    
+    peerConnectionRef.current = new RTCPeerConnection(config);
+    
+    peerConnectionRef.current.onicecandidate = (event) => {
+      if (event.candidate && wsRef.current?.readyState === WebSocket.OPEN) {
+        wsRef.current.send(JSON.stringify({
+          type: 'webrtc_signal',
+          targetUserId,
+          signal: { type: 'ice-candidate', candidate: event.candidate },
+          callId
+        }));
+      }
+    };
+    
+    peerConnectionRef.current.ontrack = (event) => {
+      if (remoteVideoRef.current) {
+        remoteVideoRef.current.srcObject = event.streams[0];
+      }
+    };
+    
+    peerConnectionRef.current.onconnectionstatechange = () => {
+      const state = peerConnectionRef.current?.connectionState;
+      if (state === 'connected') {
+        setActiveCall(prev => prev ? { ...prev, status: 'active' } : null);
+        toast({ title: "Connected!", description: "You're now connected with your peer!" });
+      } else if (state === 'disconnected' || state === 'failed') {
+        endCall();
+      }
+    };
+    
+    return peerConnectionRef.current;
+  };
+
+  // Handle incoming signaling
+  const handleSignal = async (signal: any, fromUserId: string, callId: string) => {
+    if (!peerConnectionRef.current) return;
+    
+    try {
+      if (signal.type === 'offer') {
+        await peerConnectionRef.current.setRemoteDescription(signal.offer);
+        const answer = await peerConnectionRef.current.createAnswer();
+        await peerConnectionRef.current.setLocalDescription(answer);
+        
+        if (wsRef.current?.readyState === WebSocket.OPEN) {
+          wsRef.current.send(JSON.stringify({
+            type: 'webrtc_signal',
+            targetUserId: fromUserId,
+            signal: { type: 'answer', answer },
+            callId
+          }));
+        }
+      } else if (signal.type === 'answer') {
+        await peerConnectionRef.current.setRemoteDescription(signal.answer);
+      } else if (signal.type === 'ice-candidate') {
+        await peerConnectionRef.current.addIceCandidate(signal.candidate);
+      }
+    } catch (error) {
+      console.error('Error handling signal:', error);
+    }
+  };
+
+  // Handle incoming call
+  const handleIncomingCall = (fromUserId: string, callType: string, callId: string) => {
+    const accept = window.confirm(`Incoming ${callType} call. Accept?`);
+    
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({
+        type: 'call_response',
+        targetUserId: fromUserId,
+        accepted: accept,
+        callId
+      }));
+    }
+    
+    if (accept) {
+      startWebRTCCall(fromUserId, callId, true);
+    }
+  };
+
+  // Start WebRTC call
+  const startWebRTCCall = async (targetUserId: string, callId: string, isReceiver: boolean) => {
+    try {
+      const stream = await getUserMedia(isVideoEnabled);
+      const pc = createPeerConnection(callId, targetUserId);
+      
+      // Add local stream to peer connection
+      stream.getTracks().forEach(track => {
+        pc.addTrack(track, stream);
+      });
+      
+      if (!isReceiver) {
+        // Create and send offer
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        
+        if (wsRef.current?.readyState === WebSocket.OPEN) {
+          wsRef.current.send(JSON.stringify({
+            type: 'webrtc_signal',
+            targetUserId,
+            signal: { type: 'offer', offer },
+            callId
+          }));
+        }
+      }
+    } catch (error) {
+      console.error('Error starting WebRTC call:', error);
+      toast({ title: "Call failed", description: "Could not start the call. Check your permissions.", variant: "destructive" });
+    }
   };
 
   const endCall = () => {
     if (activeCall) {
+      // Send end call signal
+      if (wsRef.current?.readyState === WebSocket.OPEN) {
+        wsRef.current.send(JSON.stringify({
+          type: 'end_call',
+          targetUserId: activeCall.partnerId,
+          callId: activeCall.id
+        }));
+      }
+      
+      // Clean up local resources
+      if (localStreamRef.current) {
+        localStreamRef.current.getTracks().forEach(track => track.stop());
+        localStreamRef.current = null;
+      }
+      
+      if (peerConnectionRef.current) {
+        peerConnectionRef.current.close();
+        peerConnectionRef.current = null;
+      }
+      
       endCallMutation.mutate(activeCall.id);
     }
   };
 
   const toggleAudio = () => {
     setIsAudioEnabled(!isAudioEnabled);
+    
+    if (localStreamRef.current) {
+      const audioTrack = localStreamRef.current.getAudioTracks()[0];
+      if (audioTrack) {
+        audioTrack.enabled = !isAudioEnabled;
+      }
+    }
   };
 
   const toggleVideo = () => {
     setIsVideoEnabled(!isVideoEnabled);
+    
+    if (localStreamRef.current) {
+      const videoTrack = localStreamRef.current.getVideoTracks()[0];
+      if (videoTrack) {
+        videoTrack.enabled = !isVideoEnabled;
+      }
+    }
   };
+
+  // Initialize WebSocket when component mounts
+  useEffect(() => {
+    setupWebSocket();
+    
+    return () => {
+      if (wsRef.current) {
+        wsRef.current.close();
+      }
+      if (localStreamRef.current) {
+        localStreamRef.current.getTracks().forEach(track => track.stop());
+      }
+      if (peerConnectionRef.current) {
+        peerConnectionRef.current.close();
+      }
+    };
+  }, [setupWebSocket]);
+
 
   if (activeCall) {
     return (

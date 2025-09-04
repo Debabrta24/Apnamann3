@@ -27,7 +27,7 @@ export interface PsychologicalResponse {
 }
 
 export class AIService {
-  private config: AIConfig;
+  private config!: AIConfig;
   private openai?: OpenAI;
   private gemini?: GoogleGenAI;
 
@@ -56,16 +56,20 @@ export class AIService {
   }
 
   private initializeProviders() {
-    if (this.config.ai_provider === "openai" || this.config.openai_api_key !== "YOUR_OPENAI_API_KEY_HERE") {
-      this.openai = new OpenAI({ 
-        apiKey: this.config.openai_api_key || process.env.OPENAI_API_KEY 
-      });
-    }
-    
-    if (this.config.ai_provider === "gemini" || this.config.gemini_api_key !== "YOUR_GEMINI_API_KEY_HERE") {
-      this.gemini = new GoogleGenAI({ 
-        apiKey: this.config.gemini_api_key || process.env.GEMINI_API_KEY 
-      });
+    try {
+      if (this.config.ai_provider === "openai" && this.config.openai_api_key && this.config.openai_api_key !== "your-openai-key-here") {
+        this.openai = new OpenAI({ 
+          apiKey: this.config.openai_api_key 
+        });
+      }
+      
+      if (this.config.ai_provider === "gemini" && this.config.gemini_api_key && this.config.gemini_api_key !== "your-gemini-key-here") {
+        this.gemini = new GoogleGenAI({ 
+          apiKey: this.config.gemini_api_key 
+        });
+      }
+    } catch (error) {
+      console.warn("AI providers not initialized, using fallback responses");
     }
   }
 

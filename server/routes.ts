@@ -17,6 +17,7 @@ import { z } from "zod";
 
 // WebSocket connection management
 const wsConnections = new Map<string, WebSocket>();
+const peerConnections = new Map<string, {ws: WebSocket, userId: string, callId?: string}>();
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
@@ -59,6 +60,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }));
           }
         }
+        
+        // Handle WebRTC signaling for peer calls
+        else if (data.type === 'webrtc_signal' && userId) {
+          const { targetUserId, signal, callId } = data;
+          const targetConnection = wsConnections.get(targetUserId);
+          
+          if (targetConnection && targetConnection.readyState === WebSocket.OPEN) {
+            targetConnection.send(JSON.stringify({
+              type: 'webrtc_signal',
+              fromUserId: userId,
+              signal,
+              callId
+            }));
+          }
+        }
+        
+        // Handle call initiation
+        else if (data.type === 'initiate_call' && userId) {
+          const { targetUserId, callType, callId } = data;
+          const targetConnection = wsConnections.get(targetUserId);
+          
+          if (targetConnection && targetConnection.readyState === WebSocket.OPEN) {
+            targetConnection.send(JSON.stringify({
+              type: 'incoming_call',
+              fromUserId: userId,
+              callType,
+              callId
+            }));
+          }
+        }
+        
+        // Handle call response
+        else if (data.type === 'call_response' && userId) {
+          const { targetUserId, accepted, callId } = data;
+          const targetConnection = wsConnections.get(targetUserId);
+          
+          if (targetConnection && targetConnection.readyState === WebSocket.OPEN) {
+            targetConnection.send(JSON.stringify({
+              type: 'call_response',
+              fromUserId: userId,
+              accepted,
+              callId
+            }));
+          }
+        }
+        
+        // Handle call end
+        else if (data.type === 'end_call' && userId) {
+          const { targetUserId, callId } = data;
+          const targetConnection = wsConnections.get(targetUserId);
+          
+          if (targetConnection && targetConnection.readyState === WebSocket.OPEN) {
+            targetConnection.send(JSON.stringify({
+              type: 'call_ended',
+              fromUserId: userId,
+              callId
+            }));
+          }
+        }
+        
       } catch (error) {
         console.error('WebSocket message error:', error);
       }
