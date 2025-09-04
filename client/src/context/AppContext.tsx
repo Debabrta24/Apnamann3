@@ -1,6 +1,12 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import type { User } from "@/types";
 
+interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+  timestamp: Date;
+}
+
 interface AppContextType {
   currentUser: User | null;
   setCurrentUser: (user: User | null) => void;
@@ -13,6 +19,9 @@ interface AppContextType {
   logout: () => void;
   completeOnboarding: (data: OnboardingData) => void;
   closeStartupPopup: () => void;
+  chatMessages: ChatMessage[];
+  setChatMessages: (messages: ChatMessage[] | ((prev: ChatMessage[]) => ChatMessage[])) => void;
+  addChatMessage: (message: ChatMessage) => void;
 }
 
 interface OnboardingData {
@@ -50,6 +59,23 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [showStartupPopup, setShowStartupPopup] = useState(true);
   const [tempEmail, setTempEmail] = useState<string | null>(null);
 
+  // Chat state management
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() => {
+    const savedMessages = localStorage.getItem('chatMessages');
+    if (savedMessages) {
+      const parsed = JSON.parse(savedMessages);
+      return parsed.map((msg: any) => ({
+        ...msg,
+        timestamp: new Date(msg.timestamp)
+      }));
+    }
+    return [{
+      role: "assistant",
+      content: "Hello! I'm here to provide psychological first aid and support. How are you feeling today? Remember, this is a safe space to share your thoughts.",
+      timestamp: new Date(),
+    }];
+  });
+
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window !== "undefined") {
       const savedTheme = localStorage.getItem("theme");
@@ -81,6 +107,12 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     setIsOnboarding(false);
     setTempEmail(null);
     localStorage.removeItem("user");
+    localStorage.removeItem("chatMessages");
+    setChatMessages([{
+      role: "assistant",
+      content: "Hello! I'm here to provide psychological first aid and support. How are you feeling today? Remember, this is a safe space to share your thoughts.",
+      timestamp: new Date(),
+    }]);
   };
 
   const completeOnboarding = (data: OnboardingData) => {
@@ -106,6 +138,19 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     setShowStartupPopup(false);
     localStorage.setItem("startupPopupSeen", "true");
   };
+
+  const addChatMessage = (message: ChatMessage) => {
+    setChatMessages(prev => {
+      const newMessages = [...prev, message];
+      localStorage.setItem('chatMessages', JSON.stringify(newMessages));
+      return newMessages;
+    });
+  };
+
+  // Save chat messages to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
+  }, [chatMessages]);
 
   // Load user from localStorage on app start
   useEffect(() => {
@@ -136,7 +181,10 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       login,
       logout,
       completeOnboarding,
-      closeStartupPopup
+      closeStartupPopup,
+      chatMessages,
+      setChatMessages,
+      addChatMessage
     }}>
       {children}
     </AppContext.Provider>

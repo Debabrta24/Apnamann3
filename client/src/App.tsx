@@ -7,6 +7,9 @@ import { AppProvider, useAppContext } from "@/context/AppContext";
 import { Brain, User, Music, BookOpen, Video, MessageSquare, Gamepad2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Header from "@/components/layout/header";
+import MotivationalQuote from "@/components/layout/motivational-quote";
+import RoutineGenerator from "@/components/wellness/routine-generator";
+import SleepCycleTool from "@/components/wellness/sleep-cycle-tool";
 import QuickActionsFAB from "@/components/quick-actions-fab";
 import OnboardingPopup from "@/components/onboarding/onboarding-popup";
 import StartupPopup from "@/components/startup-popup";
@@ -94,7 +97,21 @@ function Router() {
                   </button>
                 );
               })}
+              
+              {/* Wellness Tools Section */}
+              <div className="pt-4 border-t border-border">
+                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
+                  Wellness Tools
+                </h3>
+                <div className="space-y-1">
+                  <RoutineGenerator />
+                  <SleepCycleTool />
+                </div>
+              </div>
             </nav>
+            
+            {/* Motivational Quote */}
+            <MotivationalQuote />
             
             {/* Profile section at bottom */}
             <div className="p-4 border-t border-border">

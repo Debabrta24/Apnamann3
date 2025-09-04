@@ -5,7 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useWebSocket } from "@/hooks/use-websocket";
 import { useAppContext } from "@/context/AppContext";
-import type { ChatMessage } from "@/types";
+
+interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+  timestamp: Date;
+}
 
 interface ChatInterfaceProps {
   selectedAction?: string | null;
@@ -13,25 +18,18 @@ interface ChatInterfaceProps {
 }
 
 export default function ChatInterface({ selectedAction, selectedPersonality }: ChatInterfaceProps) {
-  const { currentUser } = useAppContext();
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      role: "assistant",
-      content: "Hello! I'm here to provide psychological first aid and support. How are you feeling today? Remember, this is a safe space to share your thoughts.",
-      timestamp: new Date(),
-    },
-  ]);
+  const { currentUser, chatMessages, setChatMessages, addChatMessage } = useAppContext();
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { sendMessage, isConnected } = useWebSocket(currentUser?.id || "", (message) => {
     if (message.type === "chat_response") {
-      setMessages(prev => [...prev, {
+      addChatMessage({
         role: "assistant",
         content: message.message,
         timestamp: new Date(),
-      }]);
+      });
       setIsTyping(false);
     }
   });
@@ -42,7 +40,7 @@ export default function ChatInterface({ selectedAction, selectedPersonality }: C
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [chatMessages]);
 
   useEffect(() => {
     if (selectedAction) {
@@ -59,13 +57,13 @@ export default function ChatInterface({ selectedAction, selectedPersonality }: C
       timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    addChatMessage(userMessage);
     setIsTyping(true);
     
     sendMessage({
       type: "chat_message",
       message: inputMessage,
-      chatHistory: messages,
+      chatHistory: chatMessages,
       personality: selectedPersonality,
     });
 
@@ -87,7 +85,7 @@ export default function ChatInterface({ selectedAction, selectedPersonality }: C
   };
 
   const clearChat = () => {
-    setMessages([{
+    setChatMessages([{
       role: "assistant",
       content: "Hello! I'm here to provide psychological first aid and support. How are you feeling today? Remember, this is a safe space to share your thoughts.",
       timestamp: new Date(),
@@ -131,7 +129,7 @@ export default function ChatInterface({ selectedAction, selectedPersonality }: C
       <CardContent className="flex-1 flex flex-col p-0">
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
-          {messages.map((message, index) => (
+          {chatMessages.map((message, index) => (
             <div
               key={index}
               className={`flex space-x-3 ${message.role === "user" ? "justify-end" : ""}`}
