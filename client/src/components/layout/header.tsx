@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/sheet";
 import { useAppContext } from "@/context/AppContext";
 import { useLocation } from "wouter";
-import Navigation from "./navigation";
 import GlobalSearch from "@/components/global-search";
 import NotificationCenter from "@/components/notifications/notification-center";
 
@@ -39,10 +38,10 @@ export default function Header() {
 
   return (
     <header className="bg-card border-b border-border sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo and branding */}
-          <div className="flex items-center space-x-3">
+          {/* Mobile Logo and branding - only show on mobile */}
+          <div className="flex items-center space-x-3 md:hidden">
             <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
               <Brain className="text-primary-foreground h-6 w-6" />
             </div>
@@ -95,12 +94,9 @@ export default function Header() {
           </div>
 
           {/* Global Search - Desktop */}
-          <div className="hidden md:flex flex-1 max-w-md mx-8">
+          <div className="hidden md:flex flex-1 max-w-md">
             <GlobalSearch />
           </div>
-
-          {/* Desktop Navigation */}
-          <Navigation />
 
           {/* User menu */}
           <div className="flex items-center space-x-4">
