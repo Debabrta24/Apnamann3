@@ -22,6 +22,9 @@ interface AppContextType {
   chatMessages: ChatMessage[];
   setChatMessages: (messages: ChatMessage[] | ((prev: ChatMessage[]) => ChatMessage[])) => void;
   addChatMessage: (message: ChatMessage) => void;
+  showQuoteOverlay: boolean;
+  setShowQuoteOverlay: (show: boolean) => void;
+  triggerQuoteOverlay: () => void;
 }
 
 interface OnboardingData {
@@ -75,6 +78,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       timestamp: new Date(),
     }];
   });
+
+  // Quote overlay state
+  const [showQuoteOverlay, setShowQuoteOverlay] = useState(false);
 
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window !== "undefined") {
@@ -147,6 +153,10 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     });
   };
 
+  const triggerQuoteOverlay = () => {
+    setShowQuoteOverlay(true);
+  };
+
   // Save chat messages to localStorage when they change
   useEffect(() => {
     localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
@@ -184,7 +194,10 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       closeStartupPopup,
       chatMessages,
       setChatMessages,
-      addChatMessage
+      addChatMessage,
+      showQuoteOverlay,
+      setShowQuoteOverlay,
+      triggerQuoteOverlay
     }}>
       {children}
     </AppContext.Provider>

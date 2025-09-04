@@ -1,4 +1,5 @@
 import { Switch, Route, useLocation } from "wouter";
+import { useState, useEffect } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -8,6 +9,7 @@ import { Brain, User, Music, BookOpen, Video, MessageSquare, Gamepad2 } from "lu
 import { cn } from "@/lib/utils";
 import Header from "@/components/layout/header";
 import MotivationalQuote from "@/components/layout/motivational-quote";
+import PageQuoteOverlay from "@/components/layout/page-quote-overlay";
 import RoutineGenerator from "@/components/wellness/routine-generator";
 import SleepCycleTool from "@/components/wellness/sleep-cycle-tool";
 import QuickActionsFAB from "@/components/quick-actions-fab";
@@ -29,8 +31,18 @@ import Games from "@/pages/games";
 import NotFound from "@/pages/not-found";
 
 function Router() {
-  const { isAuthenticated, isOnboarding, showStartupPopup, completeOnboarding, closeStartupPopup } = useAppContext();
+  const { isAuthenticated, isOnboarding, showStartupPopup, completeOnboarding, closeStartupPopup, showQuoteOverlay, setShowQuoteOverlay, triggerQuoteOverlay } = useAppContext();
   const [location, setLocation] = useLocation();
+
+  // Trigger quote overlay on location changes (except first load)
+  const [previousLocation, setPreviousLocation] = useState(location);
+  
+  useEffect(() => {
+    if (previousLocation !== location && isAuthenticated && !isOnboarding) {
+      triggerQuoteOverlay();
+    }
+    setPreviousLocation(location);
+  }, [location, isAuthenticated, isOnboarding, triggerQuoteOverlay, previousLocation]);
 
   // Show startup popup first (if not seen before)
   if (showStartupPopup && !isAuthenticated) {
@@ -157,6 +169,10 @@ function Router() {
       <OnboardingPopup 
         isOpen={isOnboarding} 
         onComplete={completeOnboarding}
+      />
+      <PageQuoteOverlay
+        isVisible={showQuoteOverlay}
+        onComplete={() => setShowQuoteOverlay(false)}
       />
     </>
   );
