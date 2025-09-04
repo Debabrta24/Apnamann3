@@ -4,7 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppProvider, useAppContext } from "@/context/AppContext";
-import { Brain, User, Music, BookOpen, Video, MessageSquare } from "lucide-react";
+import { Brain, User, Music, BookOpen, Video, MessageSquare, Gamepad2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Header from "@/components/layout/header";
 import QuickActionsFAB from "@/components/quick-actions-fab";
@@ -22,6 +22,7 @@ import PeerCalling from "@/pages/peer-calling";
 import MusicPage from "@/pages/music";
 import DiaryPage from "@/pages/diary";
 import VideosPage from "@/pages/videos";
+import Games from "@/pages/games";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -70,6 +71,7 @@ function Router() {
                 { href: "/", label: "Home", icon: Brain, testId: "nav-home" },
                 { href: "/chat", label: "AI Support", icon: MessageSquare, testId: "nav-chat" },
                 { href: "/screening", label: "Screening", icon: Brain, testId: "nav-screening" },
+                { href: "/games", label: "Games", icon: Gamepad2, testId: "nav-games" },
                 { href: "/music", label: "Mind Fresh Music", icon: Music, testId: "nav-music" },
                 { href: "/diary", label: "My Diary", icon: BookOpen, testId: "nav-diary" },
                 { href: "/videos", label: "Motivational Videos", icon: Video, testId: "nav-videos" },
@@ -120,6 +122,7 @@ function Router() {
               <Route path="/" component={Dashboard} />
               <Route path="/chat" component={Chat} />
               <Route path="/screening" component={Screening} />
+              <Route path="/games" component={Games} />
               <Route path="/music" component={MusicPage} />
               <Route path="/diary" component={DiaryPage} />
               <Route path="/videos" component={VideosPage} />
