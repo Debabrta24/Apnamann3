@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
-import { openaiService } from "./services/openai";
+import { aiService } from "./services/ai-service";
 import { ScreeningService } from "./services/screening";
 import { CrisisService } from "./services/crisis";
 import { 
@@ -40,10 +40,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         if (data.type === 'chat_message' && userId) {
           // Process chat message with AI
-          const response = await openaiService.generateResponse([
+          const response = await aiService.generateResponse([
             ...data.chatHistory || [],
             { role: 'user', content: data.message, timestamp: new Date() }
-          ]);
+          ], data.personality);
 
           // Check for crisis indicators
           await CrisisService.evaluateChatMessage(userId, data.message);
@@ -199,8 +199,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/chat/guided-exercise", async (req, res) => {
     try {
       const { type } = req.body;
-      const steps = await openaiService.generateGuidedExercise(type);
+      const steps = await aiService.generateGuidedExercise(type);
       res.json({ steps });
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  // Custom AI Personality Routes
+  app.post("/api/chat/custom-personality", async (req, res) => {
+    try {
+      const { userId, name, chatData, description } = req.body;
+      
+      // Process chat data to create personality
+      const customPrompt = `Based on this chat conversation, adopt the personality and speech patterns shown:
+      
+${chatData}
+
+Key traits to emulate:
+- Speaking style and tone
+- Common phrases and expressions  
+- Response patterns and personality quirks
+- Emotional expressions and reactions
+
+Maintain the core therapeutic and supportive role while incorporating this personality style.`;
+
+      const personality = {
+        id: `custom_${Date.now()}`,
+        name: name || "Custom AI",
+        description: description || "AI trained on uploaded conversations",
+        customPrompt,
+        userId,
+        createdAt: new Date()
+      };
+
+      // Save to storage (you might want to add this to your database schema)
+      await storage.createCustomPersonality?.(personality) || 
+            console.log("Custom personality created:", personality.id);
+      
+      res.json({ success: true, personality });
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/chat/custom-personalities/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      
+      // Get custom personalities for user (placeholder - implement based on your storage)
+      const personalities = await storage.getUserCustomPersonalities?.(userId) || [];
+      
+      res.json(personalities);
     } catch (error: any) {
       res.status(400).json({ message: error.message });
     }

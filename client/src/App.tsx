@@ -50,8 +50,8 @@ function Router() {
   return (
     <>
       <div className="flex h-screen">
-        {/* Left Sidebar Navigation */}
-        <div className="hidden md:flex md:w-64 md:flex-col">
+        {/* Left Sidebar Navigation - Hidden on profile page */}
+        <div className={`hidden md:flex md:w-64 md:flex-col ${location === '/profile' ? 'md:hidden' : ''}`}>
           <div className="flex flex-col flex-1 min-h-0 bg-card border-r border-border">
             {/* Logo and branding */}
             <div className="flex items-center p-4 border-b border-border">

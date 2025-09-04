@@ -12,7 +12,7 @@ interface Video {
   description: string;
   duration: string;
   views: number;
-  category: 'Motivation' | 'Mindfulness' | 'Success' | 'Wellness' | 'Inspiration';
+  category: 'Motivation' | 'Mindfulness' | 'Success' | 'Wellness' | 'Inspiration' | 'Comedy';
   thumbnailUrl: string;
   videoUrl: string;
   speaker: string;
@@ -91,10 +91,58 @@ const motivationalVideos: Video[] = [
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     speaker: "Dr. Emma Wilson",
     tags: ["anxiety", "breathing", "calm"]
+  },
+  {
+    id: "7",
+    title: "Laugh Your Way to Better Health",
+    description: "Funny comedy sketches and jokes that boost mood and reduce stress naturally.",
+    duration: "12:30",
+    views: 45200,
+    category: "Comedy",
+    thumbnailUrl: "https://via.placeholder.com/320x180/fbbf24/000000?text=Comedy",
+    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    speaker: "Comedy Central",
+    tags: ["humor", "laughter", "stress relief"]
+  },
+  {
+    id: "8",
+    title: "Stand-up Comedy: Life's Funny Moments",
+    description: "Hilarious stand-up routine about everyday life situations that make you laugh.",
+    duration: "15:45",
+    views: 38900,
+    category: "Comedy",
+    thumbnailUrl: "https://via.placeholder.com/320x180/f59e0b/000000?text=Stand-up",
+    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    speaker: "Mike Johnson",
+    tags: ["stand-up", "humor", "entertainment"]
+  },
+  {
+    id: "9",
+    title: "Funny Animal Videos Compilation",
+    description: "Cute and funny animal moments guaranteed to make you smile and feel better.",
+    duration: "8:15",
+    views: 67300,
+    category: "Comedy",
+    thumbnailUrl: "https://via.placeholder.com/320x180/10b981/000000?text=Animals",
+    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    speaker: "Animal Planet",
+    tags: ["animals", "cute", "funny"]
+  },
+  {
+    id: "10",
+    title: "Comedy Therapy: Humor as Medicine",
+    description: "How laughter can be used as a therapeutic tool for mental health and wellbeing.",
+    duration: "11:20",
+    views: 29400,
+    category: "Comedy",
+    thumbnailUrl: "https://via.placeholder.com/320x180/ef4444/ffffff?text=Therapy",
+    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    speaker: "Dr. Humor Smith",
+    tags: ["therapy", "laughter", "healing"]
   }
 ];
 
-const categories = ["All", "Motivation", "Mindfulness", "Success", "Wellness", "Inspiration"];
+const categories = ["All", "Motivation", "Mindfulness", "Success", "Wellness", "Inspiration", "Comedy"];
 
 export default function Videos() {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
@@ -127,8 +175,8 @@ export default function Videos() {
   return (
     <div className="container mx-auto p-6 max-w-7xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Motivational Videos</h1>
-        <p className="text-muted-foreground">Inspiring content to boost your mental wellness and motivation</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Mind Fresh Videos</h1>
+        <p className="text-muted-foreground">Inspiring and entertaining content to boost your mental wellness and mood</p>
       </div>
 
       {/* Search and Filter */}
