@@ -87,9 +87,9 @@ export default function Login() {
           <div className="mx-auto mb-4 w-16 h-16 bg-primary rounded-full flex items-center justify-center">
             <Brain className="text-primary-foreground h-8 w-8" />
           </div>
-          <CardTitle className="text-2xl font-bold">Welcome to DPIS</CardTitle>
+          <CardTitle className="text-2xl font-bold">Welcome to xyz</CardTitle>
           <p className="text-muted-foreground">
-            Digital Psychological Intervention System
+            Mental Health Support Platform
           </p>
           <p className="text-sm text-muted-foreground mt-2">
             Sign in to access your mental health support platform

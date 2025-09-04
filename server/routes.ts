@@ -703,5 +703,76 @@ Maintain the core therapeutic and supportive role while incorporating this perso
     }
   });
 
+  // Local music file management
+  app.get("/api/local-music/scan", async (req, res) => {
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      
+      const musicDir = path.resolve(process.cwd(), 'attached_assets/local_music');
+      
+      try {
+        const files = await fs.readdir(musicDir);
+        const musicFiles = files
+          .filter(file => /\.(mp3|wav|m4a|aac|ogg|flac)$/i.test(file))
+          .map(file => ({
+            name: file,
+            duration: "0:00" // In real implementation, would extract from file metadata
+          }));
+        
+        res.json(musicFiles);
+      } catch (dirError) {
+        // Directory doesn't exist or is empty
+        res.json([]);
+      }
+    } catch (error: any) {
+      res.status(500).json({ message: "Error scanning music files" });
+    }
+  });
+
+  // Configure multer for music file uploads
+  const musicUpload = multer({
+    storage: multer.diskStorage({
+      destination: (req, file, cb) => {
+        cb(null, 'attached_assets/local_music/');
+      },
+      filename: (req, file, cb) => {
+        // Keep original filename but ensure it's safe
+        const safeName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
+        cb(null, safeName);
+      }
+    }),
+    limits: {
+      fileSize: 50 * 1024 * 1024, // 50MB limit for music files
+    },
+    fileFilter: (req, file, cb) => {
+      const allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/m4a', 'audio/aac', 'audio/ogg', 'audio/flac'];
+      if (allowedTypes.includes(file.mimetype) || /\.(mp3|wav|m4a|aac|ogg|flac)$/i.test(file.originalname)) {
+        cb(null, true);
+      } else {
+        cb(new Error('Invalid file type. Only audio files are allowed.'));
+      }
+    }
+  });
+
+  app.post("/api/local-music/upload", musicUpload.single('musicFile'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No music file provided' });
+      }
+
+      const file_url = `/attached_assets/local_music/${req.file.filename}`;
+      
+      res.json({
+        message: 'Music file uploaded successfully',
+        file_url,
+        file_name: req.file.filename,
+        original_name: req.file.originalname
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   return httpServer;
 }

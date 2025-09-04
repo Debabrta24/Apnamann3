@@ -1,6 +1,6 @@
 # Overview
 
-This is a Digital Psychological Intervention System (DPIS) - a comprehensive mental health platform designed specifically for Indian college students. The application provides AI-powered psychological first aid, mental health screening tools (PHQ-9 and GAD-7), counselor booking, peer support forums, educational resources, and crisis intervention capabilities. Built as a full-stack web application, it aims to address the growing mental health challenges in Indian higher education institutions through culturally sensitive, accessible, and stigma-free support.
+This is xyz - a comprehensive mental health platform designed specifically for Indian college students. The application provides AI-powered psychological first aid, mental health screening tools (PHQ-9 and GAD-7), counselor booking, peer support forums, educational resources, and crisis intervention capabilities. Built as a full-stack web application, it aims to address the growing mental health challenges in Indian higher education institutions through culturally sensitive, accessible, and stigma-free support.
 
 # User Preferences
 

@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Play, Clock, Eye, Heart, Filter, Search } from "lucide-react";
+import { Play, Clock, Eye, Heart, Filter, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Video {
   id: string;
@@ -192,19 +193,20 @@ export default function Videos() {
           />
         </div>
         
-        <div className="flex gap-2 flex-wrap">
-          <Filter className="h-4 w-4 mt-2 text-muted-foreground" />
-          {categories.map((category) => (
-            <Button
-              key={category}
-              variant={selectedCategory === category ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedCategory(category)}
-              data-testid={`filter-${category.toLowerCase()}`}
-            >
-              {category}
-            </Button>
-          ))}
+        <div className="flex items-center gap-2">
+          <Filter className="h-4 w-4 text-muted-foreground" />
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-48" data-testid="select-video-filter">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((category) => (
+                <SelectItem key={category} value={category} data-testid={`filter-option-${category.toLowerCase()}`}>
+                  {category}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -223,11 +225,15 @@ export default function Videos() {
                 className="relative overflow-hidden rounded-t-lg"
                 onClick={() => setSelectedVideo(video)}
               >
-                <img 
-                  src={video.thumbnailUrl} 
-                  alt={video.title}
-                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+                <div className="w-full h-48 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center relative">
+                  <div className="text-center text-white">
+                    <Play className="h-12 w-12 mx-auto mb-2 opacity-80" />
+                    <p className="text-sm font-medium">{video.category}</p>
+                  </div>
+                  <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
+                    {video.speaker}
+                  </div>
+                </div>
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center">
                     <Play className="h-6 w-6 text-black ml-1" />

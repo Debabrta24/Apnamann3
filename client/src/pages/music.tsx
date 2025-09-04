@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Play, Pause, SkipBack, SkipForward, Volume2, Heart, Search, Loader2 } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Volume2, Heart, Search, Loader2, Upload, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -7,6 +7,7 @@ import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { ambientMusic } from "@/lib/ambient-music";
 import { musicAPI, Track } from "@/lib/music-api";
+import { localMusicManager, LocalTrack } from "@/lib/local-music";
 import { useQuery } from "@tanstack/react-query";
 
 const musicTracks = [
@@ -57,12 +58,13 @@ const musicTracks = [
   }
 ];
 
-const categories = ["All", "Meditation", "Relaxation", "Nature", "Sleep", "Focus", "Music"];
+const categories = ["All", "Meditation", "Relaxation", "Nature", "Sleep", "Focus", "Music", "Local Music"];
 
 export default function Music() {
   const [currentTrack, setCurrentTrack] = useState(musicTracks[0]);
   const [currentApiTrack, setCurrentApiTrack] = useState<Track | null>(null);
-  const [currentTrackType, setCurrentTrackType] = useState<'ambient' | 'api'>('ambient');
+  const [currentLocalTrack, setCurrentLocalTrack] = useState<LocalTrack | null>(null);
+  const [currentTrackType, setCurrentTrackType] = useState<'ambient' | 'api' | 'local'>('ambient');
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -89,6 +91,14 @@ export default function Music() {
     staleTime: 1000 * 60 * 10 // Cache for 10 minutes
   });
 
+  // Scan local music files
+  const { data: localTracks = [], isLoading: loadingLocal } = useQuery({
+    queryKey: ['/music/local'],
+    queryFn: () => localMusicManager.scanMusicFiles(),
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    enabled: selectedCategory === "Local Music"
+  });
+
   const ambientTracks = selectedCategory === "All" 
     ? musicTracks 
     : musicTracks.filter(track => track.category === selectedCategory);
@@ -97,7 +107,13 @@ export default function Music() {
     ? (searchQuery ? searchResults : popularTracks)
     : [];
 
-  const allTracks = selectedCategory === "Music" ? apiTracks : ambientTracks;
+  const localMusicTracks = selectedCategory === "Local Music" ? localTracks : [];
+
+  const allTracks = selectedCategory === "Music" 
+    ? apiTracks 
+    : selectedCategory === "Local Music" 
+    ? localMusicTracks 
+    : ambientTracks;
 
   const playAmbientTrack = async (track: any) => {
     const trackType = track.type as string;
@@ -129,7 +145,14 @@ export default function Music() {
     }
   };
 
-  const selectTrack = (track: any, type: 'ambient' | 'api') => {
+  const playLocalTrack = (track: LocalTrack) => {
+    if (audioRef.current) {
+      audioRef.current.src = track.file_url;
+      audioRef.current.play();
+    }
+  };
+
+  const selectTrack = (track: any, type: 'ambient' | 'api' | 'local') => {
     if (isPlaying) {
       ambientMusic.stop();
       if (audioRef.current) {
@@ -141,9 +164,12 @@ export default function Music() {
     if (type === 'ambient') {
       setCurrentTrack(track);
       setCurrentTrackType('ambient');
-    } else {
+    } else if (type === 'api') {
       setCurrentApiTrack(track);
       setCurrentTrackType('api');
+    } else if (type === 'local') {
+      setCurrentLocalTrack(track);
+      setCurrentTrackType('local');
     }
   };
 
@@ -157,8 +183,10 @@ export default function Music() {
     } else {
       if (currentTrackType === 'ambient') {
         await playAmbientTrack(currentTrack);
-      } else if (currentApiTrack) {
+      } else if (currentTrackType === 'api' && currentApiTrack) {
         playApiTrack(currentApiTrack);
+      } else if (currentTrackType === 'local' && currentLocalTrack) {
+        playLocalTrack(currentLocalTrack);
       }
       setIsPlaying(true);
     }
@@ -238,6 +266,32 @@ export default function Music() {
     }
   }, [volume]);
 
+  // Handle local music file upload
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const formData = new FormData();
+      formData.append('musicFile', file);
+
+      const response = await fetch('/api/local-music/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        // Refresh local music list
+        window.location.reload(); // Simple refresh to update the list
+      }
+    } catch (error) {
+      console.error('Error uploading music file:', error);
+    }
+
+    // Reset the input
+    event.target.value = '';
+  };
+
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
@@ -258,7 +312,10 @@ export default function Music() {
             <CardHeader>
               <CardTitle>Now Playing</CardTitle>
               <CardDescription>
-                {currentTrackType === 'api' ? currentApiTrack?.title : currentTrack.title} - {currentTrackType === 'api' ? currentApiTrack?.artist : currentTrack.artist}
+                {currentTrackType === 'api' ? currentApiTrack?.title : 
+                 currentTrackType === 'local' ? currentLocalTrack?.title : currentTrack.title} - 
+                {currentTrackType === 'api' ? currentApiTrack?.artist : 
+                 currentTrackType === 'local' ? currentLocalTrack?.artist : currentTrack.artist}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -273,22 +330,27 @@ export default function Music() {
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-4xl font-bold">
-                        ♪
+                        {currentTrackType === 'local' ? '🎵' : '♪'}
                       </div>
                     )}
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold mb-2">
-                      {currentTrackType === 'api' ? currentApiTrack?.title : currentTrack.title}
+                      {currentTrackType === 'api' ? currentApiTrack?.title : 
+                       currentTrackType === 'local' ? currentLocalTrack?.title : currentTrack.title}
                     </h3>
                     <p className="text-muted-foreground mb-4">
-                      {currentTrackType === 'api' ? currentApiTrack?.artist : currentTrack.artist}
+                      {currentTrackType === 'api' ? currentApiTrack?.artist : 
+                       currentTrackType === 'local' ? currentLocalTrack?.artist : currentTrack.artist}
                     </p>
                     {currentTrackType === 'ambient' && (
                       <p className="text-sm text-muted-foreground">{currentTrack.description}</p>
                     )}
                     {currentTrackType === 'api' && currentApiTrack?.album && (
                       <p className="text-sm text-muted-foreground">{currentApiTrack.album}</p>
+                    )}
+                    {currentTrackType === 'local' && currentLocalTrack && (
+                      <p className="text-sm text-muted-foreground">Local Music File</p>
                     )}
                   </div>
                 </div>
@@ -300,7 +362,7 @@ export default function Music() {
                 <div className="flex justify-between text-sm text-muted-foreground">
                   <span>{formatTime(currentTime)}</span>
                   <span>
-                    {currentTrackType === 'api' ? formatTime(duration) : (isPlaying ? 'Playing...' : 'Stopped')}
+                    {(currentTrackType === 'api' || currentTrackType === 'local') ? formatTime(duration) : (isPlaying ? 'Playing...' : 'Stopped')}
                   </span>
                 </div>
               </div>
@@ -397,6 +459,40 @@ export default function Music() {
                 </div>
               )}
 
+              {/* Local Music Upload */}
+              {selectedCategory === "Local Music" && (
+                <div className="mb-4">
+                  <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4 text-center">
+                    <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Add music files to your local collection
+                    </p>
+                    <Input
+                      type="file"
+                      accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.flac"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      id="music-file-upload"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => document.getElementById('music-file-upload')?.click()}
+                      data-testid="button-upload-music"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Music File
+                    </Button>
+                  </div>
+                  {loadingLocal && (
+                    <div className="flex items-center justify-center mt-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span className="ml-2 text-sm text-muted-foreground">Scanning local files...</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Track List */}
               <div className="space-y-2">
                 {selectedCategory === "Music" && loadingPopular && !searchQuery && (
@@ -408,9 +504,13 @@ export default function Music() {
                 
                 {allTracks.map((track: any) => {
                   const isApiTrack = selectedCategory === "Music";
-                  const trackId = isApiTrack ? parseInt(track.id) : track.id;
+                  const isLocalTrack = selectedCategory === "Local Music";
+                  const trackId = (isApiTrack || isLocalTrack) ? parseInt(track.id) : track.id;
+                  
                   const isCurrentTrack = isApiTrack 
                     ? currentApiTrack?.id === track.id
+                    : isLocalTrack
+                    ? currentLocalTrack?.id === track.id
                     : currentTrack.id === track.id;
                   
                   return (
@@ -421,7 +521,7 @@ export default function Music() {
                           ? 'bg-accent text-accent-foreground'
                           : 'hover:bg-muted'
                       }`}
-                      onClick={() => selectTrack(track, isApiTrack ? 'api' : 'ambient')}
+                      onClick={() => selectTrack(track, isApiTrack ? 'api' : isLocalTrack ? 'local' : 'ambient')}
                       data-testid={`track-${track.id}`}
                     >
                       <div className="flex items-center space-x-3">
@@ -434,7 +534,7 @@ export default function Music() {
                             />
                           ) : (
                             <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-lg">
-                              ♪
+                              {isLocalTrack ? '🎵' : '♪'}
                             </div>
                           )}
                         </div>
@@ -471,6 +571,14 @@ export default function Music() {
                 {selectedCategory === "Music" && allTracks.length === 0 && !loadingSearch && !loadingPopular && (
                   <div className="text-center p-4 text-muted-foreground">
                     {searchQuery ? 'No tracks found. Try a different search.' : 'No popular tracks available.'}
+                  </div>
+                )}
+                
+                {selectedCategory === "Local Music" && allTracks.length === 0 && !loadingLocal && (
+                  <div className="text-center p-4 text-muted-foreground">
+                    <Upload className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                    <p>No local music files found.</p>
+                    <p className="text-xs mt-1">Upload some music files to get started!</p>
                   </div>
                 )}
               </div>

@@ -46,8 +46,7 @@ export default function Header() {
               <Brain className="text-primary-foreground h-6 w-6" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground">DPIS</h1>
-              <p className="text-xs text-muted-foreground">Psychological Support</p>
+              <h1 className="text-xl font-bold text-foreground">xyz</h1>
             </div>
           </div>
 
