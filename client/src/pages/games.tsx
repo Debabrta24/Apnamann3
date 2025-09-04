@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { soundEffects } from "@/lib/sound-effects";
 import { 
   RotateCcw, 
   Play, 
@@ -51,6 +52,7 @@ function BubblePop() {
   const popBubble = (id: number) => {
     setBubbles(prev => prev.filter(b => b.id !== id));
     setScore(prev => prev + 1);
+    soundEffects.playBubblePop();
   };
 
   useEffect(() => {
@@ -103,12 +105,14 @@ function StressBall() {
         onMouseDown={() => {
           setIsPressed(true);
           setSqueezes(prev => prev + 1);
+          soundEffects.playSquish();
         }}
         onMouseUp={() => setIsPressed(false)}
         onMouseLeave={() => setIsPressed(false)}
         onTouchStart={() => {
           setIsPressed(true);
           setSqueezes(prev => prev + 1);
+          soundEffects.playSquish();
         }}
         onTouchEnd={() => setIsPressed(false)}
       />
@@ -138,6 +142,7 @@ function ColorMixer() {
     const b = Math.floor((b1 + b2) / 2);
     
     setMixedColor(`#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`);
+    soundEffects.playColorMix();
   };
 
   return (
@@ -184,8 +189,15 @@ function BreathingCircles() {
 
     const cycle = () => {
       setPhase('inhale');
-      setTimeout(() => setPhase('hold'), 4000);
-      setTimeout(() => setPhase('exhale'), 7000);
+      soundEffects.playBreathingChime();
+      setTimeout(() => {
+        setPhase('hold');
+        soundEffects.playBreathingChime();
+      }, 4000);
+      setTimeout(() => {
+        setPhase('exhale');
+        soundEffects.playBreathingChime();
+      }, 7000);
       setTimeout(() => setPhase('inhale'), 11000);
     };
 
@@ -251,6 +263,7 @@ function PatternDraw() {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       setPattern(prev => [...prev, {x, y}]);
+      if (Math.random() < 0.1) soundEffects.playDraw(); // 10% chance to play sound
     }
   };
 

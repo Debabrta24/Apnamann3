@@ -1,55 +1,56 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Play, Pause, SkipBack, SkipForward, Volume2, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
+import { ambientMusic } from "@/lib/ambient-music";
 
 const musicTracks = [
   {
     id: 1,
-    title: "Peaceful Morning",
-    artist: "Nature Sounds",
-    duration: "5:30",
+    title: "Peaceful Meditation",
+    artist: "Mind Fresh Audio",
+    duration: "∞",
     category: "Meditation",
-    url: "https://www.soundjay.com/misc/sounds/rain-03.wav", // Sample audio
-    description: "Gentle morning sounds to start your day peacefully"
+    type: "meditation",
+    description: "Gentle meditation tones to start your day peacefully"
   },
   {
     id: 2,
     title: "Ocean Waves",
-    artist: "Natural Ambiance",
-    duration: "10:00",
+    artist: "Mind Fresh Audio",
+    duration: "∞",
     category: "Relaxation",
-    url: "https://www.soundjay.com/misc/sounds/rain-03.wav", // Sample audio
+    type: "ocean",
     description: "Soothing ocean waves for deep relaxation"
   },
   {
     id: 3,
-    title: "Forest Whispers",
-    artist: "Calm Collective",
-    duration: "7:45",
+    title: "Forest Ambience",
+    artist: "Mind Fresh Audio",
+    duration: "∞",
     category: "Nature",
-    url: "https://www.soundjay.com/misc/sounds/rain-03.wav", // Sample audio
+    type: "forest",
     description: "Peaceful forest sounds to reduce stress"
   },
   {
     id: 4,
     title: "Gentle Rain",
-    artist: "Sleep Sounds",
-    duration: "8:20",
+    artist: "Mind Fresh Audio",
+    duration: "∞",
     category: "Sleep",
-    url: "https://www.soundjay.com/misc/sounds/rain-03.wav", // Sample audio
+    type: "rain",
     description: "Soft rainfall sounds for better sleep"
   },
   {
     id: 5,
-    title: "Mountain Breeze",
-    artist: "Mindful Music",
-    duration: "6:15",
+    title: "Focus Sounds",
+    artist: "Mind Fresh Audio",
+    duration: "∞",
     category: "Focus",
-    url: "https://www.soundjay.com/misc/sounds/rain-03.wav", // Sample audio
-    description: "Clear mountain air sounds for better concentration"
+    type: "focus",
+    description: "Clear focus sounds for better concentration"
   }
 ];
 
@@ -70,15 +71,61 @@ export default function Music() {
     ? musicTracks 
     : musicTracks.filter(track => track.category === selectedCategory);
 
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
+  const playTrack = async (track: any) => {
+    const trackType = track.type as string;
+    switch (trackType) {
+      case 'meditation':
+        await ambientMusic.playMeditation();
+        break;
+      case 'ocean':
+        await ambientMusic.playOceanWaves();
+        break;
+      case 'forest':
+        await ambientMusic.playForest();
+        break;
+      case 'rain':
+        await ambientMusic.playRainfall();
+        break;
+      case 'focus':
+        await ambientMusic.playFocus();
+        break;
+      default:
+        await ambientMusic.playMeditation();
     }
+  };
+
+  const togglePlay = async () => {
+    if (isPlaying) {
+      ambientMusic.stop();
+      setIsPlaying(false);
+    } else {
+      await playTrack(currentTrack);
+      setIsPlaying(true);
+    }
+  };
+
+  const skipToNext = async () => {
+    const currentIndex = filteredTracks.findIndex(track => track.id === currentTrack.id);
+    const nextIndex = (currentIndex + 1) % filteredTracks.length;
+    const nextTrack = filteredTracks[nextIndex];
+    
+    if (isPlaying) {
+      ambientMusic.stop();
+      await playTrack(nextTrack);
+    }
+    setCurrentTrack(nextTrack);
+  };
+
+  const skipToPrevious = async () => {
+    const currentIndex = filteredTracks.findIndex(track => track.id === currentTrack.id);
+    const prevIndex = currentIndex === 0 ? filteredTracks.length - 1 : currentIndex - 1;
+    const prevTrack = filteredTracks[prevIndex];
+    
+    if (isPlaying) {
+      ambientMusic.stop();
+      await playTrack(prevTrack);
+    }
+    setCurrentTrack(prevTrack);
   };
 
   const toggleLike = (trackId: number) => {
@@ -125,20 +172,20 @@ export default function Music() {
               <div className="space-y-2">
                 <Progress value={(currentTime / duration) * 100} className="w-full" />
                 <div className="flex justify-between text-sm text-muted-foreground">
-                  <span>{formatTime(currentTime)}</span>
-                  <span>{formatTime(duration)}</span>
+                  <span>{isPlaying ? 'Playing...' : 'Stopped'}</span>
+                  <span>{currentTrack.duration}</span>
                 </div>
               </div>
 
               {/* Controls */}
               <div className="flex items-center justify-center space-x-4">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={skipToPrevious}>
                   <SkipBack className="h-4 w-4" />
                 </Button>
                 <Button onClick={togglePlay} size="lg">
                   {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={skipToNext}>
                   <SkipForward className="h-4 w-4" />
                 </Button>
                 <Button 
@@ -163,13 +210,6 @@ export default function Music() {
                 <span className="text-sm text-muted-foreground w-8">{volume[0]}%</span>
               </div>
 
-              <audio 
-                ref={audioRef}
-                src={currentTrack.url}
-                onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
-                onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
-                onEnded={() => setIsPlaying(false)}
-              />
             </CardContent>
           </Card>
         </div>
@@ -209,7 +249,13 @@ export default function Music() {
                         ? 'bg-accent text-accent-foreground'
                         : 'hover:bg-muted'
                     }`}
-                    onClick={() => setCurrentTrack(track)}
+                    onClick={() => {
+                      if (isPlaying) {
+                        ambientMusic.stop();
+                        setIsPlaying(false);
+                      }
+                      setCurrentTrack(track);
+                    }}
                     data-testid={`track-${track.id}`}
                   >
                     <div className="flex items-center justify-between">
