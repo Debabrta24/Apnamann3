@@ -5,6 +5,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppProvider, useAppContext } from "@/context/AppContext";
+import { useUsageAnalytics } from "@/lib/usage-analytics";
 import { Brain, User, Music, BookOpen, Video, MessageSquare, Gamepad2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Header from "@/components/layout/header";
@@ -33,6 +34,7 @@ import NotFound from "@/pages/not-found";
 function Router() {
   const { isAuthenticated, isOnboarding, showStartupPopup, completeOnboarding, closeStartupPopup, showQuoteOverlay, setShowQuoteOverlay, triggerQuoteOverlay } = useAppContext();
   const [location, setLocation] = useLocation();
+  const { trackAction, trackPageDuration } = useUsageAnalytics();
 
   // Trigger quote overlay on location changes (except first load)
   const [previousLocation, setPreviousLocation] = useState(location);
@@ -47,6 +49,19 @@ function Router() {
     }
     setPreviousLocation(location);
   }, [location, isAuthenticated, isOnboarding, triggerQuoteOverlay, previousLocation]);
+
+  // Track page usage analytics
+  useEffect(() => {
+    if (isAuthenticated && !isOnboarding) {
+      const startTime = Date.now();
+      trackAction('page_visit', location);
+
+      return () => {
+        const duration = (Date.now() - startTime) / 1000; // Convert to seconds
+        trackPageDuration(location, duration);
+      };
+    }
+  }, [location, isAuthenticated, isOnboarding, trackAction, trackPageDuration]);
 
   // Show startup popup first (if not seen before)
   if (showStartupPopup && !isAuthenticated) {

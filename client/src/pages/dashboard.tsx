@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAppContext } from "@/context/AppContext";
+import AISuggestions from "@/components/ai-suggestions";
 import CrisisAlert from "@/components/dashboard/crisis-alert";
 import MoodTracker from "@/components/dashboard/mood-tracker";
 import { Card, CardContent } from "@/components/ui/card";
@@ -199,6 +200,9 @@ export default function Dashboard() {
 
         {/* Sidebar */}
         <div>
+          {/* AI-Powered Suggestions */}
+          <AISuggestions />
+          
           {/* Today's Recommendations */}
           <Card className="mb-6">
             <CardContent className="p-6">

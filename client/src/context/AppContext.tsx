@@ -62,22 +62,33 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [showStartupPopup, setShowStartupPopup] = useState(true);
   const [tempEmail, setTempEmail] = useState<string | null>(null);
 
-  // Chat state management
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() => {
-    const savedMessages = localStorage.getItem('chatMessages');
-    if (savedMessages) {
-      const parsed = JSON.parse(savedMessages);
-      return parsed.map((msg: any) => ({
-        ...msg,
-        timestamp: new Date(msg.timestamp)
-      }));
-    }
-    return [{
-      role: "assistant",
-      content: "Hello! I'm here to provide psychological first aid and support. How are you feeling today? Remember, this is a safe space to share your thoughts.",
-      timestamp: new Date(),
-    }];
-  });
+  // Chat state management - initialize with default message
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([{
+    role: "assistant",
+    content: "Hello! I'm here to provide psychological first aid and support. How are you feeling today? Remember, this is a safe space to share your thoughts.",
+    timestamp: new Date(),
+  }]);
+
+  // Load chat messages from localStorage asynchronously
+  useEffect(() => {
+    const loadChatMessages = async () => {
+      try {
+        const savedMessages = localStorage.getItem('chatMessages');
+        if (savedMessages) {
+          const parsed = JSON.parse(savedMessages);
+          const messagesWithDates = parsed.map((msg: any) => ({
+            ...msg,
+            timestamp: new Date(msg.timestamp)
+          }));
+          setChatMessages(messagesWithDates);
+        }
+      } catch (error) {
+        console.error('Error loading chat messages:', error);
+        // Keep default messages on error
+      }
+    };
+    loadChatMessages();
+  }, []);
 
   // Quote overlay state
   const [showQuoteOverlay, setShowQuoteOverlay] = useState(false);
@@ -146,11 +157,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   };
 
   const addChatMessage = (message: ChatMessage) => {
-    setChatMessages(prev => {
-      const newMessages = [...prev, message];
-      localStorage.setItem('chatMessages', JSON.stringify(newMessages));
-      return newMessages;
-    });
+    setChatMessages(prev => [...prev, message]);
   };
 
   const triggerQuoteOverlay = () => {
@@ -158,9 +165,17 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     setShowQuoteOverlay(true);
   };
 
-  // Save chat messages to localStorage when they change
+  // Save chat messages to localStorage when they change (debounced)
   useEffect(() => {
-    localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
+    const saveTimeout = setTimeout(() => {
+      try {
+        localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
+      } catch (error) {
+        console.error('Error saving chat messages:', error);
+      }
+    }, 100); // Small delay to debounce rapid updates
+
+    return () => clearTimeout(saveTimeout);
   }, [chatMessages]);
 
   // Load user from localStorage on app start
