@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { Play, Pause, SkipBack, SkipForward, Volume2, Heart, Search, Loader2, Upload, Plus } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Volume2, Heart, Search, Loader2, Upload, Plus, ChevronDown, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ambientMusic } from "@/lib/ambient-music";
 import { musicAPI, Track } from "@/lib/music-api";
 import { localMusicManager, LocalTrack } from "@/lib/local-music";
@@ -55,10 +56,109 @@ const musicTracks = [
     category: "Focus",
     type: "focus",
     description: "Clear focus sounds for better concentration"
+  },
+  {
+    id: 6,
+    title: "Mountain Stream",
+    artist: "Mind Fresh Audio",
+    duration: "∞",
+    category: "Nature",
+    type: "stream",
+    description: "Gentle flowing water sounds from mountain streams"
+  },
+  {
+    id: 7,
+    title: "Deep Focus",
+    artist: "Mind Fresh Audio",
+    duration: "∞",
+    category: "Focus",
+    type: "deep-focus",
+    description: "Binaural beats for enhanced concentration"
+  },
+  {
+    id: 8,
+    title: "Evening Wind",
+    artist: "Mind Fresh Audio",
+    duration: "∞",
+    category: "Sleep",
+    type: "wind",
+    description: "Soft evening wind sounds for peaceful sleep"
+  },
+  {
+    id: 9,
+    title: "Zen Garden",
+    artist: "Mind Fresh Audio",
+    duration: "∞",
+    category: "Meditation",
+    type: "zen",
+    description: "Tranquil sounds from a peaceful zen garden"
+  },
+  {
+    id: 10,
+    title: "Healing Frequencies",
+    artist: "Mind Fresh Audio",
+    duration: "∞",
+    category: "Relaxation",
+    type: "healing",
+    description: "Therapeutic frequencies for mind and body healing"
+  },
+  {
+    id: 11,
+    title: "Bird Songs",
+    artist: "Mind Fresh Audio",
+    duration: "∞",
+    category: "Nature",
+    type: "birds",
+    description: "Peaceful morning bird songs and chirping"
+  },
+  {
+    id: 12,
+    title: "Study Alpha",
+    artist: "Mind Fresh Audio",
+    duration: "∞",
+    category: "Focus",
+    type: "alpha",
+    description: "Alpha wave frequencies for enhanced learning"
+  },
+  {
+    id: 13,
+    title: "Campfire Crackle",
+    artist: "Mind Fresh Audio",
+    duration: "∞",
+    category: "Relaxation",
+    type: "fire",
+    description: "Cozy campfire sounds for warm relaxation"
+  },
+  {
+    id: 14,
+    title: "Thunder Storm",
+    artist: "Mind Fresh Audio",
+    duration: "∞",
+    category: "Sleep",
+    type: "storm",
+    description: "Distant thunder and rain for deep sleep"
+  },
+  {
+    id: 15,
+    title: "Mindful Breathing",
+    artist: "Mind Fresh Audio",
+    duration: "∞",
+    category: "Meditation",
+    type: "breathing",
+    description: "Guided breathing rhythms for mindfulness"
   }
 ];
 
-const categories = ["All", "Meditation", "Relaxation", "Nature", "Sleep", "Focus", "Music", "Local Music"];
+const categories = [
+  { value: "All", label: "All Categories" },
+  { value: "Meditation", label: "Meditation" },
+  { value: "Relaxation", label: "Relaxation" },
+  { value: "Nature", label: "Nature Sounds" },
+  { value: "Sleep", label: "Sleep" },
+  { value: "Focus", label: "Focus & Study" },
+  { value: "Music", label: "Music Tracks" },
+  { value: "Local Music", label: "My Music" }
+];
 
 export default function Music() {
   const [currentTrack, setCurrentTrack] = useState(musicTracks[0]);
@@ -131,7 +231,25 @@ export default function Music() {
         await ambientMusic.playRainfall();
         break;
       case 'focus':
+      case 'deep-focus':
+      case 'alpha':
         await ambientMusic.playFocus();
+        break;
+      case 'stream':
+      case 'birds':
+        await ambientMusic.playForest();
+        break;
+      case 'wind':
+      case 'storm':
+        await ambientMusic.playRainfall();
+        break;
+      case 'zen':
+      case 'breathing':
+        await ambientMusic.playMeditation();
+        break;
+      case 'healing':
+      case 'fire':
+        await ambientMusic.playOceanWaves();
         break;
       default:
         await ambientMusic.playMeditation();
@@ -419,21 +537,28 @@ export default function Music() {
               <CardDescription>Choose your relaxation soundtrack</CardDescription>
             </CardHeader>
             <CardContent>
-              {/* Category Filter */}
+              {/* Category Filter Dropdown */}
               <div className="mb-4">
-                <div className="flex flex-wrap gap-2">
-                  {categories.map((category) => (
-                    <Button
-                      key={category}
-                      variant={selectedCategory === category ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setSelectedCategory(category)}
-                      data-testid={`filter-${category.toLowerCase()}`}
-                    >
-                      {category}
-                    </Button>
-                  ))}
+                <div className="flex items-center gap-2 mb-2">
+                  <Filter className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium text-foreground">Filter by Category</span>
                 </div>
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="w-full" data-testid="select-category-filter">
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem 
+                        key={category.value} 
+                        value={category.value}
+                        data-testid={`filter-${category.value.toLowerCase()}`}
+                      >
+                        {category.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* Search Input for Music */}

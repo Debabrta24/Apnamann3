@@ -71,7 +71,7 @@ function Router() {
     <>
       <div className="flex h-screen">
         {/* Left Sidebar Navigation - Hidden on profile page */}
-        <div className={`hidden md:flex md:w-64 md:flex-col ${location === '/profile' ? 'md:hidden' : ''}`}>
+        <div className={`hidden lg:flex lg:w-64 lg:flex-col ${location === '/profile' ? 'lg:hidden' : ''}`}>
           <div className="flex flex-col flex-1 min-h-0 bg-card border-r border-border">
             {/* Logo and branding */}
             <div className="flex items-center p-4 border-b border-border">
@@ -84,7 +84,7 @@ function Router() {
             </div>
             
             {/* Navigation */}
-            <nav className="flex-1 p-4 space-y-2">
+            <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
               {[
                 { href: "/", label: "Home", icon: Brain, testId: "nav-home" },
                 { href: "/chat", label: "AI Support", icon: MessageSquare, testId: "nav-chat" },
@@ -147,7 +147,7 @@ function Router() {
         </div>
         
         {/* Main content area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
           <Header />
           <main className="flex-1 overflow-auto">
             <Switch>

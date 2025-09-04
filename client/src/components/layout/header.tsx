@@ -70,6 +70,10 @@ export default function Header() {
                     { href: "/", label: "Home", testId: "nav-home-mobile" },
                     { href: "/chat", label: "AI Support", testId: "nav-chat-mobile" },
                     { href: "/screening", label: "Screening", testId: "nav-screening-mobile" },
+                    { href: "/games", label: "Games", testId: "nav-games-mobile" },
+                    { href: "/music", label: "Mind Fresh Music", testId: "nav-music-mobile" },
+                    { href: "/diary", label: "My Diary", testId: "nav-diary-mobile" },
+                    { href: "/videos", label: "Motivational Videos", testId: "nav-videos-mobile" },
                     { href: "/resources", label: "Resources", testId: "nav-resources-mobile" },
                     { href: "/community", label: "Community", testId: "nav-community-mobile" },
                     { href: "/peer-calling", label: "Peer Calls", testId: "nav-peer-calling-mobile" },
@@ -87,6 +91,31 @@ export default function Header() {
                       {item.label}
                     </Button>
                   ))}
+                  
+                  {/* Wellness Tools Section for Mobile */}
+                  <div className="pt-4 border-t border-border">
+                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
+                      Wellness Tools
+                    </h3>
+                    <div className="space-y-2">
+                      <Button
+                        variant="ghost"
+                        className="justify-start h-12 w-full"
+                        onClick={() => setMobileMenuOpen(false)}
+                        data-testid="routine-generator-mobile"
+                      >
+                        Routine Generator
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        className="justify-start h-12 w-full"
+                        onClick={() => setMobileMenuOpen(false)}
+                        data-testid="sleep-cycle-tool-mobile"
+                      >
+                        Sleep Cycle Guide
+                      </Button>
+                    </div>
+                  </div>
                 </nav>
               </SheetContent>
             </Sheet>
