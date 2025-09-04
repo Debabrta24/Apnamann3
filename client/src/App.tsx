@@ -4,7 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppProvider, useAppContext } from "@/context/AppContext";
-import { Brain } from "lucide-react";
+import { Brain, User, Music, BookOpen, Video, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Header from "@/components/layout/header";
 import QuickActionsFAB from "@/components/quick-actions-fab";
@@ -19,6 +19,9 @@ import Community from "@/pages/community";
 import Admin from "@/pages/admin";
 import Profile from "@/pages/profile";
 import PeerCalling from "@/pages/peer-calling";
+import MusicPage from "@/pages/music";
+import DiaryPage from "@/pages/diary";
+import VideosPage from "@/pages/videos";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -64,26 +67,48 @@ function Router() {
             {/* Navigation */}
             <nav className="flex-1 p-4 space-y-2">
               {[
-                { href: "/", label: "Home", testId: "nav-home" },
-                { href: "/chat", label: "AI Support", testId: "nav-chat" },
-                { href: "/screening", label: "Screening", testId: "nav-screening" },
-                { href: "/resources", label: "Resources", testId: "nav-resources" },
-                { href: "/community", label: "Community", testId: "nav-community" },
-                { href: "/peer-calling", label: "Peer Calls", testId: "nav-peer-calling" },
-              ].map((item) => (
-                <button
-                  key={item.href}
-                  onClick={() => setLocation(item.href)}
-                  className={cn(
-                    "w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground transition-colors",
-                    location === item.href && "bg-accent text-accent-foreground font-medium"
-                  )}
-                  data-testid={item.testId}
-                >
-                  {item.label}
-                </button>
-              ))}
+                { href: "/", label: "Home", icon: Brain, testId: "nav-home" },
+                { href: "/chat", label: "AI Support", icon: MessageSquare, testId: "nav-chat" },
+                { href: "/screening", label: "Screening", icon: Brain, testId: "nav-screening" },
+                { href: "/music", label: "Mind Fresh Music", icon: Music, testId: "nav-music" },
+                { href: "/diary", label: "My Diary", icon: BookOpen, testId: "nav-diary" },
+                { href: "/videos", label: "Motivational Videos", icon: Video, testId: "nav-videos" },
+                { href: "/resources", label: "Resources", icon: Brain, testId: "nav-resources" },
+                { href: "/community", label: "Community", icon: Brain, testId: "nav-community" },
+                { href: "/peer-calling", label: "Peer Calls", icon: Brain, testId: "nav-peer-calling" },
+              ].map((item) => {
+                const IconComponent = item.icon;
+                return (
+                  <button
+                    key={item.href}
+                    onClick={() => setLocation(item.href)}
+                    className={cn(
+                      "w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3",
+                      location === item.href && "bg-accent text-accent-foreground font-medium"
+                    )}
+                    data-testid={item.testId}
+                  >
+                    <IconComponent className="h-5 w-5" />
+                    {item.label}
+                  </button>
+                );
+              })}
             </nav>
+            
+            {/* Profile section at bottom */}
+            <div className="p-4 border-t border-border">
+              <button
+                onClick={() => setLocation("/profile")}
+                className={cn(
+                  "w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3",
+                  location === "/profile" && "bg-accent text-accent-foreground font-medium"
+                )}
+                data-testid="nav-profile"
+              >
+                <User className="h-5 w-5" />
+                Profile
+              </button>
+            </div>
           </div>
         </div>
         
@@ -95,6 +120,9 @@ function Router() {
               <Route path="/" component={Dashboard} />
               <Route path="/chat" component={Chat} />
               <Route path="/screening" component={Screening} />
+              <Route path="/music" component={MusicPage} />
+              <Route path="/diary" component={DiaryPage} />
+              <Route path="/videos" component={VideosPage} />
               <Route path="/resources" component={Resources} />
               <Route path="/community" component={Community} />
               <Route path="/peer-calling" component={PeerCalling} />
