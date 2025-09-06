@@ -128,7 +128,7 @@ function Router() {
               {/* Main Navigation Items */}
               {[
                 { href: "/", label: "Home", icon: Brain, testId: "nav-home" },
-                { href: "/chat", label: "AI Assistant", icon: MessageSquare, testId: "nav-ai-assistant" },
+                { href: "/chat", label: "Assistance", icon: MessageSquare, testId: "nav-ai-assistant" },
               ].map((item) => {
                 const IconComponent = item.icon;
                 return (
