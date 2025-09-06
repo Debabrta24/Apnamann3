@@ -276,8 +276,15 @@ export default function Music() {
       if (audioRef.current) {
         audioRef.current.pause();
       }
+      if (ambientTimer) {
+        clearInterval(ambientTimer);
+        setAmbientTimer(null);
+      }
       setIsPlaying(false);
     }
+    
+    // Reset current time when selecting a new track
+    setCurrentTime(0);
     
     if (type === 'ambient') {
       setCurrentTrack(track);
@@ -297,10 +304,19 @@ export default function Music() {
       if (audioRef.current) {
         audioRef.current.pause();
       }
+      if (ambientTimer) {
+        clearInterval(ambientTimer);
+        setAmbientTimer(null);
+      }
       setIsPlaying(false);
     } else {
       if (currentTrackType === 'ambient') {
         await playAmbientTrack(currentTrack);
+        // Start timer for ambient tracks
+        const timer = setInterval(() => {
+          setCurrentTime(prev => prev + 1);
+        }, 1000);
+        setAmbientTimer(timer);
       } else if (currentTrackType === 'api' && currentApiTrack) {
         playApiTrack(currentApiTrack);
       } else if (currentTrackType === 'local' && currentLocalTrack) {
@@ -410,6 +426,15 @@ export default function Music() {
     }
   }, [volume]);
 
+  // Cleanup ambient timer on component unmount
+  useEffect(() => {
+    return () => {
+      if (ambientTimer) {
+        clearInterval(ambientTimer);
+      }
+    };
+  }, [ambientTimer]);
+
   // Handle local music file upload
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -435,15 +460,16 @@ export default function Music() {
           title: file.name.replace(/\.[^/.]+$/, ''), // Remove file extension
           artist: 'Local Music',
           file_url: audioUrl,
-          duration: 0, // Will be set when loaded
-          size: file.size
+          duration: '0', // Will be set when loaded
+          file_name: file.name,
+          type: 'local'
         };
 
         // Test if audio can be loaded
         const audio = new Audio(audioUrl);
         await new Promise((resolve, reject) => {
           audio.onloadedmetadata = () => {
-            localTrack.duration = audio.duration;
+            localTrack.duration = audio.duration.toString();
             resolve(undefined);
           };
           audio.onerror = reject;
@@ -552,7 +578,7 @@ export default function Music() {
                 <div className="flex justify-between text-sm text-muted-foreground">
                   <span>{formatTime(currentTime)}</span>
                   <span>
-                    {(currentTrackType === 'api' || currentTrackType === 'local') ? formatTime(duration) : (isPlaying ? 'Playing...' : 'Stopped')}
+                    {(currentTrackType === 'api' || currentTrackType === 'local') ? formatTime(duration) : formatTime(currentTime)}
                   </span>
                 </div>
               </div>
