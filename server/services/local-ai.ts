@@ -228,7 +228,7 @@ export class LocalAIService {
       case 'humorous':
         return response + ' 😄';
       case 'supportive':
-        return response + ' I'm here for you!';
+        return response + ' I\'m here for you!';
       case 'positive':
         return response + ' ✨';
       case 'negative':
@@ -314,8 +314,8 @@ export class LocalAIService {
     const messageLower = userMessage.toLowerCase();
     
     // High risk indicators
-    const highRiskWords = ['suicide', 'kill myself', 'end it all', 'can\\'t go on', 'no point', 'worthless', 'hopeless'];
-    const moderateRiskWords = ['depressed', 'very sad', 'can\\'t handle', 'overwhelmed', 'breaking down', 'giving up'];
+    const highRiskWords = ['suicide', 'kill myself', 'end it all', 'cant go on', 'no point', 'worthless', 'hopeless'];
+    const moderateRiskWords = ['depressed', 'very sad', 'cant handle', 'overwhelmed', 'breaking down', 'giving up'];
     const stressWords = ['stressed', 'worried', 'anxious', 'nervous', 'scared', 'tired'];
     
     if (highRiskWords.some(word => messageLower.includes(word))) {

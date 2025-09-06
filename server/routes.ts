@@ -5,6 +5,7 @@ import multer from "multer";
 import mammoth from "mammoth";
 import { storage } from "./storage";
 import { aiService } from "./services/ai-service";
+import { LocalAIService } from "./services/local-ai";
 import { ScreeningService } from "./services/screening";
 import { CrisisService } from "./services/crisis";
 import { 
@@ -82,11 +83,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const data = JSON.parse(message.toString());
         
         if (data.type === 'chat_message' && userId) {
-          // Process chat message with AI
-          const response = await aiService.generateResponse([
-            ...data.chatHistory || [],
-            { role: 'user', content: data.message, timestamp: new Date() }
-          ], data.personality);
+          let response;
+          
+          // Check if we should use local AI for custom personality
+          if (data.personality && data.personality.trainingData && data.personality.sourceType === 'file') {
+            // Use local AI service for custom personalities trained on chat files
+            const localAI = new LocalAIService();
+            localAI.learnFromChat(data.personality.trainingData);
+            
+            response = localAI.generateResponse([
+              ...data.chatHistory || [],
+              { role: 'user', content: data.message, timestamp: new Date() }
+            ]);
+          } else {
+            // Use regular AI service for default responses
+            response = await aiService.generateResponse([
+              ...data.chatHistory || [],
+              { role: 'user', content: data.message, timestamp: new Date() }
+            ], data.personality);
+          }
 
           // Check for crisis indicators
           await CrisisService.evaluateChatMessage(userId, data.message);
@@ -331,24 +346,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Either file or chat data is required" });
       }
       
-      // Create personality prompt from training data
-      const customPrompt = `Based on this ${sourceType === 'file' ? 'document/conversation' : 'chat conversation'}, adopt the personality and speech patterns shown:
+      // Create and train local AI service
+      const localAI = new LocalAIService();
+      localAI.learnFromChat(trainingData);
       
-${trainingData}
+      const personalityInfo = localAI.getPersonalityInfo();
+      let customPrompt = '';
+      
+      if (personalityInfo) {
+        customPrompt = `Trained Local AI with personality traits:
+Name: ${personalityInfo.name}
+Common Phrases: ${personalityInfo.commonPhrases.join(', ')}
+Communication Style: Uses ${personalityInfo.communicationStyle.emojis.join(' ')} emojis
+Response Patterns: ${personalityInfo.responsePatterns.length} learned patterns
+Topics: ${Array.from(personalityInfo.topics.keys()).join(', ')}
 
-Key traits to emulate:
-- Speaking style and tone
-- Common phrases and expressions  
-- Response patterns and personality quirks
-- Emotional expressions and reactions
-
-Maintain the core therapeutic and supportive role while incorporating this personality style.`;
+This AI has learned from real conversation patterns and will respond authentically based on the training data.`;
+      } else {
+        customPrompt = `Local AI trained on conversation data but no patterns were detected. Will use default supportive responses.`;
+      }
 
       // Validate input
       const personalityData = insertCustomPersonalitySchema.parse({
         userId,
-        name: name || "Custom AI",
-        description: description || "AI trained on uploaded conversations",
+        name: name || (personalityInfo?.name || "Custom AI"),
+        description: description || "AI trained locally on uploaded conversations - no external APIs needed!",
         customPrompt,
         sourceType,
         originalFileName,

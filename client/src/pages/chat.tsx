@@ -7,10 +7,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Wind, PenTool, Waves, AlertTriangle, Bot, Heart, Brain, Lightbulb, Target, Plus, Upload, FileText, File, X } from "lucide-react";
+import { Wind, PenTool, Waves, AlertTriangle, Bot, Heart, Brain, Lightbulb, Target, Plus, Upload, FileText, File, X, Sparkles } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
 import { useToast } from "@/hooks/use-toast";
 import { BackButton } from "@/components/ui/back-button";
+import CustomPersonalityDialog from "@/components/chat/custom-personality-dialog";
+import { useQuery } from "@tanstack/react-query";
 
 const aiPersonalities = [
   {
@@ -95,22 +97,25 @@ export default function Chat() {
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
   const [selectedPersonality, setSelectedPersonality] = useState(aiPersonalities[0]);
   const [showPersonalities, setShowPersonalities] = useState(true);
-  const [showCreateCustom, setShowCreateCustom] = useState(false);
+  const [showCustomDialog, setShowCustomDialog] = useState(false);
   const [customPersonalities, setCustomPersonalities] = useState([]);
-  const [newCustomPersonality, setNewCustomPersonality] = useState({
-    name: '',
-    description: '',
-    chatData: ''
-  });
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [activeTab, setActiveTab] = useState('text');
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const { currentUser } = useAppContext();
   const { toast } = useToast();
 
+  // Fetch custom personalities for the user
+  const { data: userCustomPersonalities, refetch: refetchPersonalities } = useQuery({
+    queryKey: ['/api/chat/custom-personalities', currentUser?.id],
+    enabled: !!currentUser?.id
+  });
+
+  useEffect(() => {
+    if (userCustomPersonalities) {
+      setCustomPersonalities(userCustomPersonalities);
+    }
+  }, [userCustomPersonalities]);
+
   const handleQuickAction = (action: string) => {
     setSelectedAction(action);
-    // This would trigger the corresponding action in the chat interface
   };
 
   const handlePersonalitySelect = (personality: typeof aiPersonalities[0]) => {
@@ -118,119 +123,15 @@ export default function Chat() {
     setShowPersonalities(false);
   };
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const allowedTypes = ['text/plain', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'];
-      
-      if (!allowedTypes.includes(file.type)) {
-        toast({
-          title: "Invalid File Type",
-          description: "Please upload a PDF, TXT, or Word document",
-          variant: "destructive"
-        });
-        return;
-      }
-      
-      if (file.size > 10 * 1024 * 1024) { // 10MB limit
-        toast({
-          title: "File Too Large",
-          description: "File size must be less than 10MB",
-          variant: "destructive"
-        });
-        return;
-      }
-      
-      setSelectedFile(file);
-    }
+  const handleCustomPersonalityCreated = (personality: any) => {
+    refetchPersonalities();
+    setSelectedPersonality(personality);
+    setShowPersonalities(false);
+    toast({
+      title: "Success! 🎉",
+      description: `Your custom AI "${personality.name}" is ready to chat!`,
+    });
   };
-
-  const handleCreateCustomPersonality = async () => {
-    if (!newCustomPersonality.name.trim()) {
-      toast({
-        title: "Missing Information",
-        description: "Please provide a name for your custom AI",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (activeTab === 'text' && !newCustomPersonality.chatData.trim()) {
-      toast({
-        title: "Missing Information",
-        description: "Please provide chat data for your custom AI",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (activeTab === 'file' && !selectedFile) {
-      toast({
-        title: "Missing Information",
-        description: "Please select a file to upload",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    try {
-      const formData = new FormData();
-      formData.append('userId', currentUser?.id || '');
-      formData.append('name', newCustomPersonality.name);
-      formData.append('description', newCustomPersonality.description);
-      
-      if (activeTab === 'file' && selectedFile) {
-        formData.append('file', selectedFile);
-      } else {
-        formData.append('chatData', newCustomPersonality.chatData);
-      }
-
-      const response = await fetch('/api/chat/custom-personality', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        toast({
-          title: "Custom AI Created!",
-          description: `${newCustomPersonality.name} has been trained and is ready to chat`
-        });
-        setNewCustomPersonality({ name: '', description: '', chatData: '' });
-        setSelectedFile(null);
-        setActiveTab('text');
-        setShowCreateCustom(false);
-        loadCustomPersonalities();
-      } else {
-        const error = await response.json();
-        throw new Error(error.message);
-      }
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to create custom AI. Please try again.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const loadCustomPersonalities = async () => {
-    if (currentUser?.id) {
-      try {
-        const response = await fetch(`/api/chat/custom-personalities/${currentUser.id}`);
-        if (response.ok) {
-          const personalities = await response.json();
-          setCustomPersonalities(personalities);
-        }
-      } catch (error) {
-        console.error('Failed to load custom personalities:', error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    loadCustomPersonalities();
-  }, [currentUser?.id]);
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -252,6 +153,7 @@ export default function Chat() {
                   key={personality.id} 
                   className="hover:shadow-lg transition-shadow cursor-pointer"
                   onClick={() => handlePersonalitySelect(personality)}
+                  data-testid={`personality-card-${personality.id}`}
                 >
                   <CardHeader>
                     <div className="flex items-center space-x-3">
@@ -275,173 +177,79 @@ export default function Chat() {
                 </Card>
               );
             })}
-            
+
             {/* Custom AI Personalities */}
             {customPersonalities.map((personality: any) => (
               <Card 
                 key={personality.id} 
-                className="hover:shadow-lg transition-shadow cursor-pointer border-primary/20"
+                className="hover:shadow-lg transition-shadow cursor-pointer border-2 border-primary/20"
                 onClick={() => handlePersonalitySelect(personality)}
+                data-testid={`custom-personality-card-${personality.id}`}
               >
                 <CardHeader>
                   <div className="flex items-center space-x-3">
-                    <div className="p-2 rounded-lg bg-primary/10 text-primary">
-                      <Heart className="h-6 w-6" />
+                    <div className="p-2 rounded-lg bg-gradient-to-br from-primary to-primary/60 text-primary-foreground">
+                      <Sparkles className="h-6 w-6" />
                     </div>
-                    <div>
-                      <CardTitle className="text-lg">{personality.name}</CardTitle>
-                      <CardDescription>Custom AI</CardDescription>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <CardTitle className="text-lg">{personality.name}</CardTitle>
+                        <div className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full font-medium">
+                          Custom
+                        </div>
+                      </div>
+                      <CardDescription>
+                        {personality.description || "Trained from your conversations"}
+                      </CardDescription>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-3">
-                    {personality.description}
+                    This AI learned from your {personality.sourceType === 'file' ? 'uploaded file' : 'chat data'}: {personality.originalFileName || 'text input'}
                   </p>
-                  <div className="bg-primary/5 p-2 rounded text-xs text-primary">
-                    <strong>Custom trained on your conversations</strong>
+                  <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-2 rounded text-xs">
+                    <strong>🎉 Free Local AI:</strong> No API keys needed!
                   </div>
                 </CardContent>
               </Card>
             ))}
 
             {/* Create Custom AI Card */}
-            <Card className="border-dashed border-2 hover:shadow-lg transition-shadow cursor-pointer">
-              <Dialog open={showCreateCustom} onOpenChange={setShowCreateCustom}>
-                <DialogTrigger asChild>
-                  <div className="p-6 text-center h-full flex flex-col items-center justify-center">
-                    <div className="p-4 rounded-lg bg-secondary/50 mb-4">
-                      <Plus className="h-8 w-8 text-muted-foreground" />
-                    </div>
-                    <CardTitle className="text-lg mb-2">Create Custom AI</CardTitle>
-                    <CardDescription>Upload chat conversations to create a personalized AI</CardDescription>
+            <Card 
+              className="hover:shadow-lg transition-shadow cursor-pointer border-2 border-dashed border-primary/30 hover:border-primary/50 bg-gradient-to-br from-primary/5 to-transparent"
+              onClick={() => setShowCustomDialog(true)}
+              data-testid="create-custom-ai-card"
+            >
+              <CardHeader>
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                    <Plus className="h-6 w-6" />
                   </div>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle>Create Your Custom AI Personality</DialogTitle>
-                    <DialogDescription>
-                      Upload chat conversations or text to train an AI that talks like your friend, partner, or anyone you choose.
-                    </DialogDescription>
-                  </DialogHeader>
-                  
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="ai-name" className="text-sm font-medium">AI Name</Label>
-                      <Input
-                        id="ai-name"
-                        value={newCustomPersonality.name}
-                        onChange={(e) => setNewCustomPersonality(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder="e.g., My Friend AI, Study Buddy Bot"
-                        className="mt-2"
-                      />
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="ai-description" className="text-sm font-medium">Description (optional)</Label>
-                      <Input
-                        id="ai-description"
-                        value={newCustomPersonality.description}
-                        onChange={(e) => setNewCustomPersonality(prev => ({ ...prev, description: e.target.value }))}
-                        placeholder="Brief description of this AI personality"
-                        className="mt-2"
-                      />
-                    </div>
-
-                    <div>
-                      <Label className="text-sm font-medium">Training Data</Label>
-                      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-2">
-                        <TabsList className="grid w-full grid-cols-2">
-                          <TabsTrigger value="text">
-                            <FileText className="w-4 h-4 mr-2" />
-                            Paste Text
-                          </TabsTrigger>
-                          <TabsTrigger value="file">
-                            <Upload className="w-4 h-4 mr-2" />
-                            Upload File
-                          </TabsTrigger>
-                        </TabsList>
-                        
-                        <TabsContent value="text" className="space-y-2">
-                          <Textarea
-                            value={newCustomPersonality.chatData}
-                            onChange={(e) => setNewCustomPersonality(prev => ({ ...prev, chatData: e.target.value }))}
-                            placeholder="Paste chat conversations here...\n\nExample:\nYou: How was your day?\nThem: Amazing! I went to the beach and saw the most beautiful sunset\nYou: That sounds lovely\nThem: You should come with me next time, I'd love to share it with you\n\n(Include as many conversations as possible for better training)"
-                            className="min-h-[200px]"
-                          />
-                        </TabsContent>
-                        
-                        <TabsContent value="file" className="space-y-2">
-                          <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
-                            <input
-                              ref={fileInputRef}
-                              type="file"
-                              accept=".txt,.pdf,.doc,.docx"
-                              onChange={handleFileSelect}
-                              className="hidden"
-                              data-testid="file-input"
-                            />
-                            {selectedFile ? (
-                              <div className="space-y-2">
-                                <File className="w-12 h-12 text-blue-500 mx-auto" />
-                                <div className="flex items-center justify-center gap-2">
-                                  <span className="text-sm font-medium">{selectedFile.name}</span>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => setSelectedFile(null)}
-                                    data-testid="remove-file"
-                                  >
-                                    <X className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                                <p className="text-xs text-muted-foreground">
-                                  {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-                                </p>
-                              </div>
-                            ) : (
-                              <div className="space-y-2">
-                                <Upload className="w-12 h-12 text-gray-400 mx-auto" />
-                                <div>
-                                  <Button
-                                    variant="outline"
-                                    onClick={() => fileInputRef.current?.click()}
-                                    data-testid="upload-file-button"
-                                  >
-                                    <Upload className="w-4 h-4 mr-2" />
-                                    Upload File
-                                  </Button>
-                                </div>
-                                <p className="text-xs text-muted-foreground">
-                                  Support: PDF, TXT, Word documents (max 10MB)
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                          {selectedFile && (
-                            <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg">
-                              <p className="text-sm text-blue-800 dark:text-blue-200">
-                                ✓ File selected. The AI will be trained on the content from this document.
-                              </p>
-                            </div>
-                          )}
-                        </TabsContent>
-                      </Tabs>
-                    </div>
+                  <div>
+                    <CardTitle className="text-lg text-primary">Create Custom AI</CardTitle>
+                    <CardDescription>Train your own chatbot</CardDescription>
                   </div>
-
-                  <DialogFooter>
-                    <Button variant="outline" onClick={() => setShowCreateCustom(false)}>
-                      Cancel
-                    </Button>
-                    <Button onClick={handleCreateCustomPersonality}>
-                      <Upload className="h-4 w-4 mr-2" />
-                      Create Custom AI
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Upload your chat files or paste conversations to create a personalized AI companion
+                </p>
+                <div className="bg-green-50 dark:bg-green-950/20 p-2 rounded text-xs text-green-700 dark:text-green-300">
+                  <strong>✨ Completely Free:</strong> No external API keys required!
+                </div>
+              </CardContent>
             </Card>
+          </div>
+
+          {/* Custom Personality Dialog */}
+          <CustomPersonalityDialog
+            open={showCustomDialog}
+            onOpenChange={setShowCustomDialog}
+            userId={currentUser?.id || ""}
+            onPersonalityCreated={handleCustomPersonalityCreated}
+          />
           </div>
           
           <div className="text-center">
