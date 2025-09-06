@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, FileText, MessageCircle, Bot, Sparkles } from "lucide-react";
+import { Upload, FileText, MessageCircle, Bot, Sparkles, Camera, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -27,8 +27,11 @@ export default function CustomPersonalityDialog({
   const [description, setDescription] = useState("");
   const [chatData, setChatData] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("file");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,6 +58,39 @@ export default function CustomPersonalityDialog({
       
       setSelectedFile(file);
       setName(name || `AI from ${file.name}`);
+    }
+  };
+
+  const handlePhotoSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit for images
+        toast({
+          title: "Image too large",
+          description: "Please select an image smaller than 5MB.",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+      if (!allowedImageTypes.includes(file.type)) {
+        toast({
+          title: "Invalid image type",
+          description: "Please select a JPG, PNG, WEBP, or GIF image.",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      setSelectedPhoto(file);
+      
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPhotoPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -184,6 +220,7 @@ export default function CustomPersonalityDialog({
         originalFileName,
         trainingData: trainingData.substring(0, 5000), // Store first 5000 chars for reference
         aiPersonality,
+        photo: photoPreview, // Store the photo preview URL
         customPrompt: `You are ${name}, a custom AI trained on conversation data. 
         Your speaking style includes phrases like: ${aiPersonality.commonPhrases.join(', ')}.
         You have a ${aiPersonality.conversationStyle} conversation style.
@@ -217,6 +254,8 @@ export default function CustomPersonalityDialog({
     setDescription("");
     setChatData("");
     setSelectedFile(null);
+    setSelectedPhoto(null);
+    setPhotoPreview(null);
     setActiveTab("file");
     onOpenChange(false);
   };
@@ -256,6 +295,60 @@ export default function CustomPersonalityDialog({
                 onChange={(e) => setDescription(e.target.value)}
                 data-testid="input-ai-description"
               />
+            </div>
+            
+            {/* Photo Upload */}
+            <div>
+              <Label>AI Profile Photo (Optional)</Label>
+              <div className="flex items-center space-x-4 mt-2">
+                <div className="w-16 h-16 rounded-full border-2 border-dashed border-muted-foreground/30 flex items-center justify-center overflow-hidden bg-muted/10">
+                  {photoPreview ? (
+                    <img 
+                      src={photoPreview} 
+                      alt="AI profile preview" 
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <User className="h-8 w-8 text-muted-foreground/50" />
+                  )}
+                </div>
+                <div className="flex-1 space-y-2">
+                  <Button 
+                    type="button"
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => photoInputRef.current?.click()}
+                    data-testid="button-upload-photo"
+                  >
+                    <Camera className="h-4 w-4 mr-2" />
+                    {photoPreview ? "Change Photo" : "Upload Photo"}
+                  </Button>
+                  {photoPreview && (
+                    <Button 
+                      type="button"
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => {
+                        setSelectedPhoto(null);
+                        setPhotoPreview(null);
+                      }}
+                      data-testid="button-remove-photo"
+                    >
+                      Remove Photo
+                    </Button>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    JPG, PNG, WEBP, GIF (Max 5MB)
+                  </p>
+                </div>
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  onChange={handlePhotoSelect}
+                  className="hidden"
+                />
+              </div>
             </div>
           </div>
 

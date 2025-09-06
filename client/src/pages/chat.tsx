@@ -253,8 +253,25 @@ export default function Chat() {
               >
                 <CardHeader>
                   <div className="flex items-center space-x-3">
-                    <div className="p-2 rounded-lg bg-gradient-to-br from-primary to-primary/60 text-primary-foreground">
-                      <Sparkles className="h-6 w-6" />
+                    <div className="relative">
+                      {personality.photo ? (
+                        <>
+                          <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden shadow-lg border-3 border-white/50">
+                            <img 
+                              src={personality.photo}
+                              alt={`${personality.name} profile`}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div className="absolute -bottom-1 -right-1 p-1 rounded-full bg-gradient-to-br from-primary to-primary/60 text-primary-foreground shadow-md">
+                            <Sparkles className="h-3 w-3" />
+                          </div>
+                        </>
+                      ) : (
+                        <div className="p-2 rounded-lg bg-gradient-to-br from-primary to-primary/60 text-primary-foreground">
+                          <Sparkles className="h-6 w-6" />
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
