@@ -516,8 +516,31 @@ export default function Resources() {
   };
 
   const handleResourceAction = (action: string, resourceId: string) => {
-    console.log(`${action} resource ${resourceId}`);
-    // Implementation would depend on resource type
+    const resource = resources.find(r => r.id === resourceId);
+    if (!resource) return;
+
+    if (action === 'view') {
+      // Open resource content based on type
+      if (resource.type === 'video' || resource.type === 'audio') {
+        // For video/audio - show a modal or redirect to media player
+        alert(`Playing: ${resource.title}\n\n${resource.description}\n\nDuration: ${resource.duration} minutes`);
+      } else if (resource.type === 'tool') {
+        // For tools - show interactive tool interface
+        alert(`Using Tool: ${resource.title}\n\n${resource.description}\n\nThis would open the interactive ${resource.category.toLowerCase()} tool.`);
+      } else if (resource.type === 'guide' || resource.type === 'article') {
+        // For guides/articles - show reading interface
+        alert(`Reading: ${resource.title}\n\n${resource.description}\n\nEstimated reading time: ${resource.duration} minutes\n\nThis would open the full content for reading.`);
+      } else {
+        // For activities - show step-by-step instructions
+        alert(`Starting Activity: ${resource.title}\n\n${resource.description}\n\nDuration: ${resource.duration} minutes\n\nThis would guide you through the ${resource.category.toLowerCase()} activity.`);
+      }
+    } else if (action === 'bookmark') {
+      // Add to saved resources
+      alert(`Bookmarked: ${resource.title}\n\nThis resource has been saved to your bookmarks for easy access later.`);
+    } else if (action === 'download') {
+      // Download for offline access
+      alert(`Downloading: ${resource.title}\n\nThis resource is being prepared for offline access.`);
+    }
   };
 
   return (
