@@ -73,7 +73,8 @@ export class AIService {
     }
   }
 
-  private systemPrompt = `You are a compassionate AI assistant providing psychological first aid and basic medical guidance for Indian college students. Your role is to:
+  private getContextAwareSystemPrompt(messages: ChatMessage[]) {
+    const basePrompt = `You are a compassionate AI assistant providing psychological first aid and basic medical guidance for Indian college students. Your role is to:
 
 PSYCHOLOGICAL SUPPORT:
 1. Listen empathetically and validate feelings
@@ -101,21 +102,66 @@ SAFETY GUIDELINES:
 - If you detect high-risk language (self-harm, suicide ideation), immediately recommend crisis resources
 - Recognize emergency situations requiring immediate medical attention
 
+CONVERSATION CONTEXT:
+- Review the entire conversation history to understand the user's ongoing concerns
+- Avoid repeating the same advice or information you've already given
+- Build upon previous conversations and show continuity
+- Acknowledge progress or changes since your last interaction
+- Ask follow-up questions about previously discussed topics when appropriate
+- Remember specific details the user has shared (symptoms, situations, feelings)
+
 COMMUNICATION STYLE:
 - Use warm, supportive, and non-judgmental language
 - Provide practical, actionable advice
 - Explain medical concepts in simple, understandable terms
 - Offer both immediate relief strategies and long-term wellness plans
+- Vary your responses to avoid repetitive language
+- Show genuine engagement with the user's unique situation
 
 Response format: Always respond with JSON containing:
-- message: Your supportive response with medical/psychological guidance
-- supportiveActions: Array of 2-3 specific actions the user can take (mix of self-care and professional help as appropriate)
+- message: Your supportive response with medical/psychological guidance (tailored to conversation context)
+- supportiveActions: Array of 2-3 specific actions the user can take (building on previous suggestions)
 - riskLevel: "low", "moderate", or "high" (considering both psychological and physical health risks)
 - escalationRequired: boolean (true if immediate professional help needed)`;
 
+    // Add conversation context analysis
+    if (messages.length > 2) {
+      const recentTopics = this.analyzeConversationContext(messages);
+      return basePrompt + `\n\nCONVERSATION CONTEXT ANALYSIS:\n${recentTopics}`;
+    }
+
+    return basePrompt;
+  }
+
+  private analyzeConversationContext(messages: ChatMessage[]): string {
+    const userMessages = messages.filter(m => m.role === 'user').slice(-3);
+    const assistantMessages = messages.filter(m => m.role === 'assistant').slice(-2);
+    
+    let context = '';
+    
+    if (userMessages.length > 0) {
+      context += `Recent user concerns: ${userMessages.map(m => m.content.substring(0, 100)).join('; ')}\n`;
+    }
+    
+    if (assistantMessages.length > 0) {
+      context += `Previous advice given: Avoid repeating these exact suggestions - ${assistantMessages.map(m => {
+        try {
+          const parsed = JSON.parse(m.content);
+          return parsed.supportiveActions?.join(', ') || '';
+        } catch {
+          return m.content.substring(0, 100);
+        }
+      }).join('; ')}\n`;
+    }
+    
+    context += `Remember to acknowledge any progress and build upon the ongoing conversation.`;
+    
+    return context;
+  }
+
   async generateResponse(messages: ChatMessage[], personality?: any): Promise<PsychologicalResponse> {
     try {
-      let personalityPrompt = this.systemPrompt;
+      let personalityPrompt = this.getContextAwareSystemPrompt(messages);
       
       if (personality && personality.customPrompt) {
         personalityPrompt += `\n\nAdditional personality instructions: ${personality.customPrompt}`;

@@ -373,9 +373,35 @@ export default function Music() {
   // Audio event handlers
   const handleApiTrackPlay = () => setIsPlaying(true);
   const handleApiTrackPause = () => setIsPlaying(false);
-  const handleApiTrackEnded = () => setIsPlaying(false);
+  const handleApiTrackEnded = () => {
+    setIsPlaying(false);
+    setCurrentTime(0);
+  };
   const handleApiTrackTimeUpdate = (e: any) => setCurrentTime(e.target.currentTime);
-  const handleApiTrackLoadedMetadata = (e: any) => setDuration(e.target.duration);
+  const handleApiTrackLoadedMetadata = (e: any) => {
+    setDuration(e.target.duration);
+    setCurrentTime(0);
+  };
+
+  // Add audio ref event listeners
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.addEventListener('play', handleApiTrackPlay);
+    audio.addEventListener('pause', handleApiTrackPause);
+    audio.addEventListener('ended', handleApiTrackEnded);
+    audio.addEventListener('timeupdate', handleApiTrackTimeUpdate);
+    audio.addEventListener('loadedmetadata', handleApiTrackLoadedMetadata);
+
+    return () => {
+      audio.removeEventListener('play', handleApiTrackPlay);
+      audio.removeEventListener('pause', handleApiTrackPause);
+      audio.removeEventListener('ended', handleApiTrackEnded);
+      audio.removeEventListener('timeupdate', handleApiTrackTimeUpdate);
+      audio.removeEventListener('loadedmetadata', handleApiTrackLoadedMetadata);
+    };
+  }, []);
 
   // Update volume for API tracks
   useEffect(() => {
@@ -386,28 +412,74 @@ export default function Music() {
 
   // Handle local music file upload
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
 
-    try {
-      const formData = new FormData();
-      formData.append('musicFile', file);
-
-      const response = await fetch('/api/local-music/upload', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (response.ok) {
-        // Refresh local music list
-        window.location.reload(); // Simple refresh to update the list
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      
+      // Validate file type
+      const validTypes = ['audio/mpeg', 'audio/wav', 'audio/mp4', 'audio/aac', 'audio/ogg', 'audio/flac'];
+      if (!validTypes.includes(file.type)) {
+        alert(`"${file.name}" is not a valid audio file. Please select MP3, WAV, M4A, AAC, OGG, or FLAC files.`);
+        continue;
       }
-    } catch (error) {
-      console.error('Error uploading music file:', error);
+
+      try {
+        // Create object URL for local playback
+        const audioUrl = URL.createObjectURL(file);
+        
+        // Create a local track entry
+        const localTrack: LocalTrack = {
+          id: `local-${Date.now()}-${i}`,
+          title: file.name.replace(/\.[^/.]+$/, ''), // Remove file extension
+          artist: 'Local Music',
+          file_url: audioUrl,
+          duration: 0, // Will be set when loaded
+          size: file.size
+        };
+
+        // Test if audio can be loaded
+        const audio = new Audio(audioUrl);
+        await new Promise((resolve, reject) => {
+          audio.onloadedmetadata = () => {
+            localTrack.duration = audio.duration;
+            resolve(undefined);
+          };
+          audio.onerror = reject;
+        });
+
+        // Store in localStorage for persistence
+        const existingTracks = JSON.parse(localStorage.getItem('localMusicTracks') || '[]');
+        existingTracks.push(localTrack);
+        localStorage.setItem('localMusicTracks', JSON.stringify(existingTracks));
+
+        // Set as current track if it's the first one uploaded
+        if (i === 0) {
+          setCurrentLocalTrack(localTrack);
+          setCurrentTrackType('local');
+          setSelectedCategory('Local Music');
+        }
+        
+      } catch (error) {
+        console.error('Error loading audio file:', error);
+        alert(`Error loading "${file.name}". Please try another file.`);
+      }
     }
+
+    alert(`Successfully added ${files.length} song${files.length !== 1 ? 's' : ''} to your music library!`);
 
     // Reset the input
     event.target.value = '';
+  };
+
+  // Load local tracks from localStorage
+  const getLocalTracks = () => {
+    try {
+      return JSON.parse(localStorage.getItem('localMusicTracks') || '[]');
+    } catch {
+      return [];
+    }
   };
 
   const formatTime = (time: number) => {
