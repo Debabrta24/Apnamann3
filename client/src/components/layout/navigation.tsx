@@ -9,13 +9,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navItems = [
+  { href: "/music", label: "Mind Fresh Music", testId: "nav-music" },
   { href: "/", label: "Home", testId: "nav-home" },
   { href: "/chat", label: "AI Support", testId: "nav-chat" },
   { href: "/doctor", label: "Doctor", testId: "nav-doctor" },
   { href: "/screening", label: "Screening", testId: "nav-screening" },
   { href: "/resources", label: "Resources", testId: "nav-resources" },
   { href: "/games", label: "Games", testId: "nav-games" },
-  { href: "/music", label: "Music", testId: "nav-music" },
   { href: "/videos", label: "Motivational Music", testId: "nav-videos" },
 ];
 
