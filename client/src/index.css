@@ -30,7 +30,7 @@
   --healing-foreground: hsl(320 40% 25%);
   --nature: hsl(120 40% 78%); /* Earthy green */
   --nature-foreground: hsl(120 50% 20%);
-  --destructive: hsl(356 70% 54%);
+  --destructive: hsl(355 58% 48%);
   --destructive-foreground: hsl(0 0% 100%);
   --border: hsl(200 20% 88%);
   --input: hsl(210 40% 96%);
@@ -92,8 +92,8 @@
   --healing-foreground: hsl(320 30% 95%);
   --nature: hsl(120 30% 45%); /* Forest green */
   --nature-foreground: hsl(120 40% 90%);
-  --destructive: hsl(356 60% 58%);
-  --destructive-foreground: hsl(220 27% 8%);
+  --destructive: hsl(355 50% 55%);
+  --destructive-foreground: hsl(210 15% 92%);
   --border: hsl(220 20% 18%);
   --input: hsl(220 27% 16%);
   --ring: hsl(142 45% 58%);

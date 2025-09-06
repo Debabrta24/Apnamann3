@@ -105,7 +105,8 @@ export default function CustomPersonalityDialog({
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create custom personality');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to create custom personality');
       }
 
       const data = await response.json();
@@ -118,11 +119,25 @@ export default function CustomPersonalityDialog({
       onPersonalityCreated(data.personality);
       handleClose();
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating personality:', error);
+      
+      // Provide more specific error messages
+      let errorMessage = "Something went wrong while creating your custom AI.";
+      
+      if (error.message?.includes("user")) {
+        errorMessage = "Unable to verify your account. Please try refreshing the page.";
+      } else if (error.message?.includes("training")) {
+        errorMessage = "There was an issue processing your training data. Please check your file or text.";
+      } else if (error.message?.includes("database") || error.message?.includes("relation")) {
+        errorMessage = "Database connection issue. Please try again in a moment.";
+      } else if (error.message && error.message !== 'Failed to create custom personality') {
+        errorMessage = error.message;
+      }
+      
       toast({
-        title: "Error",
-        description: "Failed to create custom personality. Please try again.",
+        title: "Unable to Create Custom AI",
+        description: `${errorMessage} Please try again or contact support if the issue persists.`,
         variant: "destructive"
       });
     } finally {
