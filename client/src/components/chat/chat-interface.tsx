@@ -100,13 +100,13 @@ export default function ChatInterface({ selectedAction, selectedPersonality }: C
   };
 
   return (
-    <Card className="h-[600px] sm:h-[700px] flex flex-col w-full max-w-4xl mx-auto">
-      <CardHeader className="border-b bg-gradient-to-r from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20">
+    <Card className="h-[600px] sm:h-[700px] lg:h-[800px] flex flex-col w-full max-w-5xl mx-auto border-4 border-primary/20 shadow-2xl">
+      <CardHeader className="border-b-4 border-primary/10 bg-gradient-to-r from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20 p-4 sm:p-6 lg:p-8">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-4">
             <div className="relative">
-              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center shadow-lg">
-                <Bot className="text-primary-foreground h-5 w-5" />
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-primary rounded-full flex items-center justify-center shadow-xl border-4 border-primary/20">
+                <Bot className="text-primary-foreground h-6 w-6 sm:h-7 sm:w-7" />
               </div>
               {/* Connection status indicator */}
               <div 
@@ -116,10 +116,10 @@ export default function ChatInterface({ selectedAction, selectedPersonality }: C
               />
             </div>
             <div className="min-w-0 flex-1">
-              <CardTitle className="text-lg font-semibold truncate">
+              <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold truncate">
                 {selectedPersonality?.name || "Medical AI Assistant"}
               </CardTitle>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
                 {isConnected ? (
                   selectedPersonality?.role || "Online • Medical & Psychological Support"
                 ) : (
@@ -153,27 +153,27 @@ export default function ChatInterface({ selectedAction, selectedPersonality }: C
               data-testid={`message-${index}`}
             >
               {message.role === "assistant" && (
-                <div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
-                  <Bot className="text-primary-foreground h-3 w-3 sm:h-4 sm:w-4" />
+                <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-primary rounded-full flex items-center justify-center flex-shrink-0 shadow-xl border-2 border-primary/30">
+                  <Bot className="text-primary-foreground h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
                 </div>
               )}
               
               <div
-                className={`max-w-[75%] sm:max-w-md lg:max-w-lg p-3 sm:p-4 rounded-2xl shadow-sm transition-all hover:shadow-md ${
+                className={`max-w-[75%] sm:max-w-md lg:max-w-xl xl:max-w-2xl p-4 sm:p-5 lg:p-6 rounded-3xl shadow-md border-2 transition-all hover:shadow-xl hover:scale-[1.02] ${
                   message.role === "user"
-                    ? "bg-primary text-primary-foreground rounded-br-md"
-                    : "bg-card border border-border/50 rounded-bl-md backdrop-blur-sm"
+                    ? "bg-primary text-primary-foreground rounded-br-lg border-primary/30"
+                    : "bg-card border-border/50 rounded-bl-lg backdrop-blur-sm"
                 }`}
               >
-                <p className="text-sm sm:text-base whitespace-pre-wrap leading-relaxed">{message.content}</p>
-                <p className="text-xs opacity-60 mt-2">
+                <p className="text-sm sm:text-base lg:text-lg whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                <p className="text-xs sm:text-sm opacity-60 mt-3">
                   {message.timestamp ? new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}
                 </p>
               </div>
 
               {message.role === "user" && (
-                <div className="w-7 h-7 sm:w-8 sm:h-8 bg-accent rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
-                  <User className="text-accent-foreground h-3 w-3 sm:h-4 sm:w-4" />
+                <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-accent rounded-full flex items-center justify-center flex-shrink-0 shadow-xl border-2 border-accent/30">
+                  <User className="text-accent-foreground h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
                 </div>
               )}
             </div>
@@ -199,21 +199,21 @@ export default function ChatInterface({ selectedAction, selectedPersonality }: C
         </div>
 
         {/* Message Input */}
-        <div className="border-t bg-background/80 backdrop-blur-sm p-3 sm:p-4">
-          <div className="flex space-x-2 max-w-4xl mx-auto">
+        <div className="border-t-4 border-primary/10 bg-background/80 backdrop-blur-sm p-4 sm:p-5 lg:p-6">
+          <div className="flex space-x-3 sm:space-x-4 max-w-5xl mx-auto">
             <Input
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Ask about your health or share what's on your mind..."
-              className="flex-1 rounded-full px-4 border-2 focus:border-primary/50 transition-colors"
+              className="flex-1 rounded-full px-5 py-3 border-3 border-border/50 focus:border-primary/50 transition-colors text-base sm:text-lg shadow-lg focus:shadow-xl"
               disabled={!isConnected}
               data-testid="input-chat-message"
             />
             <Button
               onClick={handleSendMessage}
               disabled={!inputMessage.trim() || !isConnected || isTyping}
-              className="rounded-full h-10 w-10 p-0 shadow-lg hover:shadow-xl transition-all"
+              className="rounded-full h-12 w-12 sm:h-14 sm:w-14 p-0 shadow-xl hover:shadow-2xl transition-all hover:scale-110 border-2 border-primary/20"
               data-testid="button-send-message"
             >
               <Send className="h-4 w-4" />
