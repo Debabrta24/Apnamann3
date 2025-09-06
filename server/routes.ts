@@ -374,7 +374,7 @@ This AI has learned from real conversation patterns and will respond authentical
         // Create a basic user record with the specified userId
         try {
           // Use raw database insert to specify the ID
-          const [basicUser] = await db.insert(users).values({
+          const [basicUser] = await db().insert(users).values({
             id: userId,
             username: `user-${userId.substring(0, 8)}`,
             email: `user-${userId}@temp.com`,
