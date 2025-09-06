@@ -8,6 +8,11 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Wind, PenTool, Waves, AlertTriangle, Bot, Heart, Brain, Lightbulb, Target, Plus, Upload, FileText, File, X, Sparkles } from "lucide-react";
+import drSarahPhoto from '@assets/generated_images/Dr_Sarah_therapist_photo_c6bcfbb6.png';
+import alexPhoto from '@assets/generated_images/Alex_life_coach_photo_9e882e79.png';
+import zenPhoto from '@assets/generated_images/Zen_mindfulness_guide_photo_17ae2476.png';
+import mayaPhoto from '@assets/generated_images/Maya_creative_mentor_photo_28d7db9e.png';
+import samPhoto from '@assets/generated_images/Sam_supportive_friend_photo_2d226a81.png';
 import { useAppContext } from "@/context/AppContext";
 import { useToast } from "@/hooks/use-toast";
 import { BackButton } from "@/components/ui/back-button";
@@ -22,7 +27,8 @@ const aiPersonalities = [
     description: "Specializes in CBT and helps with anxiety, depression, and negative thought patterns",
     icon: Brain,
     color: "bg-blue-100 text-blue-800",
-    personality: "Professional, empathetic, and evidence-based approach"
+    personality: "Professional, empathetic, and evidence-based approach",
+    photo: drSarahPhoto
   },
   {
     id: "coach",
@@ -31,7 +37,8 @@ const aiPersonalities = [
     description: "Motivational support for goal-setting, productivity, and personal growth",
     icon: Target,
     color: "bg-green-100 text-green-800",
-    personality: "Energetic, goal-oriented, and encouraging"
+    personality: "Energetic, goal-oriented, and encouraging",
+    photo: alexPhoto
   },
   {
     id: "mindfulness",
@@ -40,7 +47,8 @@ const aiPersonalities = [
     description: "Meditation teacher focused on present-moment awareness and stress reduction",
     icon: Heart,
     color: "bg-purple-100 text-purple-800",
-    personality: "Calm, wise, and spiritually grounded"
+    personality: "Calm, wise, and spiritually grounded",
+    photo: zenPhoto
   },
   {
     id: "creative",
@@ -49,7 +57,8 @@ const aiPersonalities = [
     description: "Helps overcome creative blocks and encourages artistic expression for healing",
     icon: Lightbulb,
     color: "bg-orange-100 text-orange-800",
-    personality: "Imaginative, inspiring, and unconventional"
+    personality: "Imaginative, inspiring, and unconventional",
+    photo: mayaPhoto
   },
   {
     id: "friend",
@@ -58,7 +67,8 @@ const aiPersonalities = [
     description: "Casual, friendly conversation for daily support and emotional venting",
     icon: Bot,
     color: "bg-pink-100 text-pink-800",
-    personality: "Warm, casual, and relatable"
+    personality: "Warm, casual, and relatable",
+    photo: samPhoto
   }
 ];
 
@@ -203,8 +213,17 @@ export default function Chat() {
                 >
                   <CardHeader>
                     <div className="flex items-center space-x-3">
-                      <div className={`p-2 rounded-lg ${personality.color}`}>
-                        <IconComponent className="h-6 w-6" />
+                      <div className="relative">
+                        <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden shadow-lg border-3 border-white/50">
+                          <img 
+                            src={personality.photo}
+                            alt={`${personality.name} profile`}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className={`absolute -bottom-1 -right-1 p-1 rounded-full ${personality.color} shadow-md`}>
+                          <IconComponent className="h-3 w-3" />
+                        </div>
                       </div>
                       <div>
                         <CardTitle className="text-lg">{personality.name}</CardTitle>
@@ -315,8 +334,25 @@ export default function Chat() {
             <div className="mb-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className={`p-2 rounded-lg ${selectedPersonality.color}`}>
-                    <selectedPersonality.icon className="h-5 w-5" />
+                  <div className="relative">
+                    {selectedPersonality.photo ? (
+                      <>
+                        <div className="w-12 h-12 rounded-full overflow-hidden shadow-lg border-2 border-white/50">
+                          <img 
+                            src={selectedPersonality.photo}
+                            alt={`${selectedPersonality.name} profile`}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className={`absolute -bottom-0.5 -right-0.5 p-1 rounded-full ${selectedPersonality.color} shadow-md`}>
+                          <selectedPersonality.icon className="h-3 w-3" />
+                        </div>
+                      </>
+                    ) : (
+                      <div className={`p-2 rounded-lg ${selectedPersonality.color}`}>
+                        <selectedPersonality.icon className="h-5 w-5" />
+                      </div>
+                    )}
                   </div>
                   <div>
                     <h2 className="font-semibold">{selectedPersonality.name}</h2>
@@ -370,8 +406,25 @@ export default function Chat() {
               </CardHeader>
               <CardContent className="pt-0">
                 <div className="flex items-center space-x-3 mb-2">
-                  <div className={`p-2 rounded-lg ${selectedPersonality.color}`}>
-                    <selectedPersonality.icon className="h-4 w-4" />
+                  <div className="relative">
+                    {selectedPersonality.photo ? (
+                      <>
+                        <div className="w-10 h-10 rounded-full overflow-hidden shadow-md border-2 border-white/50">
+                          <img 
+                            src={selectedPersonality.photo}
+                            alt={`${selectedPersonality.name} profile`}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className={`absolute -bottom-0.5 -right-0.5 p-0.5 rounded-full ${selectedPersonality.color} shadow-sm`}>
+                          <selectedPersonality.icon className="h-2.5 w-2.5" />
+                        </div>
+                      </>
+                    ) : (
+                      <div className={`p-2 rounded-lg ${selectedPersonality.color}`}>
+                        <selectedPersonality.icon className="h-4 w-4" />
+                      </div>
+                    )}
                   </div>
                   <div>
                     <p className="font-medium text-sm">{selectedPersonality.name}</p>
