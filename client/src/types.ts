@@ -73,3 +73,12 @@ export interface Appointment {
   type: 'video' | 'phone' | 'chat';
   notes?: string;
 }
+
+export interface MoodEntry {
+  id: string;
+  userId: string;
+  moodLevel: number;
+  moodType: string;
+  notes?: string;
+  date: Date;
+}
