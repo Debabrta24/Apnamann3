@@ -38,6 +38,14 @@ import {
 import type { Resource } from "@/types";
 import { BackButton } from "@/components/ui/back-button";
 
+// Import generated wellness images
+import stressImage from "@assets/generated_images/Stress_management_breathing_exercise_cea20dc4.png";
+import sleepImage from "@assets/generated_images/Sleep_hygiene_wellness_illustration_06246b3a.png";
+import studyImage from "@assets/generated_images/Study_techniques_educational_illustration_89d65f81.png";
+import mindfulnessImage from "@assets/generated_images/Mindfulness_meditation_wellness_illustration_1d2de5d2.png";
+import socialImage from "@assets/generated_images/Social_confidence_building_illustration_08d34b18.png";
+import careerImage from "@assets/generated_images/Career_guidance_professional_illustration_3fdaef7e.png";
+
 
 const categories = [
   { id: "stress-management", icon: Leaf, label: "Stress Management", color: "bg-card border border-border text-card-foreground" },
@@ -64,6 +72,16 @@ const resourceTypeColors = {
   guide: "bg-secondary/20 text-secondary",
   tool: "bg-primary/20 text-primary",
   activity: "bg-green-500/20 text-green-700",
+};
+
+// Category to image mapping
+const categoryImages = {
+  "stress-management": stressImage,
+  "sleep-hygiene": sleepImage,
+  "study-techniques": studyImage,
+  "mindfulness": mindfulnessImage,
+  "social-confidence": socialImage,
+  "career-guidance": careerImage,
 };
 
 const wellnessResourcesData = {
@@ -598,13 +616,21 @@ export default function Resources() {
                   
                   return (
                     <Card key={resource.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-105 border-l-4 border-l-primary">
-                      {/* Colorful Header with Icon */}
-                      <div className="h-32 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent flex items-center justify-center relative">
-                        <ResourceIcon className="h-16 w-16 text-primary/70" />
+                      {/* Beautiful Category Image */}
+                      <div className="h-32 relative overflow-hidden">
+                        <img 
+                          src={categoryImages[selectedCategory as keyof typeof categoryImages]} 
+                          alt={currentCategoryData?.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                         <div className="absolute top-3 right-3">
-                          <Badge className={`text-xs font-medium ${typeColor}`}>
+                          <Badge className={`text-xs font-medium ${typeColor} backdrop-blur-sm`}>
                             {resource.type}
                           </Badge>
+                        </div>
+                        <div className="absolute bottom-3 left-3">
+                          <ResourceIcon className="h-8 w-8 text-white drop-shadow-lg" />
                         </div>
                       </div>
                       
