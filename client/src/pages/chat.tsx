@@ -250,7 +250,6 @@ export default function Chat() {
             userId={currentUser?.id || ""}
             onPersonalityCreated={handleCustomPersonalityCreated}
           />
-          </div>
           
           <div className="text-center">
             <Button 
