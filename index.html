@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApnaMann - Mental Health Support Platform</title>
+    <meta name="description" content="Mental health support platform for Indian college students offering AI-powered psychological first aid, wellness screening, and peer support.">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Login Screen -->
+        <div id="login-screen" class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="logo">
+                        <div class="logo-icon">🧠</div>
+                        <h1>ApnaMann</h1>
+                    </div>
+                    <p class="subtitle">Mental Health Support Platform</p>
+                    <p class="description">Sign in to access your mental health support platform</p>
+                </div>
+                
+                <form id="login-form" class="login-form">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <div class="input-wrapper">
+                            <i data-lucide="mail" class="input-icon"></i>
+                            <input type="email" id="email" placeholder="your.email@student.edu" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrapper">
+                            <i data-lucide="lock" class="input-icon"></i>
+                            <input type="password" id="password" placeholder="Enter your password" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword()">
+                                <i data-lucide="eye" id="password-toggle-icon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="login-btn">
+                        <i data-lucide="log-in" class="btn-icon"></i>
+                        Sign In Securely
+                    </button>
+                </form>
+
+                <div class="privacy-notice">
+                    <h4>Your Privacy Matters</h4>
+                    <p>All conversations and data are confidential. This platform uses secure encryption and follows strict privacy guidelines to protect your mental health information.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main App -->
+        <div id="main-app" class="main-app hidden">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <div class="mobile-logo">
+                        <div class="logo-icon">🧠</div>
+                        <h1>ApnaMann</h1>
+                    </div>
+                    <nav class="nav">
+                        <button class="nav-btn active" data-page="dashboard">
+                            <i data-lucide="home"></i>
+                            <span>Home</span>
+                        </button>
+                        <button class="nav-btn" data-page="chat">
+                            <i data-lucide="message-square"></i>
+                            <span>AI Assistant</span>
+                        </button>
+                        <button class="nav-btn" data-page="screening">
+                            <i data-lucide="heart"></i>
+                            <span>Screening</span>
+                        </button>
+                        <button class="nav-btn" data-page="profile">
+                            <i data-lucide="user"></i>
+                            <span>Profile</span>
+                        </button>
+                    </nav>
+                    <button class="logout-btn" onclick="logout()">
+                        <i data-lucide="log-out"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Page -->
+            <main id="dashboard-page" class="page active">
+                <div class="container">
+                    <!-- Welcome Section -->
+                    <div class="welcome-section">
+                        <h2>Welcome back, <span id="user-name">Student</span></h2>
+                        <p>How are you feeling today? Remember, taking care of your mental health is just as important as your physical health.</p>
+                        <div class="welcome-actions">
+                            <button class="btn btn-primary" onclick="navigateTo('chat')">
+                                <i data-lucide="brain"></i>
+                                Talk to AI Helper
+                            </button>
+                            <button class="btn btn-secondary" onclick="navigateTo('screening')">
+                                <i data-lucide="heart"></i>
+                                Quick Wellness Check
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions Grid -->
+                    <div class="quick-actions">
+                        <div class="action-card" onclick="navigateTo('chat')">
+                            <div class="action-icon primary">
+                                <i data-lucide="brain"></i>
+                            </div>
+                            <h3>AI Support Chat</h3>
+                            <p>Get instant support and coping strategies</p>
+                        </div>
+                        
+                        <div class="action-card" onclick="navigateTo('screening')">
+                            <div class="action-icon secondary">
+                                <i data-lucide="heart"></i>
+                            </div>
+                            <h3>Wellness Screening</h3>
+                            <p>Check your mental health with PHQ-9 & GAD-7</p>
+                        </div>
+                        
+                        <div class="action-card" onclick="showMoodTracker()">
+                            <div class="action-icon accent">
+                                <i data-lucide="calendar"></i>
+                            </div>
+                            <h3>Mood Tracking</h3>
+                            <p>Track your daily emotions and patterns</p>
+                        </div>
+                        
+                        <div class="action-card" onclick="showCommunity()">
+                            <div class="action-icon chart">
+                                <i data-lucide="users"></i>
+                            </div>
+                            <h3>Peer Support</h3>
+                            <p>Connect with fellow students anonymously</p>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activities -->
+                    <div class="recent-activities">
+                        <h3>Recent Activities</h3>
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon secondary">
+                                    <i data-lucide="heart"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p class="activity-title">Completed GAD-7 Screening</p>
+                                    <p class="activity-time">2 hours ago</p>
+                                </div>
+                                <div class="activity-result">Low Risk</div>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-icon primary">
+                                    <i data-lucide="brain"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p class="activity-title">Chat Session with AI</p>
+                                    <p class="activity-time">Yesterday</p>
+                                </div>
+                                <div class="activity-result">15 min</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Crisis Resources -->
+                    <div class="crisis-resources">
+                        <h4>
+                            <i data-lucide="phone"></i>
+                            Crisis Support
+                        </h4>
+                        <div class="crisis-list">
+                            <div class="crisis-item">
+                                <span>Campus Crisis Helpline</span>
+                                <a href="tel:1800-123-4567">Call Now</a>
+                            </div>
+                            <div class="crisis-item">
+                                <span>National Mental Health Helpline</span>
+                                <a href="tel:1800-891-4416">Call Now</a>
+                            </div>
+                        </div>
+                        <p class="crisis-note">
+                            <i data-lucide="shield"></i>
+                            All conversations are completely confidential
+                        </p>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Chat Page -->
+            <main id="chat-page" class="page">
+                <div class="container">
+                    <!-- AI Personality Selection -->
+                    <div id="personality-selection" class="personality-section">
+                        <div class="personality-header">
+                            <h1>Choose Your AI Companion</h1>
+                            <p>Select the AI personality that best matches your current needs</p>
+                        </div>
+                        
+                        <div class="personality-grid">
+                            <div class="personality-card" data-personality="therapist">
+                                <div class="personality-info">
+                                    <div class="personality-avatar">
+                                        <div class="avatar-bg therapist">👩‍⚕️</div>
+                                        <div class="personality-badge">
+                                            <i data-lucide="brain"></i>
+                                        </div>
+                                    </div>
+                                    <div class="personality-details">
+                                        <h3>Dr. Sarah</h3>
+                                        <p class="role">Cognitive Therapist</p>
+                                    </div>
+                                </div>
+                                <div class="personality-description">
+                                    <p>Specializes in CBT and helps with anxiety, depression, and negative thought patterns</p>
+                                    <div class="personality-style">
+                                        <strong>Style:</strong> Professional, empathetic, and evidence-based approach
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="personality-card" data-personality="coach">
+                                <div class="personality-info">
+                                    <div class="personality-avatar">
+                                        <div class="avatar-bg coach">💪</div>
+                                        <div class="personality-badge">
+                                            <i data-lucide="target"></i>
+                                        </div>
+                                    </div>
+                                    <div class="personality-details">
+                                        <h3>Alex</h3>
+                                        <p class="role">Life Coach</p>
+                                    </div>
+                                </div>
+                                <div class="personality-description">
+                                    <p>Motivational support for goal-setting, productivity, and personal growth</p>
+                                    <div class="personality-style">
+                                        <strong>Style:</strong> Energetic, goal-oriented, and encouraging
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="personality-card" data-personality="mindfulness">
+                                <div class="personality-info">
+                                    <div class="personality-avatar">
+                                        <div class="avatar-bg mindfulness">🧘</div>
+                                        <div class="personality-badge">
+                                            <i data-lucide="heart"></i>
+                                        </div>
+                                    </div>
+                                    <div class="personality-details">
+                                        <h3>Zen</h3>
+                                        <p class="role">Mindfulness Guide</p>
+                                    </div>
+                                </div>
+                                <div class="personality-description">
+                                    <p>Meditation teacher focused on present-moment awareness and stress reduction</p>
+                                    <div class="personality-style">
+                                        <strong>Style:</strong> Calm, wise, and spiritually grounded
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="personality-footer">
+                            <button class="btn btn-outline" onclick="startChatWithDefault()">
+                                Continue with Dr. Sarah (Default)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Chat Interface -->
+                    <div id="chat-interface" class="chat-section hidden">
+                        <div class="chat-header">
+                            <div class="current-ai">
+                                <div class="ai-avatar">
+                                    <div id="current-ai-avatar" class="avatar-bg therapist">👩‍⚕️</div>
+                                    <div class="ai-status online"></div>
+                                </div>
+                                <div class="ai-details">
+                                    <h3 id="current-ai-name">Dr. Sarah</h3>
+                                    <p id="current-ai-role">Cognitive Therapist</p>
+                                </div>
+                            </div>
+                            <div class="chat-actions">
+                                <button class="btn btn-outline btn-sm" onclick="changePersonality()">Change AI</button>
+                                <button class="btn btn-ghost btn-sm" onclick="clearChat()">
+                                    <i data-lucide="trash-2"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="chat-container">
+                            <div id="chat-messages" class="chat-messages">
+                                <div class="message assistant">
+                                    <div class="message-avatar">
+                                        <div class="avatar-bg therapist">👩‍⚕️</div>
+                                    </div>
+                                    <div class="message-content">
+                                        <p>Hello! I'm Dr. Sarah, your cognitive therapist. I'm here to provide you with professional, empathetic support using evidence-based approaches. How can I help you today?</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="chat-input-container">
+                                <div class="chat-input-wrapper">
+                                    <textarea 
+                                        id="chat-input" 
+                                        placeholder="Type your message here..." 
+                                        rows="1"
+                                        onkeydown="handleChatKeydown(event)"
+                                    ></textarea>
+                                    <button id="send-button" class="send-btn" onclick="sendMessage()">
+                                        <i data-lucide="send"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions Sidebar -->
+                        <div class="quick-actions-sidebar">
+                            <h4>Quick Actions</h4>
+                            <div class="sidebar-actions">
+                                <button class="sidebar-action" onclick="triggerQuickAction('breathing')">
+                                    <i data-lucide="wind" class="action-icon secondary"></i>
+                                    <div class="action-text">
+                                        <p class="action-title">Breathing Exercise</p>
+                                        <p class="action-desc">Guided relaxation</p>
+                                    </div>
+                                </button>
+                                
+                                <button class="sidebar-action" onclick="triggerQuickAction('journal')">
+                                    <i data-lucide="pen-tool" class="action-icon primary"></i>
+                                    <div class="action-text">
+                                        <p class="action-title">Mood Journal</p>
+                                        <p class="action-desc">Track your feelings</p>
+                                    </div>
+                                </button>
+                                
+                                <button class="sidebar-action" onclick="triggerQuickAction('relaxation')">
+                                    <i data-lucide="waves" class="action-icon accent"></i>
+                                    <div class="action-text">
+                                        <p class="action-title">Progressive Muscle Relaxation</p>
+                                        <p class="action-desc">Body tension relief</p>
+                                    </div>
+                                </button>
+                                
+                                <button class="sidebar-action emergency" onclick="triggerQuickAction('emergency')">
+                                    <i data-lucide="alert-triangle" class="action-icon destructive"></i>
+                                    <div class="action-text">
+                                        <p class="action-title">Need Immediate Help?</p>
+                                        <p class="action-desc">Connect with counselor</p>
+                                    </div>
+                                </button>
+                            </div>
+
+                            <!-- Current AI Info -->
+                            <div class="current-ai-info">
+                                <h4>Current AI Companion</h4>
+                                <div class="ai-info-content">
+                                    <div class="ai-info-avatar">
+                                        <div id="sidebar-ai-avatar" class="avatar-bg therapist">👩‍⚕️</div>
+                                    </div>
+                                    <div class="ai-info-details">
+                                        <p class="ai-name" id="sidebar-ai-name">Dr. Sarah</p>
+                                        <p class="ai-role" id="sidebar-ai-role">Cognitive Therapist</p>
+                                        <p class="ai-description" id="sidebar-ai-description">Specializes in CBT and helps with anxiety, depression, and negative thought patterns</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Disclaimer -->
+                            <div class="disclaimer">
+                                <p>
+                                    <span class="indicator"></span>
+                                    This AI assistant provides supportive guidance and is not a substitute for professional mental health care. All conversations are confidential.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Screening Page -->
+            <main id="screening-page" class="page">
+                <div class="container">
+                    <div class="screening-header">
+                        <h1>Mental Health Screening</h1>
+                        <p>Complete a quick assessment to understand your current mental health status</p>
+                    </div>
+                    
+                    <div class="screening-options">
+                        <div class="screening-card" onclick="startScreening('phq9')">
+                            <div class="screening-icon">
+                                <i data-lucide="heart"></i>
+                            </div>
+                            <h3>PHQ-9 Depression Screening</h3>
+                            <p>Assess symptoms of depression over the past two weeks</p>
+                            <span class="screening-duration">~5 minutes</span>
+                        </div>
+                        
+                        <div class="screening-card" onclick="startScreening('gad7')">
+                            <div class="screening-icon">
+                                <i data-lucide="brain"></i>
+                            </div>
+                            <h3>GAD-7 Anxiety Screening</h3>
+                            <p>Evaluate anxiety symptoms and their impact</p>
+                            <span class="screening-duration">~3 minutes</span>
+                        </div>
+                    </div>
+                    
+                    <div class="screening-note">
+                        <p>
+                            <i data-lucide="info"></i>
+                            These screenings are confidential and for educational purposes only. They do not replace professional medical diagnosis.
+                        </p>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Profile Page -->
+            <main id="profile-page" class="page">
+                <div class="container">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <div class="avatar-placeholder">
+                                <i data-lucide="user"></i>
+                            </div>
+                        </div>
+                        <div class="profile-info">
+                            <h1 id="profile-name">Student Name</h1>
+                            <p id="profile-email">student@example.edu</p>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-sections">
+                        <div class="profile-section">
+                            <h3>Personal Information</h3>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Institution</label>
+                                    <span>University of Excellence</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Course</label>
+                                    <span>Computer Science</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>Year</label>
+                                    <span>3rd Year</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-section">
+                            <h3>Privacy & Security</h3>
+                            <div class="privacy-options">
+                                <div class="privacy-item">
+                                    <div class="privacy-info">
+                                        <h4>Data Encryption</h4>
+                                        <p>All your data is encrypted and secure</p>
+                                    </div>
+                                    <div class="privacy-status">
+                                        <i data-lucide="shield-check"></i>
+                                        <span>Enabled</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="privacy-item">
+                                    <div class="privacy-info">
+                                        <h4>Anonymous Mode</h4>
+                                        <p>Use the platform without revealing identity</p>
+                                    </div>
+                                    <div class="privacy-toggle">
+                                        <label class="switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
