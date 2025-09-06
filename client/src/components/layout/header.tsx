@@ -58,7 +58,7 @@ export default function Header() {
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[280px] sm:w-[350px]">
+              <SheetContent side="left" className="w-[280px] sm:w-[350px] overflow-y-auto">
                 <SheetHeader>
                   <SheetTitle className="text-left">Navigation</SheetTitle>
                 </SheetHeader>
@@ -79,7 +79,7 @@ export default function Header() {
                     <Button
                       key={item.href}
                       variant="ghost"
-                      className="justify-start h-12"
+                      className="justify-start h-12 text-left w-full"
                       onClick={() => {
                         setLocation(item.href);
                         setMobileMenuOpen(false);
@@ -104,7 +104,7 @@ export default function Header() {
                         <Button
                           key={item.href}
                           variant="ghost"
-                          className="justify-start h-12 w-full pl-6"
+                          className="justify-start h-12 w-full pl-6 text-left"
                           onClick={() => {
                             setLocation(item.href);
                             setMobileMenuOpen(false);
@@ -131,7 +131,7 @@ export default function Header() {
                         <Button
                           key={item.href}
                           variant="ghost"
-                          className="justify-start h-12 w-full pl-6"
+                          className="justify-start h-12 w-full pl-6 text-left"
                           onClick={() => {
                             setLocation(item.href);
                             setMobileMenuOpen(false);

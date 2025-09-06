@@ -36,13 +36,13 @@ export default function Navigation() {
   const isLiveActive = liveItems.some(item => location === item.href);
 
   return (
-    <nav className="hidden md:flex items-center space-x-6">
+    <nav className="hidden md:flex items-center space-x-4 lg:space-x-6">
       {navItems.map((item) => (
         <button
           key={item.href}
           onClick={() => setLocation(item.href)}
           className={cn(
-            "text-foreground hover:text-primary transition-colors",
+            "text-foreground hover:text-primary transition-colors whitespace-nowrap text-sm lg:text-base",
             location === item.href && "text-primary font-medium"
           )}
           data-testid={item.testId}
@@ -54,7 +54,7 @@ export default function Navigation() {
       {/* Entertainment Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger className={cn(
-          "flex items-center space-x-1 text-foreground hover:text-primary transition-colors focus:outline-none",
+          "flex items-center space-x-1 text-foreground hover:text-primary transition-colors focus:outline-none whitespace-nowrap text-sm lg:text-base",
           isEntertainmentActive && "text-primary font-medium"
         )}>
           <span>Entertainment</span>
@@ -81,7 +81,7 @@ export default function Navigation() {
       {/* Live Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger className={cn(
-          "flex items-center space-x-1 text-foreground hover:text-primary transition-colors focus:outline-none",
+          "flex items-center space-x-1 text-foreground hover:text-primary transition-colors focus:outline-none whitespace-nowrap text-sm lg:text-base",
           isLiveActive && "text-primary font-medium"
         )}>
           <span>Live</span>
