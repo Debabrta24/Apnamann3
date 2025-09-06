@@ -9,6 +9,7 @@ export interface User {
   year?: number;
   language: string;
   isAdmin: boolean;
+  coins?: number;
 }
 
 export interface ScreeningAssessment {

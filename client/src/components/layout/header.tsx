@@ -18,6 +18,7 @@ import { useAppContext } from "@/context/AppContext";
 import { useLocation } from "wouter";
 import GlobalSearch from "@/components/global-search";
 import NotificationCenter from "@/components/notifications/notification-center";
+import CoinDisplay from "@/components/coins/coin-display";
 import logoUrl from '@/assets/logo.png';
 
 const languages = [
@@ -308,6 +309,10 @@ export default function Header() {
           {/* User menu */}
           <div className="flex items-center space-x-4">
             <NotificationCenter />
+
+            {currentUser && (
+              <CoinDisplay userCoins={currentUser.coins || 0} />
+            )}
 
             <Button
               variant="ghost"
