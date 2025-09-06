@@ -122,7 +122,7 @@ export default function Dashboard() {
         <div className="flex flex-col sm:flex-row gap-4">
           <Button
             onClick={() => setLocation("/chat")}
-            className="bg-white/90 hover:bg-white text-primary border-0"
+            className="bg-primary-foreground/20 hover:bg-primary-foreground/30 text-primary-foreground"
             data-testid="button-start-chat"
           >
             <Brain className="mr-2 h-4 w-4" />
