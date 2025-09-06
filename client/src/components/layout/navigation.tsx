@@ -1,17 +1,39 @@
 import { useLocation } from "wouter";
+import { ChevronDown, Play, Music, Gamepad2, Video, Radio, Users, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
 
 const navItems = [
   { href: "/", label: "Home", testId: "nav-home" },
   { href: "/chat", label: "AI Support", testId: "nav-chat" },
+  { href: "/doctor", label: "Doctor", testId: "nav-doctor" },
   { href: "/screening", label: "Screening", testId: "nav-screening" },
   { href: "/resources", label: "Resources", testId: "nav-resources" },
-  { href: "/community", label: "Community", testId: "nav-community" },
-  { href: "/peer-calling", label: "Peer Calls", testId: "nav-peer-calling" },
+];
+
+const entertainmentItems = [
+  { href: "/games", label: "Games", icon: Gamepad2, testId: "nav-games" },
+  { href: "/music", label: "Mind Fresh Music", icon: Music, testId: "nav-music" },
+  { href: "/videos", label: "Motivational Videos", icon: Video, testId: "nav-videos" },
+  { href: "/entertainment", label: "Entertainment Hub", icon: Play, testId: "nav-entertainment-hub" },
+];
+
+const liveItems = [
+  { href: "/live", label: "Live Sessions", icon: Radio, testId: "nav-live-sessions" },
+  { href: "/community", label: "Community", icon: Users, testId: "nav-community" },
+  { href: "/peer-calling", label: "Peer Calling", icon: Phone, testId: "nav-peer-calling" },
 ];
 
 export default function Navigation() {
   const [location, setLocation] = useLocation();
+
+  const isEntertainmentActive = entertainmentItems.some(item => location === item.href);
+  const isLiveActive = liveItems.some(item => location === item.href);
 
   return (
     <nav className="hidden md:flex items-center space-x-6">
@@ -28,6 +50,60 @@ export default function Navigation() {
           {item.label}
         </button>
       ))}
+      
+      {/* Entertainment Dropdown */}
+      <DropdownMenu>
+        <DropdownMenuTrigger className={cn(
+          "flex items-center space-x-1 text-foreground hover:text-primary transition-colors focus:outline-none",
+          isEntertainmentActive && "text-primary font-medium"
+        )}>
+          <span>Entertainment</span>
+          <ChevronDown className="h-3 w-3" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-56">
+          {entertainmentItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <DropdownMenuItem
+                key={item.href}
+                onClick={() => setLocation(item.href)}
+                className="flex items-center space-x-2 cursor-pointer"
+                data-testid={item.testId}
+              >
+                <Icon className="h-4 w-4" />
+                <span>{item.label}</span>
+              </DropdownMenuItem>
+            );
+          })}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {/* Live Dropdown */}
+      <DropdownMenu>
+        <DropdownMenuTrigger className={cn(
+          "flex items-center space-x-1 text-foreground hover:text-primary transition-colors focus:outline-none",
+          isLiveActive && "text-primary font-medium"
+        )}>
+          <span>Live</span>
+          <ChevronDown className="h-3 w-3" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-56">
+          {liveItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <DropdownMenuItem
+                key={item.href}
+                onClick={() => setLocation(item.href)}
+                className="flex items-center space-x-2 cursor-pointer"
+                data-testid={item.testId}
+              >
+                <Icon className="h-4 w-4" />
+                <span>{item.label}</span>
+              </DropdownMenuItem>
+            );
+          })}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </nav>
   );
 }

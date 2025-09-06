@@ -66,20 +66,14 @@ export default function Header() {
                   <GlobalSearch />
                 </div>
                 <nav className="flex flex-col space-y-4">
+                  {/* Main Navigation Items */}
                   {[
                     { href: "/", label: "Home", testId: "nav-home-mobile" },
                     { href: "/chat", label: "AI Support", testId: "nav-chat-mobile" },
                     { href: "/doctor", label: "Doctor", testId: "nav-doctor-mobile" },
                     { href: "/screening", label: "Screening", testId: "nav-screening-mobile" },
-                    { href: "/games", label: "Games", testId: "nav-games-mobile" },
-                    { href: "/music", label: "Mind Fresh Music", testId: "nav-music-mobile" },
                     { href: "/diary", label: "My Diary", testId: "nav-diary-mobile" },
-                    { href: "/videos", label: "Motivational Videos", testId: "nav-videos-mobile" },
-                    { href: "/entertainment", label: "Entertainment", testId: "nav-entertainment-mobile" },
-                    { href: "/live", label: "Live", testId: "nav-live-mobile" },
                     { href: "/resources", label: "Resources", testId: "nav-resources-mobile" },
-                    { href: "/community", label: "Community", testId: "nav-community-mobile" },
-                    { href: "/peer-calling", label: "Peer Calls", testId: "nav-peer-calling-mobile" },
                   ].map((item) => (
                     <Button
                       key={item.href}
@@ -94,6 +88,61 @@ export default function Header() {
                       {item.label}
                     </Button>
                   ))}
+                  
+                  {/* Entertainment Section */}
+                  <div className="pt-4 border-t border-border">
+                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
+                      Entertainment
+                    </h3>
+                    <div className="space-y-2">
+                      {[
+                        { href: "/games", label: "Games", testId: "nav-games-mobile" },
+                        { href: "/music", label: "Mind Fresh Music", testId: "nav-music-mobile" },
+                        { href: "/videos", label: "Motivational Videos", testId: "nav-videos-mobile" },
+                        { href: "/entertainment", label: "Entertainment Hub", testId: "nav-entertainment-mobile" },
+                      ].map((item) => (
+                        <Button
+                          key={item.href}
+                          variant="ghost"
+                          className="justify-start h-12 w-full pl-6"
+                          onClick={() => {
+                            setLocation(item.href);
+                            setMobileMenuOpen(false);
+                          }}
+                          data-testid={item.testId}
+                        >
+                          {item.label}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Live Section */}
+                  <div className="pt-4 border-t border-border">
+                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
+                      Live
+                    </h3>
+                    <div className="space-y-2">
+                      {[
+                        { href: "/live", label: "Live Sessions", testId: "nav-live-sessions-mobile" },
+                        { href: "/community", label: "Community", testId: "nav-community-mobile" },
+                        { href: "/peer-calling", label: "Peer Calling", testId: "nav-peer-calling-mobile" },
+                      ].map((item) => (
+                        <Button
+                          key={item.href}
+                          variant="ghost"
+                          className="justify-start h-12 w-full pl-6"
+                          onClick={() => {
+                            setLocation(item.href);
+                            setMobileMenuOpen(false);
+                          }}
+                          data-testid={item.testId}
+                        >
+                          {item.label}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
                   
                   {/* Wellness Tools Section for Mobile */}
                   <div className="pt-4 border-t border-border">
