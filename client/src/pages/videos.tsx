@@ -18,7 +18,7 @@ interface Video {
   description: string;
   duration: string;
   views: number;
-  category: 'Motivation' | 'Mindfulness' | 'Success' | 'Wellness' | 'Inspiration' | 'Comedy';
+  category: 'Mindfulness' | 'Success' | 'Wellness' | 'Inspiration' | 'Comedy';
   thumbnailUrl: string;
   videoUrl: string;
   speaker: string;
@@ -140,7 +140,7 @@ const generateVideoData = () => {
     "https://www.youtube.com/watch?v=placeholder100"
   ];
 
-  const categories = ["Motivation", "Mindfulness", "Wellness", "Comedy", "Success", "Inspiration"];
+  const categories = ["Mindfulness", "Wellness", "Comedy", "Success", "Inspiration"];
   const speakers = [
     "Dr. Sarah Johnson", "Motivational Speaker", "Life Coach", "Success Coach", "Fear Coach",
     "Life Mentor", "Dream Coach", "Power Coach", "Life Purpose Coach", "Mindset Expert",
@@ -150,10 +150,10 @@ const generateVideoData = () => {
   ];
 
   const videoTitles = [
-    "The Power of Positive Thinking", "Never Give Up - Motivational Speech", "Believe in Yourself - Life Changing Speech",
-    "Success Mindset - You Can Do It", "Overcome Your Fears - Motivational Video", "Rise Above Challenges",
-    "Dream Big - Motivational Message", "Unstoppable You", "Life is Worth Living", "Transform Your Mindset",
-    "Inner Strength and Resilience", "Motivation for Success", "Personal Growth Journey", "Breathing Techniques for Anxiety",
+    "Mindful Breathing Techniques", "Success Through Mindfulness", "Daily Wellness Practices",
+    "Success Mindset Development", "Overcoming Life Challenges", "Building Inner Resilience",
+    "Wellness & Self-Care", "Inner Peace Meditation", "Life Balance Techniques", "Transform Your Wellness",
+    "Inner Strength and Resilience", "Achieving Success Naturally", "Personal Growth Journey", "Breathing Techniques for Anxiety",
     "5-Minute Daily Meditation Guide", "Healthy Habits for Mental Wellness", "Laugh Your Way to Better Health",
     "Stand-up Comedy: Life's Funny Moments", "Funny Animal Videos Compilation", "Comedy Therapy: Humor as Medicine",
     "Building Confidence Daily", "Stress Management Techniques", "Finding Your Purpose", "Mindful Living Guide",
@@ -209,7 +209,7 @@ const generateVideoData = () => {
       description: descriptions[index % descriptions.length],
       duration: `${Math.floor(Math.random() * 15) + 5}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`,
       views: Math.floor(Math.random() * 50000) + 10000,
-      category: categories[index % categories.length] as 'Motivation' | 'Mindfulness' | 'Success' | 'Wellness' | 'Inspiration' | 'Comedy',
+      category: categories[index % categories.length] as 'Mindfulness' | 'Success' | 'Wellness' | 'Inspiration' | 'Comedy',
       thumbnailUrl: isPlaceholder 
         ? `https://via.placeholder.com/320x180/8b5cf6/ffffff?text=Video+${index + 1}`
         : `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
@@ -226,7 +226,7 @@ const generateVideoData = () => {
 
 const motivationalVideos: Video[] = generateVideoData();
 
-const categories = ["All", "Motivation", "Mindfulness", "Success", "Wellness", "Inspiration", "Comedy"];
+const categories = ["All", "Mindfulness", "Success", "Wellness", "Inspiration", "Comedy"];
 
 export default function Videos() {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
