@@ -172,6 +172,7 @@ export default function Music() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [likedTracks, setLikedTracks] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [ambientTimer, setAmbientTimer] = useState<NodeJS.Timeout | null>(null);
   
   const audioRef = useRef<HTMLAudioElement>(null);
 
