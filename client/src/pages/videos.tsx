@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Play, Clock, Eye, Heart, Filter, Search, ChevronDown } from "lucide-react";
+import { Play, Clock, Eye, Heart, Filter, Search, ChevronDown, MessageCircle, ThumbsUp, ThumbsDown, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BackButton } from "@/components/ui/back-button";
+import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 interface Video {
   id: string;
@@ -19,6 +23,16 @@ interface Video {
   videoUrl: string;
   speaker: string;
   tags: string[];
+}
+
+interface Comment {
+  id: string;
+  author: string;
+  content: string;
+  timestamp: string;
+  likes: number;
+  dislikes: number;
+  avatar?: string;
 }
 
 // Function to generate video data from YouTube URLs
@@ -219,6 +233,9 @@ export default function Videos() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
   const [likedVideos, setLikedVideos] = useState<string[]>([]);
+  const [comments, setComments] = useState<Record<string, Comment[]>>({});
+  const [newComment, setNewComment] = useState("");
+  const [commentLikes, setCommentLikes] = useState<Record<string, {likes: Set<string>, dislikes: Set<string>}>>({});
 
   const filteredVideos = motivationalVideos.filter(video => {
     const matchesCategory = selectedCategory === "All" || video.category === selectedCategory;
@@ -234,6 +251,56 @@ export default function Videos() {
         ? prev.filter(id => id !== videoId)
         : [...prev, videoId]
     );
+  };
+
+  const addComment = () => {
+    if (!selectedVideo || !newComment.trim()) return;
+    
+    const comment: Comment = {
+      id: Date.now().toString(),
+      author: "Anonymous User",
+      content: newComment,
+      timestamp: new Date().toLocaleString(),
+      likes: 0,
+      dislikes: 0
+    };
+    
+    setComments(prev => ({
+      ...prev,
+      [selectedVideo.id]: [...(prev[selectedVideo.id] || []), comment]
+    }));
+    
+    setNewComment("");
+  };
+
+  const toggleCommentLike = (commentId: string, type: 'like' | 'dislike') => {
+    const userId = "current-user"; // In a real app, this would be the actual user ID
+    
+    setCommentLikes(prev => {
+      const current = prev[commentId] || { likes: new Set(), dislikes: new Set() };
+      const newState = { ...current };
+      
+      if (type === 'like') {
+        if (newState.likes.has(userId)) {
+          newState.likes.delete(userId);
+        } else {
+          newState.likes.add(userId);
+          newState.dislikes.delete(userId);
+        }
+      } else {
+        if (newState.dislikes.has(userId)) {
+          newState.dislikes.delete(userId);
+        } else {
+          newState.dislikes.add(userId);
+          newState.likes.delete(userId);
+        }
+      }
+      
+      return {
+        ...prev,
+        [commentId]: newState
+      };
+    });
   };
 
   const formatViews = (views: number) => {
@@ -390,12 +457,13 @@ export default function Videos() {
             <div className="flex flex-col h-full">
               <div className="relative aspect-video bg-black">
                 <iframe
-                  src={selectedVideo.videoUrl}
+                  src={`${selectedVideo.videoUrl}?autoplay=1&enablejsapi=1&origin=${window.location.origin}`}
                   className="w-full h-full"
                   frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
                   title={selectedVideo.title}
+                  sandbox="allow-scripts allow-same-origin allow-presentation"
                 ></iframe>
                 <div className="absolute top-4 right-4 flex items-center gap-2 bg-black/70 px-3 py-1 rounded-full">
                   <svg className="h-4 w-4 text-red-500" viewBox="0 0 24 24" fill="currentColor">
@@ -455,6 +523,101 @@ export default function Videos() {
                       </Badge>
                     ))}
                   </div>
+                </div>
+
+                <Separator />
+
+                {/* Comments Section */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <MessageCircle className="h-5 w-5" />
+                    <h4 className="font-medium">Comments ({(comments[selectedVideo.id] || []).length})</h4>
+                  </div>
+
+                  {/* Add Comment */}
+                  <div className="space-y-3">
+                    <div className="flex gap-3">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback>AU</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 space-y-2">
+                        <Textarea
+                          value={newComment}
+                          onChange={(e) => setNewComment(e.target.value)}
+                          placeholder="Add a comment..."
+                          className="min-h-[80px] resize-none"
+                          data-testid="comment-input"
+                        />
+                        <div className="flex justify-end">
+                          <Button 
+                            onClick={addComment}
+                            size="sm"
+                            disabled={!newComment.trim()}
+                            data-testid="submit-comment"
+                          >
+                            <Send className="h-4 w-4 mr-2" />
+                            Comment
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Comments List */}
+                  <ScrollArea className="h-[300px]">
+                    <div className="space-y-4">
+                      {(comments[selectedVideo.id] || []).map((comment) => {
+                        const commentLike = commentLikes[comment.id] || { likes: new Set(), dislikes: new Set() };
+                        const userId = "current-user";
+                        const hasLiked = commentLike.likes.has(userId);
+                        const hasDisliked = commentLike.dislikes.has(userId);
+                        
+                        return (
+                          <div key={comment.id} className="flex gap-3 p-3 bg-muted/30 rounded-lg">
+                            <Avatar className="h-8 w-8">
+                              <AvatarFallback>{comment.author.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1 space-y-2">
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium text-sm">{comment.author}</span>
+                                <span className="text-xs text-muted-foreground">{comment.timestamp}</span>
+                              </div>
+                              <p className="text-sm leading-relaxed">{comment.content}</p>
+                              <div className="flex items-center gap-4">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => toggleCommentLike(comment.id, 'like')}
+                                  className={`h-8 px-2 ${hasLiked ? 'text-blue-600' : 'text-muted-foreground'}`}
+                                  data-testid={`like-comment-${comment.id}`}
+                                >
+                                  <ThumbsUp className="h-3 w-3 mr-1" />
+                                  {commentLike.likes.size}
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => toggleCommentLike(comment.id, 'dislike')}
+                                  className={`h-8 px-2 ${hasDisliked ? 'text-red-600' : 'text-muted-foreground'}`}
+                                  data-testid={`dislike-comment-${comment.id}`}
+                                >
+                                  <ThumbsDown className="h-3 w-3 mr-1" />
+                                  {commentLike.dislikes.size}
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                      
+                      {(comments[selectedVideo.id] || []).length === 0 && (
+                        <div className="text-center py-8 text-muted-foreground">
+                          <MessageCircle className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                          <p>No comments yet. Be the first to share your thoughts!</p>
+                        </div>
+                      )}
+                    </div>
+                  </ScrollArea>
                 </div>
               </div>
             </div>
