@@ -347,14 +347,29 @@ export default function Videos() {
                 className="relative overflow-hidden rounded-t-lg"
                 onClick={() => setSelectedVideo(video)}
               >
-                <div className="w-full h-48 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center relative">
-                  <div className="text-center text-white">
-                    <Play className="h-12 w-12 mx-auto mb-2 opacity-80" />
-                    <p className="text-sm font-medium">{video.category}</p>
+                <div className="w-full h-48 relative overflow-hidden">
+                  <img 
+                    src={video.thumbnailUrl} 
+                    alt={video.title}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback to a gradient background if thumbnail fails to load
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const fallback = target.nextElementSibling as HTMLElement;
+                      if (fallback) fallback.style.display = 'flex';
+                    }}
+                  />
+                  <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center absolute inset-0" style={{display: 'none'}}>
+                    <div className="text-center text-white">
+                      <Play className="h-12 w-12 mx-auto mb-2 opacity-80" />
+                      <p className="text-sm font-medium">{video.category}</p>
+                    </div>
                   </div>
                   <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
                     {video.speaker}
                   </div>
+                  <div className="absolute inset-0 bg-black/30"></div>
                 </div>
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center">
@@ -422,14 +437,10 @@ export default function Videos() {
 
       {/* Video Player Modal */}
       <Dialog open={!!selectedVideo} onOpenChange={() => setSelectedVideo(null)}>
-        <DialogContent className="max-w-4xl h-[80vh]">
-          <DialogHeader>
-            <DialogTitle>{selectedVideo?.title}</DialogTitle>
-          </DialogHeader>
-          
+        <DialogContent className="max-w-6xl max-h-[90vh] p-0">
           {selectedVideo && (
-            <div className="flex-1 flex flex-col">
-              <div className="aspect-video bg-black rounded-lg overflow-hidden mb-4">
+            <div className="flex flex-col h-full">
+              <div className="relative aspect-video bg-black">
                 <iframe
                   src={selectedVideo.videoUrl}
                   className="w-full h-full"
@@ -438,38 +449,51 @@ export default function Videos() {
                   allowFullScreen
                   title={selectedVideo.title}
                 ></iframe>
+                <div className="absolute top-4 right-4 flex items-center gap-2 bg-black/70 px-3 py-1 rounded-full">
+                  <svg className="h-4 w-4 text-red-500" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  </svg>
+                  <span className="text-white text-xs font-medium">YouTube</span>
+                </div>
               </div>
               
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium text-sm text-muted-foreground">
-                      by {selectedVideo.speaker}
-                    </p>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
-                      <div className="flex items-center gap-1">
-                        <Eye className="h-3 w-3" />
-                        {formatViews(selectedVideo.views)} views
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {selectedVideo.duration}
+              <div className="p-6 space-y-4 overflow-y-auto">
+                <div>
+                  <h2 className="text-2xl font-bold mb-2">{selectedVideo.title}</h2>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-sm text-muted-foreground">
+                        by {selectedVideo.speaker}
+                      </p>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
+                        <div className="flex items-center gap-1">
+                          <Eye className="h-3 w-3" />
+                          {formatViews(selectedVideo.views)} views
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {selectedVideo.duration}
+                        </div>
+                        <Badge variant="outline" className="text-xs">
+                          {selectedVideo.category}
+                        </Badge>
                       </div>
                     </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => toggleLike(selectedVideo.id)}
+                      data-testid={`modal-like-video-${selectedVideo.id}`}
+                    >
+                      <Heart className={`h-4 w-4 mr-2 ${likedVideos.includes(selectedVideo.id) ? 'fill-current text-red-500' : ''}`} />
+                      {likedVideos.includes(selectedVideo.id) ? 'Liked' : 'Like'}
+                    </Button>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => toggleLike(selectedVideo.id)}
-                  >
-                    <Heart className={`h-4 w-4 mr-2 ${likedVideos.includes(selectedVideo.id) ? 'fill-current text-red-500' : ''}`} />
-                    {likedVideos.includes(selectedVideo.id) ? 'Liked' : 'Like'}
-                  </Button>
                 </div>
                 
                 <div>
-                  <h4 className="font-medium mb-2">Description</h4>
-                  <p className="text-sm text-muted-foreground">
+                  <h4 className="font-medium mb-2">About this video</h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     {selectedVideo.description}
                   </p>
                 </div>
@@ -478,7 +502,7 @@ export default function Videos() {
                   <h4 className="font-medium mb-2">Tags</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedVideo.tags.map((tag, index) => (
-                      <Badge key={index} variant="secondary">
+                      <Badge key={index} variant="secondary" className="text-xs">
                         #{tag}
                       </Badge>
                     ))}
