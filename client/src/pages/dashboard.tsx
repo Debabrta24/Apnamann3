@@ -130,8 +130,7 @@ export default function Dashboard() {
           </Button>
           <Button
             onClick={() => setLocation("/screening")}
-            variant="outline"
-            className="border-primary-foreground/30 hover:border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10"
+            className="bg-white/90 hover:bg-white text-primary border-0"
             data-testid="button-start-screening"
           >
             <Heart className="mr-2 h-4 w-4" />
