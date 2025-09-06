@@ -96,9 +96,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window !== "undefined") {
       const savedTheme = localStorage.getItem("theme");
-      return (savedTheme as "light" | "dark") || "light";
+      return (savedTheme as "light" | "dark") || "dark";
     }
-    return "light";
+    return "dark";
   });
 
   useEffect(() => {
