@@ -118,14 +118,38 @@ export default function Chat() {
     setSelectedAction(action);
   };
 
-  const handlePersonalitySelect = (personality: typeof aiPersonalities[0]) => {
-    setSelectedPersonality(personality);
+  const handlePersonalitySelect = (personality: typeof aiPersonalities[0] | any) => {
+    // Ensure custom personalities have the required properties for display
+    let normalizedPersonality = personality;
+    
+    if (personality.customPrompt) {
+      // This is a custom personality, add default display properties
+      normalizedPersonality = {
+        ...personality,
+        icon: Sparkles,
+        color: "bg-gradient-to-br from-primary to-primary/60 text-primary-foreground",
+        role: "Custom AI",
+        personality: "Trained on your conversations - completely free!"
+      };
+    }
+    
+    setSelectedPersonality(normalizedPersonality);
     setShowPersonalities(false);
   };
 
   const handleCustomPersonalityCreated = (personality: any) => {
     refetchPersonalities();
-    setSelectedPersonality(personality);
+    
+    // Normalize the custom personality for display
+    const normalizedPersonality = {
+      ...personality,
+      icon: Sparkles,
+      color: "bg-gradient-to-br from-primary to-primary/60 text-primary-foreground",
+      role: "Custom AI",
+      personality: "Trained on your conversations - completely free!"
+    };
+    
+    setSelectedPersonality(normalizedPersonality);
     setShowPersonalities(false);
     toast({
       title: "Success! 🎉",
