@@ -42,11 +42,11 @@ function Router() {
   
   // Dropdown states for navigation sections
   const [dropdownStates, setDropdownStates] = useState({
-    doctorScreening: true,
-    wellness: true,
-    relaxRefresh: true,
-    community: true,
-    mySpace: true
+    doctorScreening: false,
+    wellness: false,
+    relaxRefresh: false,
+    community: false,
+    mySpace: false
   });
   
   const toggleDropdown = (section: keyof typeof dropdownStates) => {
