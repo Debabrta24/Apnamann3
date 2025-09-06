@@ -30,6 +30,7 @@ import DiaryPage from "@/pages/diary";
 import VideosPage from "@/pages/videos";
 import Games from "@/pages/games";
 import Doctor from "@/pages/doctor";
+import Medicine from "@/pages/medicine";
 import Entertainment from "@/pages/entertainment";
 import Live from "@/pages/live";
 import YogaPage from "@/pages/yoga";
@@ -344,6 +345,7 @@ function Router() {
               <Route path="/community" component={Community} />
               <Route path="/peer-calling" component={PeerCalling} />
               <Route path="/doctor" component={Doctor} />
+              <Route path="/medicine" component={Medicine} />
               <Route path="/entertainment" component={Entertainment} />
               <Route path="/live" component={Live} />
               <Route path="/yoga" component={YogaPage} />

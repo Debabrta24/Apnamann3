@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { ChevronDown, Play, Music, Gamepad2, Video, Radio, Users, Phone, Stethoscope, Brain, Flower, Moon, BookOpen, Save, MessageSquare } from "lucide-react";
+import { ChevronDown, Play, Music, Gamepad2, Video, Radio, Users, Phone, Stethoscope, Brain, Flower, Moon, BookOpen, Save, MessageSquare, Pill } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
   DropdownMenu, 
@@ -16,6 +16,7 @@ const navItems = [
 const doctorScreeningItems = [
   { href: "/doctor", label: "Doctor", icon: Stethoscope, testId: "nav-doctor" },
   { href: "/screening", label: "Screening", icon: Brain, testId: "nav-screening" },
+  { href: "/medicine", label: "Buy Medicine", icon: Pill, testId: "nav-medicine" },
 ];
 
 const wellnessItems = [
