@@ -29,7 +29,7 @@ const motivationalVideos: Video[] = [
     duration: "12:45",
     views: 15420,
     category: "Motivation",
-    thumbnailUrl: "https://via.placeholder.com/320x180/3b82f6/ffffff?text=Positive+Thinking",
+    thumbnailUrl: "https://img.youtube.com/vi/27LIATkhqAU/maxresdefault.jpg",
     videoUrl: "https://www.youtube.com/embed/27LIATkhqAU",
     speaker: "Dr. Sarah Johnson",
     tags: ["mindset", "positivity", "mental health"]
@@ -53,7 +53,7 @@ const motivationalVideos: Video[] = [
     duration: "15:20",
     views: 31200,
     category: "Motivation",
-    thumbnailUrl: "https://via.placeholder.com/320x180/f59e0b/ffffff?text=Never+Give+Up",
+    thumbnailUrl: "https://img.youtube.com/vi/EP8VVr4fIj4/maxresdefault.jpg",
     videoUrl: "https://www.youtube.com/embed/EP8VVr4fIj4",
     speaker: "Motivational Speaker",
     tags: ["motivation", "perseverance", "success"]
