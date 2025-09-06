@@ -372,14 +372,14 @@ This AI has learned from real conversation patterns and will respond authentical
         // Create a basic user record if it doesn't exist
         const basicUser = await storage.createUser({
           id: userId,
+          username: `user-${userId.substring(0, 8)}`,
           email: `user-${userId}@temp.com`,
           password: 'temp-password',
           firstName: 'User',
           lastName: '',
           institution: 'Unknown',
           course: 'Unknown',
-          yearOfStudy: 1,
-          role: 'student'
+          year: 1
         });
         console.log('Created basic user record for custom personality');
       }
