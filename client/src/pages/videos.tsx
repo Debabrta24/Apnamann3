@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { BackButton } from "@/components/ui/back-button";
 
 interface Video {
   id: string;
@@ -175,6 +176,7 @@ export default function Videos() {
 
   return (
     <div className="container mx-auto p-6 max-w-7xl">
+      <BackButton />
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">Mind Fresh Videos</h1>
         <p className="text-muted-foreground">Inspiring and entertaining content to boost your mental wellness and mood</p>

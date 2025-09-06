@@ -10,6 +10,7 @@ import { ambientMusic } from "@/lib/ambient-music";
 import { musicAPI, Track } from "@/lib/music-api";
 import { localMusicManager, LocalTrack } from "@/lib/local-music";
 import { useQuery } from "@tanstack/react-query";
+import { BackButton } from "@/components/ui/back-button";
 
 const musicTracks = [
   {
@@ -517,6 +518,7 @@ export default function Music() {
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
+      <BackButton />
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">Mind Fresh Music</h1>
         <p className="text-muted-foreground">Relaxing music and nature sounds for mental wellness</p>

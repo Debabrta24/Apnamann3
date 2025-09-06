@@ -20,6 +20,7 @@ import {
   Filter 
 } from "lucide-react";
 import type { Resource } from "@/types";
+import { BackButton } from "@/components/ui/back-button";
 
 const categories = [
   { id: "stress-management", icon: Leaf, label: "Stress Management", color: "bg-primary text-primary-foreground" },
@@ -80,6 +81,7 @@ export default function Resources() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <BackButton />
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">Wellness Resources</h1>
         <p className="text-muted-foreground">

@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Wind, PenTool, Waves, AlertTriangle, Bot, Heart, Brain, Lightbulb, Target, Plus, Upload, FileText, File, X } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
 import { useToast } from "@/hooks/use-toast";
+import { BackButton } from "@/components/ui/back-button";
 
 const aiPersonalities = [
   {
@@ -233,6 +234,7 @@ export default function Chat() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <BackButton />
       {showPersonalities ? (
         /* AI Personality Selection */
         <div className="space-y-6">

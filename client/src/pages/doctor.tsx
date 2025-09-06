@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAppContext } from "@/context/AppContext";
+import { BackButton } from "@/components/ui/back-button";
 
 const doctors = [
   {
@@ -90,6 +91,7 @@ export default function Doctor() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <BackButton />
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
