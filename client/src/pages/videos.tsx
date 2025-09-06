@@ -463,13 +463,13 @@ export default function Videos() {
             <div className="flex flex-col h-full">
               <div className="relative aspect-video bg-black">
                 <iframe
-                  src={`${selectedVideo.videoUrl}?autoplay=1&enablejsapi=1&origin=${window.location.origin}`}
+                  src={`${selectedVideo.videoUrl}?autoplay=1&rel=0&modestbranding=1`}
                   className="w-full h-full"
                   frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                   title={selectedVideo.title}
-                  sandbox="allow-scripts allow-same-origin allow-presentation"
+                  referrerPolicy="strict-origin-when-cross-origin"
                 ></iframe>
                 <div className="absolute top-4 right-4 flex items-center gap-2 bg-black/70 px-3 py-1 rounded-full">
                   <svg className="h-4 w-4 text-red-500" viewBox="0 0 24 24" fill="currentColor">
