@@ -10,13 +10,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { useAppContext } from "@/context/AppContext";
+import { useAppContext, type ThemeType } from "@/context/AppContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
 export default function Profile() {
-  const { currentUser, setCurrentUser, theme, toggleTheme } = useAppContext();
+  const { currentUser, setCurrentUser, theme, setTheme, toggleTheme } = useAppContext();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -522,19 +522,52 @@ export default function Profile() {
                   Appearance & Language
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label>Dark Mode</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Use dark theme for better viewing in low light conditions
-                    </p>
+              <CardContent className="space-y-6">
+                <div className="space-y-3">
+                  <Label>Color Theme</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Choose a color theme that feels comfortable and calming for you
+                  </p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {([
+                      { value: "light", label: "Light", colors: ["#ffffff", "#f1f5f9", "#10b981", "#6366f1"] },
+                      { value: "dark", label: "Dark", colors: ["#0f172a", "#1e293b", "#10b981", "#6366f1"] },
+                      { value: "ocean", label: "Ocean Breeze", colors: ["#0c1620", "#1a2b3d", "#40e0d0", "#0891b2"] },
+                      { value: "sunset", label: "Sunset Warm", colors: ["#1a0f0a", "#2d1b17", "#ff8c42", "#ec4899"] },
+                      { value: "forest", label: "Forest Calm", colors: ["#0a140a", "#162016", "#22c55e", "#65a30d"] },
+                      { value: "lavender", label: "Lavender Dreams", colors: ["#1a0f1a", "#2d1b2d", "#a855f7", "#c084fc"] },
+                      { value: "cosmic", label: "Cosmic Space", colors: ["#0c0a1a", "#1a162d", "#d946ef", "#3b82f6"] }
+                    ] as const).map((themeOption) => (
+                      <button
+                        key={themeOption.value}
+                        onClick={() => setTheme(themeOption.value as ThemeType)}
+                        className={`p-3 rounded-lg border-2 transition-all hover:scale-105 ${
+                          theme === themeOption.value 
+                            ? 'border-primary shadow-md' 
+                            : 'border-border hover:border-muted-foreground'
+                        }`}
+                        data-testid={`theme-${themeOption.value}`}
+                      >
+                        <div className="flex items-center space-x-2 mb-2">
+                          <div className="grid grid-cols-2 gap-1 w-8 h-8">
+                            {themeOption.colors.map((color, index) => (
+                              <div
+                                key={index}
+                                className="w-3 h-3 rounded-sm"
+                                style={{ backgroundColor: color }}
+                              />
+                            ))}
+                          </div>
+                          <div className="flex-1 text-left">
+                            <p className="text-sm font-medium">{themeOption.label}</p>
+                          </div>
+                        </div>
+                        {theme === themeOption.value && (
+                          <div className="text-xs text-primary font-medium">✓ Active</div>
+                        )}
+                      </button>
+                    ))}
                   </div>
-                  <Switch
-                    checked={theme === "dark"}
-                    onCheckedChange={toggleTheme}
-                    data-testid="switch-dark-mode"
-                  />
                 </div>
 
                 <Separator />
