@@ -98,21 +98,29 @@ export default function Chat() {
   const [selectedPersonality, setSelectedPersonality] = useState(aiPersonalities[0]);
   const [showPersonalities, setShowPersonalities] = useState(true);
   const [showCustomDialog, setShowCustomDialog] = useState(false);
-  const [customPersonalities, setCustomPersonalities] = useState([]);
+  const [customPersonalities, setCustomPersonalities] = useState<any[]>([]);
   const { currentUser } = useAppContext();
   const { toast } = useToast();
 
-  // Fetch custom personalities for the user
-  const { data: userCustomPersonalities, refetch: refetchPersonalities } = useQuery({
-    queryKey: ['/api/chat/custom-personalities', currentUser?.id],
-    enabled: !!currentUser?.id
-  });
-
+  // Load custom personalities from localStorage
   useEffect(() => {
-    if (userCustomPersonalities) {
-      setCustomPersonalities(userCustomPersonalities);
+    const loadCustomPersonalities = () => {
+      try {
+        const stored = localStorage.getItem('customPersonalities');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          const userPersonalities = parsed.filter((p: any) => p.userId === currentUser?.id);
+          setCustomPersonalities(userPersonalities);
+        }
+      } catch (error) {
+        console.error('Error loading custom personalities:', error);
+      }
+    };
+    
+    if (currentUser?.id) {
+      loadCustomPersonalities();
     }
-  }, [userCustomPersonalities]);
+  }, [currentUser?.id]);
 
   const handleQuickAction = (action: string) => {
     setSelectedAction(action);
@@ -138,11 +146,25 @@ export default function Chat() {
   };
 
   const handleCustomPersonalityCreated = (personality: any) => {
-    refetchPersonalities();
+    // Add to local storage
+    const stored = localStorage.getItem('customPersonalities') || '[]';
+    const existing = JSON.parse(stored);
+    const newPersonality = {
+      ...personality,
+      id: Date.now().toString(),
+      userId: currentUser?.id,
+      createdAt: new Date().toISOString()
+    };
+    
+    existing.push(newPersonality);
+    localStorage.setItem('customPersonalities', JSON.stringify(existing));
+    
+    // Update local state
+    setCustomPersonalities([...customPersonalities, newPersonality]);
     
     // Normalize the custom personality for display
     const normalizedPersonality = {
-      ...personality,
+      ...newPersonality,
       icon: Sparkles,
       color: "bg-gradient-to-br from-primary to-primary/60 text-primary-foreground",
       role: "Custom AI",

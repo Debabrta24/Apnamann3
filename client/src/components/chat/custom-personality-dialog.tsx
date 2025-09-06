@@ -58,6 +58,79 @@ export default function CustomPersonalityDialog({
     }
   };
 
+  const processFileData = async (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        resolve(content);
+      };
+      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.readAsText(file);
+    });
+  };
+
+  const trainLocalAI = (trainingData: string) => {
+    // Simple local AI training - extract patterns from chat data
+    const lines = trainingData.split('\n').filter(line => line.trim());
+    const messages = [];
+    
+    // Try to parse WhatsApp format: "DD/MM/YY, HH:MM - Name: Message"
+    const whatsappRegex = /^\d{1,2}\/\d{1,2}\/\d{2,4},\s\d{1,2}:\d{2}\s(?:am|pm)?\s?-\s([^:]+):\s(.+)$/i;
+    
+    for (const line of lines) {
+      const match = line.match(whatsappRegex);
+      if (match) {
+        const [, sender, message] = match;
+        messages.push({ sender: sender.trim(), message: message.trim() });
+      } else if (line.includes(':') && !line.startsWith('[')) {
+        // Simple format: "Name: Message"
+        const colonIndex = line.indexOf(':');
+        if (colonIndex > 0) {
+          const sender = line.substring(0, colonIndex).trim();
+          const message = line.substring(colonIndex + 1).trim();
+          if (message) {
+            messages.push({ sender, message });
+          }
+        }
+      }
+    }
+    
+    // Extract personality traits
+    const senders = Array.from(new Set(messages.map(m => m.sender)));
+    const mainSender = senders.find(s => s.toLowerCase() !== 'system') || senders[0];
+    const senderMessages = messages.filter(m => m.sender === mainSender);
+    
+    // Extract common phrases and patterns
+    const commonPhrases = [];
+    const responses = senderMessages.map(m => m.message);
+    
+    // Find frequently used words/phrases
+    const wordCount: Record<string, number> = {};
+    responses.forEach(response => {
+      const words = response.toLowerCase().split(/\s+/);
+      words.forEach(word => {
+        if (word.length > 3 && !['this', 'that', 'with', 'have', 'will', 'been', 'from'].includes(word)) {
+          wordCount[word] = (wordCount[word] || 0) + 1;
+        }
+      });
+    });
+    
+    // Get top phrases
+    const sortedWords = Object.entries(wordCount)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 10)
+      .map(([word]) => word);
+    
+    return {
+      name: mainSender || 'Trained AI',
+      commonPhrases: sortedWords,
+      sampleResponses: responses.slice(0, 20),
+      messageCount: senderMessages.length,
+      conversationStyle: responses.join(' ').toLowerCase().includes('lol') || responses.join(' ').toLowerCase().includes('haha') ? 'casual' : 'formal'
+    };
+  };
+
   const handleSubmit = async () => {
     if (!name.trim()) {
       toast({
@@ -88,56 +161,50 @@ export default function CustomPersonalityDialog({
 
     setLoading(true);
     try {
-      const formData = new FormData();
-      formData.append('userId', userId);
-      formData.append('name', name);
-      formData.append('description', description);
+      let trainingData = '';
+      let sourceType = 'text';
+      let originalFileName = '';
       
       if (activeTab === "file" && selectedFile) {
-        formData.append('file', selectedFile);
+        trainingData = await processFileData(selectedFile);
+        sourceType = 'file';
+        originalFileName = selectedFile.name;
       } else {
-        formData.append('chatData', chatData);
+        trainingData = chatData;
+        sourceType = 'text';
       }
-
-      const response = await fetch('/api/chat/custom-personality', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to create custom personality');
-      }
-
-      const data = await response.json();
+      
+      // Train local AI
+      const aiPersonality = trainLocalAI(trainingData);
+      
+      const customPersonality = {
+        name: name.trim(),
+        description: description.trim() || `AI trained from ${sourceType === 'file' ? 'uploaded file' : 'chat data'}`,
+        sourceType,
+        originalFileName,
+        trainingData: trainingData.substring(0, 5000), // Store first 5000 chars for reference
+        aiPersonality,
+        customPrompt: `You are ${name}, a custom AI trained on conversation data. 
+        Your speaking style includes phrases like: ${aiPersonality.commonPhrases.join(', ')}.
+        You have a ${aiPersonality.conversationStyle} conversation style.
+        Respond naturally and authentically based on the conversation patterns you learned.
+        Always be helpful and supportive while maintaining your unique personality.`
+      };
       
       toast({
         title: "Custom AI Created! 🎉",
         description: "Your personalized chatbot is ready to use - completely free, no API keys needed!",
       });
 
-      onPersonalityCreated(data.personality);
+      onPersonalityCreated(customPersonality);
       handleClose();
       
     } catch (error: any) {
       console.error('Error creating personality:', error);
       
-      // Provide more specific error messages
-      let errorMessage = "Something went wrong while creating your custom AI.";
-      
-      if (error.message?.includes("user")) {
-        errorMessage = "Unable to verify your account. Please try refreshing the page.";
-      } else if (error.message?.includes("training")) {
-        errorMessage = "There was an issue processing your training data. Please check your file or text.";
-      } else if (error.message?.includes("database") || error.message?.includes("relation")) {
-        errorMessage = "Database connection issue. Please try again in a moment.";
-      } else if (error.message && error.message !== 'Failed to create custom personality') {
-        errorMessage = error.message;
-      }
-      
       toast({
         title: "Unable to Create Custom AI",
-        description: `${errorMessage} Please try again or contact support if the issue persists.`,
+        description: "There was an issue processing your training data. Please check your file or text and try again.",
         variant: "destructive"
       });
     } finally {
