@@ -100,17 +100,34 @@ export default function ChatInterface({ selectedAction, selectedPersonality }: C
   };
 
   return (
-    <Card className="h-[600px] flex flex-col">
-      <CardHeader className="border-b">
+    <Card className="h-[600px] sm:h-[700px] flex flex-col w-full max-w-4xl mx-auto">
+      <CardHeader className="border-b bg-gradient-to-r from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-              <Bot className="text-primary-foreground h-5 w-5" />
+            <div className="relative">
+              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center shadow-lg">
+                <Bot className="text-primary-foreground h-5 w-5" />
+              </div>
+              {/* Connection status indicator */}
+              <div 
+                className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-background ${
+                  isConnected ? 'bg-green-500' : 'bg-red-500'
+                }`}
+              />
             </div>
-            <div>
-              <CardTitle className="text-lg">{selectedPersonality?.name || "DPIS Assistant"}</CardTitle>
-              <p className="text-sm text-secondary">
-                {isConnected ? (selectedPersonality?.role || "Online • Here to help") : "Connecting..."}
+            <div className="min-w-0 flex-1">
+              <CardTitle className="text-lg font-semibold truncate">
+                {selectedPersonality?.name || "Medical AI Assistant"}
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                {isConnected ? (
+                  selectedPersonality?.role || "Online • Medical & Psychological Support"
+                ) : (
+                  <span className="flex items-center gap-1">
+                    <div className="w-2 h-2 bg-current rounded-full animate-pulse" />
+                    Connecting...
+                  </span>
+                )}
               </p>
             </div>
           </div>
@@ -118,7 +135,7 @@ export default function ChatInterface({ selectedAction, selectedPersonality }: C
             variant="ghost"
             size="sm"
             onClick={clearChat}
-            className="text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground shrink-0"
             data-testid="button-clear-chat"
           >
             <Trash2 className="h-4 w-4" />
@@ -128,47 +145,51 @@ export default function ChatInterface({ selectedAction, selectedPersonality }: C
 
       <CardContent className="flex-1 flex flex-col p-0">
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-3 sm:space-y-4 bg-gradient-to-b from-muted/20 to-background">
           {chatMessages.map((message, index) => (
             <div
               key={index}
-              className={`flex space-x-3 ${message.role === "user" ? "justify-end" : ""}`}
+              className={`flex space-x-2 sm:space-x-3 ${message.role === "user" ? "justify-end" : ""}`}
               data-testid={`message-${index}`}
             >
               {message.role === "assistant" && (
-                <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                  <Bot className="text-primary-foreground h-4 w-4" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                  <Bot className="text-primary-foreground h-3 w-3 sm:h-4 sm:w-4" />
                 </div>
               )}
               
               <div
-                className={`max-w-md p-4 rounded-lg ${
+                className={`max-w-[75%] sm:max-w-md lg:max-w-lg p-3 sm:p-4 rounded-2xl shadow-sm transition-all hover:shadow-md ${
                   message.role === "user"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-card border border-border"
+                    ? "bg-primary text-primary-foreground rounded-br-md"
+                    : "bg-card border border-border/50 rounded-bl-md backdrop-blur-sm"
                 }`}
               >
-                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                <p className="text-sm sm:text-base whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                <p className="text-xs opacity-60 mt-2">
+                  {message.timestamp ? new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}
+                </p>
               </div>
 
               {message.role === "user" && (
-                <div className="w-8 h-8 bg-accent rounded-full flex items-center justify-center flex-shrink-0">
-                  <User className="text-accent-foreground h-4 w-4" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 bg-accent rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                  <User className="text-accent-foreground h-3 w-3 sm:h-4 sm:w-4" />
                 </div>
               )}
             </div>
           ))}
 
           {isTyping && (
-            <div className="flex space-x-3">
-              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                <Bot className="text-primary-foreground h-4 w-4" />
+            <div className="flex space-x-2 sm:space-x-3 animate-in slide-in-from-left-2 duration-300">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                <Bot className="text-primary-foreground h-3 w-3 sm:h-4 sm:w-4" />
               </div>
-              <div className="bg-card border border-border rounded-lg p-4 max-w-md">
-                <div className="flex space-x-1">
+              <div className="bg-card border border-border/50 rounded-2xl rounded-bl-md p-3 sm:p-4 max-w-[75%] sm:max-w-md shadow-sm backdrop-blur-sm">
+                <div className="flex space-x-1 items-center">
                   <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
                   <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce delay-100"></div>
                   <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce delay-200"></div>
+                  <span className="text-xs text-muted-foreground ml-2">AI is thinking...</span>
                 </div>
               </div>
             </div>
@@ -178,25 +199,34 @@ export default function ChatInterface({ selectedAction, selectedPersonality }: C
         </div>
 
         {/* Message Input */}
-        <div className="border-t p-4">
-          <div className="flex space-x-2">
+        <div className="border-t bg-background/80 backdrop-blur-sm p-3 sm:p-4">
+          <div className="flex space-x-2 max-w-4xl mx-auto">
             <Input
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Share what's on your mind..."
-              className="flex-1"
+              placeholder="Ask about your health or share what's on your mind..."
+              className="flex-1 rounded-full px-4 border-2 focus:border-primary/50 transition-colors"
               disabled={!isConnected}
               data-testid="input-chat-message"
             />
             <Button
               onClick={handleSendMessage}
               disabled={!inputMessage.trim() || !isConnected || isTyping}
+              className="rounded-full h-10 w-10 p-0 shadow-lg hover:shadow-xl transition-all"
               data-testid="button-send-message"
             >
               <Send className="h-4 w-4" />
             </Button>
           </div>
+          
+          {!isConnected && (
+            <div className="text-center mt-2">
+              <p className="text-xs text-muted-foreground">
+                Connection lost. Attempting to reconnect...
+              </p>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
