@@ -636,16 +636,31 @@ class MockStorage implements IStorage {
 
 // Try to use DatabaseStorage, fall back to MockStorage if database is not available
 let storage: IStorage;
-try {
-  storage = new DatabaseStorage();
-  // Test database connection
-  storage.getAnalytics().catch(() => {
-    console.log('Database not available, using mock storage for development');
-    storage = new MockStorage();
-  });
-} catch (error) {
-  console.log('Database not available, using mock storage for development');
-  storage = new MockStorage();
+
+async function initializeStorage(): Promise<IStorage> {
+  if (process.env.DATABASE_URL) {
+    try {
+      const dbStorage = new DatabaseStorage();
+      // Test database connection by calling a simple method
+      await dbStorage.getAnalytics();
+      console.log('Connected to database successfully');
+      return dbStorage;
+    } catch (error) {
+      console.log('Database connection failed, using mock storage for development:', error);
+      return new MockStorage();
+    }
+  } else {
+    console.log('DATABASE_URL not found, using mock storage for development');
+    return new MockStorage();
+  }
 }
+
+// Initialize storage synchronously for immediate use, but also attempt async initialization
+storage = new MockStorage();
+initializeStorage().then((initializedStorage) => {
+  storage = initializedStorage;
+}).catch(() => {
+  console.log('Failed to initialize storage, continuing with mock storage');
+});
 
 export { storage };
