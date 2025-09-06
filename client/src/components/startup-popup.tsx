@@ -70,21 +70,10 @@ export default function StartupPopup({ isOpen, onClose }: StartupPopupProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle className="flex items-center">
-              <IconComponent className={`h-6 w-6 mr-2 ${currentSlideData.color}`} />
-              {currentSlideData.title}
-            </DialogTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="h-6 w-6"
-              data-testid="button-close-popup"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
+          <DialogTitle className="flex items-center">
+            <IconComponent className={`h-6 w-6 mr-2 ${currentSlideData.color}`} />
+            {currentSlideData.title}
+          </DialogTitle>
           <DialogDescription className="text-lg font-medium">
             {currentSlideData.subtitle}
           </DialogDescription>
