@@ -14,12 +14,12 @@ const navItems = [
   { href: "/doctor", label: "Doctor", testId: "nav-doctor" },
   { href: "/screening", label: "Screening", testId: "nav-screening" },
   { href: "/resources", label: "Resources", testId: "nav-resources" },
+  { href: "/games", label: "Games", testId: "nav-games" },
+  { href: "/music", label: "Music", testId: "nav-music" },
+  { href: "/videos", label: "Motivational Music", testId: "nav-videos" },
 ];
 
 const entertainmentItems = [
-  { href: "/games", label: "Games", icon: Gamepad2, testId: "nav-games" },
-  { href: "/music", label: "Mind Fresh Music", icon: Music, testId: "nav-music" },
-  { href: "/videos", label: "Motivational Videos", icon: Video, testId: "nav-videos" },
   { href: "/entertainment", label: "Entertainment Hub", icon: Play, testId: "nav-entertainment-hub" },
 ];
 
