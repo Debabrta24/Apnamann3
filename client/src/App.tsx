@@ -32,6 +32,7 @@ import Games from "@/pages/games";
 import Doctor from "@/pages/doctor";
 import Entertainment from "@/pages/entertainment";
 import Live from "@/pages/live";
+import YogaPage from "@/pages/yoga";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -185,6 +186,7 @@ function Router() {
               <Route path="/doctor" component={Doctor} />
               <Route path="/entertainment" component={Entertainment} />
               <Route path="/live" component={Live} />
+              <Route path="/yoga" component={YogaPage} />
               <Route path="/admin" component={Admin} />
               <Route path="/profile" component={Profile} />
               <Route component={NotFound} />

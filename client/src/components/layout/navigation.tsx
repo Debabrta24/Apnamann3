@@ -13,6 +13,7 @@ const navItems = [
   { href: "/chat", label: "AI Support", testId: "nav-chat" },
   { href: "/doctor", label: "Doctor", testId: "nav-doctor" },
   { href: "/screening", label: "Screening", testId: "nav-screening" },
+  { href: "/yoga", label: "Yoga", testId: "nav-yoga" },
   { href: "/resources", label: "Resources", testId: "nav-resources" },
 ];
 
