@@ -469,22 +469,18 @@ export default function Resources() {
   const [selectedCategory, setSelectedCategory] = useState("career-guidance");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: resources, isLoading } = useQuery({
-    queryKey: ["/api/resources", selectedCategory],
-    queryFn: async () => {
-      const response = await fetch(`/api/resources?category=${selectedCategory}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch resources');
-      }
-      return response.json();
-    },
-    select: (data: Resource[]) => 
-      data.filter(resource => 
-        searchQuery === "" || 
-        resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        resource.description.toLowerCase().includes(searchQuery.toLowerCase())
-      ),
-  });
+  // Get current category data
+  const currentCategoryData = wellnessResourcesData[selectedCategory as keyof typeof wellnessResourcesData];
+  
+  // Filter resources based on search query
+  const resources = currentCategoryData?.resources.filter(resource => 
+    searchQuery === "" || 
+    resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    resource.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    resource.category.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || [];
+
+  const isLoading = false; // No loading since we use local data
 
   const handleCategoryChange = (categoryId: string) => {
     setSelectedCategory(categoryId);
@@ -587,89 +583,97 @@ export default function Resources() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {resources.map((resource) => {
-                const TypeIcon = resourceTypeIcons[resource.type as keyof typeof resourceTypeIcons];
-                const typeColor = resourceTypeColors[resource.type as keyof typeof resourceTypeColors];
-                
-                return (
-                  <Card key={resource.id} className="overflow-hidden hover:shadow-md transition-shadow">
-                    {/* Resource Image Placeholder */}
-                    <div className="h-48 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                      <TypeIcon className="h-12 w-12 text-primary/60" />
-                    </div>
-                    
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <Badge className={`text-xs font-medium ${typeColor}`}>
-                          {resource.type}
-                        </Badge>
-                        {(resource as any).duration && (
-                          <span className="text-xs text-muted-foreground">
-                            {(resource as any).duration} min
-                          </span>
-                        )}
+            <div className="space-y-6">
+              {/* Category Header */}
+              <div className="text-center py-6 border-b border-border">
+                <h2 className="text-2xl font-bold text-foreground mb-2">{currentCategoryData?.title}</h2>
+                <p className="text-muted-foreground">{currentCategoryData?.description}</p>
+              </div>
+
+              {/* Resources Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {resources.map((resource) => {
+                  const ResourceIcon = resource.icon;
+                  const typeColor = resourceTypeColors[resource.type as keyof typeof resourceTypeColors];
+                  
+                  return (
+                    <Card key={resource.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-105 border-l-4 border-l-primary">
+                      {/* Colorful Header with Icon */}
+                      <div className="h-32 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent flex items-center justify-center relative">
+                        <ResourceIcon className="h-16 w-16 text-primary/70" />
+                        <div className="absolute top-3 right-3">
+                          <Badge className={`text-xs font-medium ${typeColor}`}>
+                            {resource.type}
+                          </Badge>
+                        </div>
                       </div>
                       
-                      <h4 className="font-semibold text-card-foreground mb-2 line-clamp-2">
-                        {resource.title}
-                      </h4>
-                      
-                      <p className="text-sm text-muted-foreground mb-3 line-clamp-3">
-                        {resource.description}
-                      </p>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center text-xs text-muted-foreground">
-                          <ThumbsUp className="h-3 w-3 mr-1" />
-                          <span>{resource.likes} helpful</span>
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <Badge variant="outline" className="text-xs">
+                            {resource.category}
+                          </Badge>
+                          <div className="flex items-center text-xs text-muted-foreground">
+                            <Clock className="h-3 w-3 mr-1" />
+                            <span>{resource.duration} min</span>
+                          </div>
                         </div>
                         
-                        <div className="flex space-x-2">
-                          <Button 
-                            size="sm" 
-                            variant="ghost"
-                            onClick={() => handleResourceAction('view', resource.id)}
-                            data-testid={`button-view-resource-${resource.id}`}
-                          >
-                            {resource.type === 'video' || resource.type === 'audio' ? (
-                              <>
-                                <Play className="h-3 w-3 mr-1" />
-                                Play
-                              </>
-                            ) : (
-                              <>
-                                <BookOpen className="h-3 w-3 mr-1" />
-                                Read
-                              </>
-                            )}
-                          </Button>
+                        <h4 className="font-semibold text-card-foreground mb-2 line-clamp-2 text-lg">
+                          {resource.title}
+                        </h4>
+                        
+                        <p className="text-sm text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
+                          {resource.description}
+                        </p>
+                        
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center text-xs text-muted-foreground">
+                            <ThumbsUp className="h-3 w-3 mr-1 text-green-500" />
+                            <span className="font-medium">{resource.likes} helpful</span>
+                          </div>
                           
-                          <Button 
-                            size="sm" 
-                            variant="ghost"
-                            onClick={() => handleResourceAction('bookmark', resource.id)}
-                            data-testid={`button-bookmark-resource-${resource.id}`}
-                          >
-                            <Bookmark className="h-3 w-3" />
-                          </Button>
-                          
-                          {resource.isOfflineAvailable && (
+                          <div className="flex space-x-1">
                             <Button 
                               size="sm" 
-                              variant="ghost"
-                              onClick={() => handleResourceAction('download', resource.id)}
-                              data-testid={`button-download-resource-${resource.id}`}
+                              className="h-8 px-3"
+                              onClick={() => handleResourceAction('view', resource.id)}
+                              data-testid={`button-view-resource-${resource.id}`}
                             >
-                              <Download className="h-3 w-3" />
+                              {resource.type === 'video' || resource.type === 'audio' ? (
+                                <>
+                                  <Play className="h-3 w-3 mr-1" />
+                                  Play
+                                </>
+                              ) : resource.type === 'tool' ? (
+                                <>
+                                  <Zap className="h-3 w-3 mr-1" />
+                                  Use
+                                </>
+                              ) : (
+                                <>
+                                  <BookOpen className="h-3 w-3 mr-1" />
+                                  Start
+                                </>
+                              )}
                             </Button>
-                          )}
+                            
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              className="h-8 w-8 p-0"
+                              onClick={() => handleResourceAction('bookmark', resource.id)}
+                              data-testid={`button-bookmark-resource-${resource.id}`}
+                            >
+                              <Bookmark className="h-3 w-3" />
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
