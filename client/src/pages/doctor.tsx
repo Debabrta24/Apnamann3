@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Stethoscope, Calendar, Clock, MapPin, Star, Phone, Video, UserPlus, Mail, Building, Award } from "lucide-react";
+import { Stethoscope, Calendar, Clock, MapPin, Star, Phone, Video, UserPlus, Mail, Building, Award, X, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -24,7 +25,10 @@ const doctors = [
     fees: "₹1,200",
     image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&face=center",
     availableSlots: ["10:00 AM", "2:00 PM", "4:30 PM"],
-    about: "Specializes in anxiety, depression, and stress management for college students."
+    about: "Specializes in anxiety, depression, and stress management for college students.",
+    education: "MBBS, MD Psychiatry - AIIMS Delhi",
+    certifications: ["Certified CBT Therapist", "Mindfulness-Based Therapy"],
+    achievements: "Published 15+ research papers on student mental health"
   },
   {
     id: 2,
@@ -37,7 +41,10 @@ const doctors = [
     fees: "₹1,000",
     image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop&face=center",
     availableSlots: ["9:00 AM", "11:30 AM", "3:00 PM"],
-    about: "Expert in cognitive behavioral therapy and trauma counseling."
+    about: "Expert in cognitive behavioral therapy and trauma counseling.",
+    education: "PhD in Clinical Psychology - University of Madras",
+    certifications: ["Trauma-Informed Care Specialist", "EMDR Certified"],
+    achievements: "Former Head of Psychology - Apollo Hospitals Chennai"
   },
   {
     id: 3,
@@ -50,7 +57,90 @@ const doctors = [
     fees: "₹1,500",
     image: "https://images.unsplash.com/photo-1594824919297-b166c1de2e63?w=300&h=300&fit=crop&face=center",
     availableSlots: ["1:00 PM", "3:30 PM", "5:00 PM"],
-    about: "Focuses on mood disorders and academic stress management."
+    about: "Focuses on mood disorders and academic stress management.",
+    education: "MBBS, MD Psychiatry - Medical College Gujarat",
+    certifications: ["Adolescent Psychiatry Specialist", "Family Therapy Certified"],
+    achievements: "Winner of Gujarat State Medical Excellence Award 2023"
+  },
+  {
+    id: 4,
+    name: "Dr. Meera Patel",
+    specialization: "Counseling Psychologist",
+    experience: "6 years",
+    rating: 4.6,
+    languages: ["English", "Hindi", "Marathi"],
+    location: "Pune, Maharashtra",
+    fees: "₹800",
+    image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop&face=center",
+    availableSlots: ["11:00 AM", "2:30 PM", "6:00 PM"],
+    about: "Specializes in academic stress, relationship counseling, and career guidance for young adults.",
+    education: "MA in Counseling Psychology - Fergusson College",
+    certifications: ["Solution-Focused Brief Therapy", "Career Counseling Specialist"],
+    achievements: "Trained over 500+ students in stress management techniques"
+  },
+  {
+    id: 5,
+    name: "Dr. Vikram Singh",
+    specialization: "Psychiatrist",
+    experience: "20 years",
+    rating: 4.9,
+    languages: ["English", "Hindi", "Punjabi"],
+    location: "New Delhi, Delhi",
+    fees: "₹2,000",
+    image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop&face=center",
+    availableSlots: ["9:30 AM", "1:00 PM", "4:00 PM"],
+    about: "Senior psychiatrist with expertise in severe mental health conditions and crisis intervention.",
+    education: "MBBS, MD Psychiatry - AIIMS Delhi, Fellowship in Addiction Medicine",
+    certifications: ["Crisis Intervention Specialist", "Addiction Medicine Certified"],
+    achievements: "Former Director of Mental Health - Max Healthcare"
+  },
+  {
+    id: 6,
+    name: "Dr. Sneha Reddy",
+    specialization: "Clinical Psychologist",
+    experience: "9 years",
+    rating: 4.8,
+    languages: ["English", "Hindi", "Telugu"],
+    location: "Hyderabad, Telangana",
+    fees: "₹1,100",
+    image: "https://images.unsplash.com/photo-1594824919297-b166c1de2e63?w=300&h=300&fit=crop&face=center",
+    availableSlots: ["10:30 AM", "3:00 PM", "5:30 PM"],
+    about: "Focuses on anxiety disorders, social phobia, and confidence building for college students.",
+    education: "PhD in Clinical Psychology - University of Hyderabad",
+    certifications: ["Anxiety Disorders Specialist", "Group Therapy Certified"],
+    achievements: "Research published in International Journal of Mental Health"
+  },
+  {
+    id: 7,
+    name: "Dr. Arjun Nair",
+    specialization: "Psychiatrist",
+    experience: "11 years",
+    rating: 4.7,
+    languages: ["English", "Hindi", "Malayalam"],
+    location: "Kochi, Kerala",
+    fees: "₹1,300",
+    image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop&face=center",
+    availableSlots: ["8:00 AM", "12:00 PM", "6:00 PM"],
+    about: "Specializes in sleep disorders, depression, and holistic mental wellness approaches.",
+    education: "MBBS, MD Psychiatry - Medical College Kerala",
+    certifications: ["Sleep Medicine Specialist", "Integrative Medicine Certified"],
+    achievements: "Founder of Kerala Youth Mental Health Initiative"
+  },
+  {
+    id: 8,
+    name: "Dr. Kavya Iyer",
+    specialization: "Counseling Psychologist",
+    experience: "7 years",
+    rating: 4.5,
+    languages: ["English", "Hindi", "Kannada"],
+    location: "Bangalore, Karnataka",
+    fees: "₹900",
+    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&face=center",
+    availableSlots: ["9:00 AM", "1:30 PM", "7:00 PM"],
+    about: "Expert in tech industry stress, work-life balance, and digital wellness for young professionals.",
+    education: "MA in Applied Psychology - Christ University",
+    certifications: ["Digital Wellness Coach", "Workplace Mental Health Specialist"],
+    achievements: "Mental health consultant for 20+ tech companies in Bangalore"
   }
 ];
 
@@ -84,6 +174,7 @@ export default function Doctor() {
   const [selectedSpecialization, setSelectedSpecialization] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedConsultationType, setSelectedConsultationType] = useState("video");
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
   
   // Doctor registration form state
   const [registrationForm, setRegistrationForm] = useState({
@@ -189,7 +280,8 @@ export default function Doctor() {
               >
                 <option value="all">All Specializations</option>
                 <option value="psychiatrist">Psychiatrist</option>
-                <option value="psychologist">Psychologist</option>
+                <option value="clinical psychologist">Clinical Psychologist</option>
+                <option value="counseling psychologist">Counseling Psychologist</option>
                 <option value="counselor">Counselor</option>
               </select>
             </div>
@@ -314,13 +406,140 @@ export default function Doctor() {
                                 <Calendar className="h-4 w-4 mr-2" />
                                 Book Appointment
                               </Button>
-                              <Button 
-                                variant="outline" 
-                                className="w-full"
-                                data-testid={`button-view-profile-${doctor.id}`}
-                              >
-                                View Profile
-                              </Button>
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button 
+                                    variant="outline" 
+                                    className="w-full"
+                                    data-testid={`button-view-profile-${doctor.id}`}
+                                  >
+                                    View Profile
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                                  <DialogHeader>
+                                    <DialogTitle className="text-xl font-bold">{doctor.name} - Profile</DialogTitle>
+                                  </DialogHeader>
+                                  
+                                  <div className="space-y-6">
+                                    {/* Doctor Header */}
+                                    <div className="flex items-start gap-4">
+                                      <div className="w-20 h-20 rounded-full overflow-hidden">
+                                        <img 
+                                          src={doctor.image} 
+                                          alt={doctor.name}
+                                          className="w-full h-full object-cover"
+                                        />
+                                      </div>
+                                      <div className="flex-1">
+                                        <h2 className="text-xl font-semibold mb-1">{doctor.name}</h2>
+                                        <p className="text-primary font-medium mb-2">{doctor.specialization}</p>
+                                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                          <div className="flex items-center gap-1">
+                                            <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                                            {doctor.rating} Rating
+                                          </div>
+                                          <span>{doctor.experience} experience</span>
+                                        </div>
+                                      </div>
+                                      <div className="text-right">
+                                        <p className="text-2xl font-bold text-primary">{doctor.fees}</p>
+                                        <p className="text-sm text-muted-foreground">Consultation Fee</p>
+                                      </div>
+                                    </div>
+                                    
+                                    {/* About Section */}
+                                    <div>
+                                      <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                                        <Stethoscope className="h-5 w-5" />
+                                        About
+                                      </h3>
+                                      <p className="text-muted-foreground leading-relaxed">{doctor.about}</p>
+                                    </div>
+                                    
+                                    {/* Education */}
+                                    <div>
+                                      <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                                        <GraduationCap className="h-5 w-5" />
+                                        Education
+                                      </h3>
+                                      <p className="text-muted-foreground">{doctor.education}</p>
+                                    </div>
+                                    
+                                    {/* Certifications */}
+                                    <div>
+                                      <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                                        <Award className="h-5 w-5" />
+                                        Certifications
+                                      </h3>
+                                      <div className="flex flex-wrap gap-2">
+                                        {doctor.certifications.map((cert) => (
+                                          <Badge key={cert} variant="secondary">
+                                            {cert}
+                                          </Badge>
+                                        ))}
+                                      </div>
+                                    </div>
+                                    
+                                    {/* Achievements */}
+                                    <div>
+                                      <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                                        <Star className="h-5 w-5" />
+                                        Achievements
+                                      </h3>
+                                      <p className="text-muted-foreground">{doctor.achievements}</p>
+                                    </div>
+                                    
+                                    {/* Languages */}
+                                    <div>
+                                      <h3 className="text-lg font-semibold mb-3">Languages</h3>
+                                      <div className="flex flex-wrap gap-2">
+                                        {doctor.languages.map((language) => (
+                                          <Badge key={language} variant="outline">
+                                            {language}
+                                          </Badge>
+                                        ))}
+                                      </div>
+                                    </div>
+                                    
+                                    {/* Location */}
+                                    <div>
+                                      <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                                        <MapPin className="h-5 w-5" />
+                                        Location
+                                      </h3>
+                                      <p className="text-muted-foreground">{doctor.location}</p>
+                                    </div>
+                                    
+                                    {/* Available Slots */}
+                                    <div>
+                                      <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                                        <Clock className="h-5 w-5" />
+                                        Available Today
+                                      </h3>
+                                      <div className="flex flex-wrap gap-2">
+                                        {doctor.availableSlots.map((slot) => (
+                                          <Badge key={slot} variant="secondary">
+                                            {slot}
+                                          </Badge>
+                                        ))}
+                                      </div>
+                                    </div>
+                                    
+                                    {/* Actions */}
+                                    <div className="flex gap-3 pt-4 border-t">
+                                      <Button className="flex-1">
+                                        <Calendar className="h-4 w-4 mr-2" />
+                                        Book Appointment
+                                      </Button>
+                                      <Button variant="outline" className="flex-1">
+                                        <Phone className="h-4 w-4 mr-2" />
+                                        Contact
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </DialogContent>
+                              </Dialog>
                             </div>
                           </CardContent>
                         </Card>

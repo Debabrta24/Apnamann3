@@ -34,6 +34,9 @@ import Medicine from "@/pages/medicine";
 import Entertainment from "@/pages/entertainment";
 import Live from "@/pages/live";
 import YogaPage from "@/pages/yoga";
+import SleepPage from "@/pages/sleep";
+import RoutinePage from "@/pages/routine";
+import SavedContent from "@/pages/saved";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -349,6 +352,9 @@ function Router() {
               <Route path="/entertainment" component={Entertainment} />
               <Route path="/live" component={Live} />
               <Route path="/yoga" component={YogaPage} />
+              <Route path="/sleep" component={SleepPage} />
+              <Route path="/routine" component={RoutinePage} />
+              <Route path="/saved" component={SavedContent} />
               <Route path="/admin" component={Admin} />
               <Route path="/profile" component={Profile} />
               <Route component={NotFound} />

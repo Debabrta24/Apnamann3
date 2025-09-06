@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, Brain, ChevronDown, Globe, Moon, Sun, Menu, X, Stethoscope, Play, Radio } from "lucide-react";
+import { Bell, Brain, ChevronDown, ChevronRight, Globe, Moon, Sun, Menu, X, Stethoscope, Play, Radio, Flower, Gamepad2, Music, Video, BookOpen, Phone, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
@@ -31,6 +31,20 @@ export default function Header() {
   const [, setLocation] = useLocation();
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileDropdowns, setMobileDropdowns] = useState({
+    doctorScreening: false,
+    wellness: false,
+    relaxRefresh: false,
+    community: false,
+    mySpace: false
+  });
+
+  const toggleMobileDropdown = (section: keyof typeof mobileDropdowns) => {
+    setMobileDropdowns(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
 
   const getInitials = (firstName?: string, lastName?: string) => {
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
@@ -52,7 +66,19 @@ export default function Header() {
 
           {/* Mobile Navigation */}
           <div className="md:hidden">
-            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <Sheet open={mobileMenuOpen} onOpenChange={(open) => {
+              setMobileMenuOpen(open);
+              if (!open) {
+                // Reset all dropdowns when menu closes
+                setMobileDropdowns({
+                  doctorScreening: false,
+                  wellness: false,
+                  relaxRefresh: false,
+                  community: false,
+                  mySpace: false
+                });
+              }
+            }}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="sm" data-testid="button-mobile-menu">
                   <Menu className="h-5 w-5" />
@@ -87,135 +113,185 @@ export default function Header() {
                   
                   {/* Doctor/Screening Section */}
                   <div className="pt-4 border-t border-border">
-                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
-                      Doctor/Screening
-                    </h3>
-                    <div className="space-y-2">
-                      {[
-                        { href: "/doctor", label: "Doctor", testId: "nav-doctor-mobile" },
-                        { href: "/screening", label: "Screening", testId: "nav-screening-mobile" },
-                      ].map((item) => (
-                        <Button
-                          key={item.href}
-                          variant="ghost"
-                          className="justify-start h-12 w-full pl-6 text-left"
-                          onClick={() => {
-                            setLocation(item.href);
-                            setMobileMenuOpen(false);
-                          }}
-                          data-testid={item.testId}
-                        >
-                          {item.label}
-                        </Button>
-                      ))}
-                    </div>
+                    <Button
+                      variant="ghost"
+                      onClick={() => toggleMobileDropdown('doctorScreening')}
+                      className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Stethoscope className="h-4 w-4" />
+                        <span>Doctor/Screening</span>
+                      </div>
+                      {mobileDropdowns.doctorScreening ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                    </Button>
+                    {mobileDropdowns.doctorScreening && (
+                      <div className="space-y-2 mt-2">
+                        {[
+                          { href: "/doctor", label: "Doctor", testId: "nav-doctor-mobile" },
+                          { href: "/screening", label: "Screening", testId: "nav-screening-mobile" },
+                        ].map((item) => (
+                          <Button
+                            key={item.href}
+                            variant="ghost"
+                            className="justify-start h-12 w-full pl-6 text-left"
+                            onClick={() => {
+                              setLocation(item.href);
+                              setMobileMenuOpen(false);
+                            }}
+                            data-testid={item.testId}
+                          >
+                            {item.label}
+                          </Button>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {/* Wellness Section */}
                   <div className="pt-4 border-t border-border">
-                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
-                      Wellness
-                    </h3>
-                    <div className="space-y-2">
-                      {[
-                        { href: "/yoga", label: "Yoga", testId: "nav-yoga-mobile" },
-                        { href: "/sleep", label: "Sleep Cycle Guide", testId: "nav-sleep-cycle-mobile" },
-                        { href: "/routine", label: "Routine Generator", testId: "nav-routine-generator-mobile" },
-                      ].map((item) => (
-                        <Button
-                          key={item.href}
-                          variant="ghost"
-                          className="justify-start h-12 w-full pl-6 text-left"
-                          onClick={() => {
-                            setLocation(item.href);
-                            setMobileMenuOpen(false);
-                          }}
-                          data-testid={item.testId}
-                        >
-                          {item.label}
-                        </Button>
-                      ))}
-                    </div>
+                    <Button
+                      variant="ghost"
+                      onClick={() => toggleMobileDropdown('wellness')}
+                      className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Flower className="h-4 w-4" />
+                        <span>Wellness</span>
+                      </div>
+                      {mobileDropdowns.wellness ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                    </Button>
+                    {mobileDropdowns.wellness && (
+                      <div className="space-y-2 mt-2">
+                        {[
+                          { href: "/yoga", label: "Yoga", testId: "nav-yoga-mobile" },
+                          { href: "/sleep", label: "Sleep Cycle Guide", testId: "nav-sleep-cycle-mobile" },
+                          { href: "/routine", label: "Routine Generator", testId: "nav-routine-generator-mobile" },
+                        ].map((item) => (
+                          <Button
+                            key={item.href}
+                            variant="ghost"
+                            className="justify-start h-12 w-full pl-6 text-left"
+                            onClick={() => {
+                              setLocation(item.href);
+                              setMobileMenuOpen(false);
+                            }}
+                            data-testid={item.testId}
+                          >
+                            {item.label}
+                          </Button>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {/* Relax & Refresh Section */}
                   <div className="pt-4 border-t border-border">
-                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
-                      Relax & Refresh
-                    </h3>
-                    <div className="space-y-2">
-                      {[
-                        { href: "/games", label: "Games", testId: "nav-games-mobile" },
-                        { href: "/music", label: "Mind Fresh Music", testId: "nav-music-mobile" },
-                        { href: "/videos", label: "Motivation Videos", testId: "nav-videos-mobile" },
-                        { href: "/live", label: "Live Sessions", testId: "nav-live-sessions-mobile" },
-                      ].map((item) => (
-                        <Button
-                          key={item.href}
-                          variant="ghost"
-                          className="justify-start h-12 w-full pl-6 text-left"
-                          onClick={() => {
-                            setLocation(item.href);
-                            setMobileMenuOpen(false);
-                          }}
-                          data-testid={item.testId}
-                        >
-                          {item.label}
-                        </Button>
-                      ))}
-                    </div>
+                    <Button
+                      variant="ghost"
+                      onClick={() => toggleMobileDropdown('relaxRefresh')}
+                      className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Gamepad2 className="h-4 w-4" />
+                        <span>Relax & Refresh</span>
+                      </div>
+                      {mobileDropdowns.relaxRefresh ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                    </Button>
+                    {mobileDropdowns.relaxRefresh && (
+                      <div className="space-y-2 mt-2">
+                        {[
+                          { href: "/games", label: "Games", testId: "nav-games-mobile" },
+                          { href: "/music", label: "Mind Fresh Music", testId: "nav-music-mobile" },
+                          { href: "/videos", label: "Motivation Videos", testId: "nav-videos-mobile" },
+                          { href: "/live", label: "Live Sessions", testId: "nav-live-sessions-mobile" },
+                        ].map((item) => (
+                          <Button
+                            key={item.href}
+                            variant="ghost"
+                            className="justify-start h-12 w-full pl-6 text-left"
+                            onClick={() => {
+                              setLocation(item.href);
+                              setMobileMenuOpen(false);
+                            }}
+                            data-testid={item.testId}
+                          >
+                            {item.label}
+                          </Button>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {/* Community Section */}
                   <div className="pt-4 border-t border-border">
-                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
-                      Community
-                    </h3>
-                    <div className="space-y-2">
-                      {[
-                        { href: "/resources", label: "Resources", testId: "nav-resources-mobile" },
-                        { href: "/peer-calling", label: "Peer Call", testId: "nav-peer-call-mobile" },
-                      ].map((item) => (
-                        <Button
-                          key={item.href}
-                          variant="ghost"
-                          className="justify-start h-12 w-full pl-6 text-left"
-                          onClick={() => {
-                            setLocation(item.href);
-                            setMobileMenuOpen(false);
-                          }}
-                          data-testid={item.testId}
-                        >
-                          {item.label}
-                        </Button>
-                      ))}
-                    </div>
+                    <Button
+                      variant="ghost"
+                      onClick={() => toggleMobileDropdown('community')}
+                      className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <BookOpen className="h-4 w-4" />
+                        <span>Community</span>
+                      </div>
+                      {mobileDropdowns.community ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                    </Button>
+                    {mobileDropdowns.community && (
+                      <div className="space-y-2 mt-2">
+                        {[
+                          { href: "/resources", label: "Resources", testId: "nav-resources-mobile" },
+                          { href: "/peer-calling", label: "Peer Call", testId: "nav-peer-call-mobile" },
+                        ].map((item) => (
+                          <Button
+                            key={item.href}
+                            variant="ghost"
+                            className="justify-start h-12 w-full pl-6 text-left"
+                            onClick={() => {
+                              setLocation(item.href);
+                              setMobileMenuOpen(false);
+                            }}
+                            data-testid={item.testId}
+                          >
+                            {item.label}
+                          </Button>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {/* My Space Section */}
                   <div className="pt-4 border-t border-border">
-                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
-                      My Space
-                    </h3>
-                    <div className="space-y-2">
-                      {[
-                        { href: "/diary", label: "My Diary", testId: "nav-my-diary-mobile" },
-                        { href: "/saved", label: "Saved Content", testId: "nav-saved-content-mobile" },
-                      ].map((item) => (
-                        <Button
-                          key={item.href}
-                          variant="ghost"
-                          className="justify-start h-12 w-full pl-6 text-left"
-                          onClick={() => {
-                            setLocation(item.href);
-                            setMobileMenuOpen(false);
-                          }}
-                          data-testid={item.testId}
-                        >
-                          {item.label}
-                        </Button>
-                      ))}
-                    </div>
+                    <Button
+                      variant="ghost"
+                      onClick={() => toggleMobileDropdown('mySpace')}
+                      className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Save className="h-4 w-4" />
+                        <span>My Space</span>
+                      </div>
+                      {mobileDropdowns.mySpace ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                    </Button>
+                    {mobileDropdowns.mySpace && (
+                      <div className="space-y-2 mt-2">
+                        {[
+                          { href: "/diary", label: "My Diary", testId: "nav-my-diary-mobile" },
+                          { href: "/saved", label: "Saved Content", testId: "nav-saved-content-mobile" },
+                        ].map((item) => (
+                          <Button
+                            key={item.href}
+                            variant="ghost"
+                            className="justify-start h-12 w-full pl-6 text-left"
+                            onClick={() => {
+                              setLocation(item.href);
+                              setMobileMenuOpen(false);
+                            }}
+                            data-testid={item.testId}
+                          >
+                            {item.label}
+                          </Button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </nav>
               </SheetContent>
