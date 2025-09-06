@@ -15,8 +15,10 @@ import {
   insertForumPostSchema,
   insertForumReplySchema,
   insertMoodEntrySchema,
-  insertCustomPersonalitySchema
+  insertCustomPersonalitySchema,
+  users
 } from "@shared/schema";
+import { db } from "./db";
 import { z } from "zod";
 
 // Configure multer for file uploads
@@ -369,19 +371,26 @@ This AI has learned from real conversation patterns and will respond authentical
       // Check if user exists, if not create a basic user record
       let user = await storage.getUser(userId);
       if (!user) {
-        // Create a basic user record if it doesn't exist
-        const basicUser = await storage.createUser({
-          id: userId,
-          username: `user-${userId.substring(0, 8)}`,
-          email: `user-${userId}@temp.com`,
-          password: 'temp-password',
-          firstName: 'User',
-          lastName: '',
-          institution: 'Unknown',
-          course: 'Unknown',
-          year: 1
-        });
-        console.log('Created basic user record for custom personality');
+        // Create a basic user record with the specified userId
+        try {
+          // Use raw database insert to specify the ID
+          const [basicUser] = await db.insert(users).values({
+            id: userId,
+            username: `user-${userId.substring(0, 8)}`,
+            email: `user-${userId}@temp.com`,
+            password: 'temp-password',
+            firstName: 'User',
+            lastName: '',
+            institution: 'Unknown',
+            course: 'Unknown',
+            year: 1
+          }).returning();
+          console.log('Created basic user record for custom personality');
+          user = basicUser;
+        } catch (err) {
+          console.error('Failed to create user:', err);
+          return res.status(500).json({ message: "Failed to create user account" });
+        }
       }
 
       // Validate input
