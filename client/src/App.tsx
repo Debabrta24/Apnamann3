@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppProvider, useAppContext } from "@/context/AppContext";
 import { useUsageAnalytics } from "@/lib/usage-analytics";
-import { Brain, User, Music, BookOpen, Video, MessageSquare, Gamepad2, Stethoscope, Play, Radio, Flower, Moon, Save, Phone, ChevronDown, ChevronRight } from "lucide-react";
+import { Brain, User, Music, BookOpen, Video, MessageSquare, Gamepad2, Stethoscope, Play, Radio, Flower, Moon, Save, Phone, ChevronDown, ChevronRight, Pill } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Header from "@/components/layout/header";
 import MotivationalQuote from "@/components/layout/motivational-quote";
@@ -160,6 +160,7 @@ function Router() {
                     {[
                       { href: "/doctor", label: "Doctor", icon: Stethoscope, testId: "nav-doctor" },
                       { href: "/screening", label: "Screening", icon: Brain, testId: "nav-screening" },
+                      { href: "/medicine", label: "Medical Store", icon: Pill, testId: "nav-medicine" },
                     ].map((item) => {
                       const IconComponent = item.icon;
                       return (

@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { Pill, ShoppingCart, Search, Star, Clock, MapPin, Plus, Minus } from "lucide-react";
+import { Pill, ShoppingCart, Search, Star, Clock, MapPin, Plus, Minus, Upload, FileText, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { BackButton } from "@/components/ui/back-button";
 
 interface Medicine {
   id: number;
@@ -139,6 +143,180 @@ const medicines: Medicine[] = [
 
 const categories = ["All", "Pain Relief", "Vitamins", "Digestive", "Allergy", "Sleep Aid", "Stress Relief"];
 
+interface CheckoutFormProps {
+  medicines: Medicine[];
+  cart: {[key: number]: number};
+  total: number;
+}
+
+function CheckoutForm({ medicines, cart, total }: CheckoutFormProps) {
+  const [orderData, setOrderData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    state: "",
+    pincode: "",
+    deliveryNotes: ""
+  });
+  const { toast } = useToast();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Here you would typically send the order to your backend
+    toast({
+      title: "Order Placed Successfully!",
+      description: `Your order of ₹${total} has been placed. You will receive a confirmation email shortly.`,
+    });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Order Summary */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Order Summary</h3>
+        <div className="space-y-2 max-h-48 overflow-y-auto">
+          {Object.entries(cart).map(([medicineId, quantity]) => {
+            const medicine = medicines.find(m => m.id === parseInt(medicineId));
+            if (!medicine) return null;
+            const price = medicine.discountPrice || medicine.price;
+
+            return (
+              <div key={medicineId} className="flex justify-between items-center p-3 bg-muted rounded-lg">
+                <div>
+                  <p className="font-medium">{medicine.name}</p>
+                  <p className="text-sm text-muted-foreground">Qty: {quantity}</p>
+                </div>
+                <p className="font-medium">₹{price * quantity}</p>
+              </div>
+            );
+          })}
+        </div>
+        <div className="border-t pt-2">
+          <div className="flex justify-between items-center text-lg font-bold">
+            <span>Total Amount:</span>
+            <span>₹{total}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Personal Information */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Personal Information</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="fullName">Full Name *</Label>
+            <Input
+              id="fullName"
+              value={orderData.fullName}
+              onChange={(e) => setOrderData(prev => ({ ...prev, fullName: e.target.value }))}
+              required
+              data-testid="input-full-name"
+            />
+          </div>
+          <div>
+            <Label htmlFor="email">Email Address *</Label>
+            <Input
+              id="email"
+              type="email"
+              value={orderData.email}
+              onChange={(e) => setOrderData(prev => ({ ...prev, email: e.target.value }))}
+              required
+              data-testid="input-email"
+            />
+          </div>
+          <div>
+            <Label htmlFor="phone">Phone Number *</Label>
+            <Input
+              id="phone"
+              type="tel"
+              value={orderData.phone}
+              onChange={(e) => setOrderData(prev => ({ ...prev, phone: e.target.value }))}
+              required
+              data-testid="input-phone"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Delivery Address */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Delivery Address</h3>
+        <div className="space-y-4">
+          <div>
+            <Label htmlFor="address">Street Address *</Label>
+            <Textarea
+              id="address"
+              value={orderData.address}
+              onChange={(e) => setOrderData(prev => ({ ...prev, address: e.target.value }))}
+              required
+              placeholder="House/Flat no., Street name, Area"
+              data-testid="input-address"
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <Label htmlFor="city">City *</Label>
+              <Input
+                id="city"
+                value={orderData.city}
+                onChange={(e) => setOrderData(prev => ({ ...prev, city: e.target.value }))}
+                required
+                data-testid="input-city"
+              />
+            </div>
+            <div>
+              <Label htmlFor="state">State *</Label>
+              <Input
+                id="state"
+                value={orderData.state}
+                onChange={(e) => setOrderData(prev => ({ ...prev, state: e.target.value }))}
+                required
+                data-testid="input-state"
+              />
+            </div>
+            <div>
+              <Label htmlFor="pincode">PIN Code *</Label>
+              <Input
+                id="pincode"
+                value={orderData.pincode}
+                onChange={(e) => setOrderData(prev => ({ ...prev, pincode: e.target.value }))}
+                required
+                data-testid="input-pincode"
+              />
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="deliveryNotes">Delivery Notes (Optional)</Label>
+            <Textarea
+              id="deliveryNotes"
+              value={orderData.deliveryNotes}
+              onChange={(e) => setOrderData(prev => ({ ...prev, deliveryNotes: e.target.value }))}
+              placeholder="Any special instructions for delivery"
+              data-testid="input-delivery-notes"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Payment & Place Order */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Payment Method</h3>
+        <div className="p-4 border rounded-lg">
+          <p className="text-sm text-muted-foreground">Cash on Delivery (COD)</p>
+          <p className="text-xs text-muted-foreground mt-1">
+            Pay when your order is delivered to your doorstep
+          </p>
+        </div>
+        <Button type="submit" size="lg" className="w-full" data-testid="btn-place-order">
+          Place Order - ₹{total}
+        </Button>
+      </div>
+    </form>
+  );
+}
+
 export default function Medicine() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -193,6 +371,9 @@ export default function Medicine() {
 
   return (
     <div className="container mx-auto p-6 max-w-7xl">
+      <div className="mb-6">
+        <BackButton />
+      </div>
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-primary mb-2">Buy Medicine</h1>
         <p className="text-lg text-muted-foreground">
@@ -222,15 +403,16 @@ export default function Medicine() {
         </div>
       </div>
 
-      <Tabs defaultValue="browse" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="browse" data-testid="tab-browse">Browse Medicines</TabsTrigger>
+      <Tabs defaultValue="normal-medicine" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="normal-medicine" data-testid="tab-normal-medicine">Normal Medicine</TabsTrigger>
+          <TabsTrigger value="prescription-upload" data-testid="tab-prescription-upload">Prescription Upload</TabsTrigger>
           <TabsTrigger value="cart" data-testid="tab-cart">
             Cart ({getCartItemCount()})
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="browse" className="space-y-6">
+        <TabsContent value="normal-medicine" className="space-y-6">
           {/* Category Filter */}
           <div className="flex flex-wrap gap-2">
             {categories.map(category => (
@@ -347,6 +529,89 @@ export default function Medicine() {
           </div>
         </TabsContent>
 
+        <TabsContent value="prescription-upload" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Upload className="h-5 w-5 mr-2" />
+                Upload Prescription
+              </CardTitle>
+              <p className="text-muted-foreground">
+                Upload your prescription and we'll help you order the exact medicines your doctor prescribed.
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Upload Section */}
+              <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
+                <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Upload your prescription</h3>
+                <p className="text-muted-foreground mb-4">
+                  Supported formats: JPG, PNG, PDF (Max size: 10MB)
+                </p>
+                <Button className="mb-2" data-testid="btn-upload-prescription">
+                  <Upload className="h-4 w-4 mr-2" />
+                  Choose File
+                </Button>
+                <p className="text-xs text-muted-foreground">
+                  Your prescription will be verified by our licensed pharmacists
+                </p>
+              </div>
+
+              {/* Information Cards */}
+              <div className="grid md:grid-cols-3 gap-4">
+                <Card>
+                  <CardContent className="p-4 text-center">
+                    <CheckCircle className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                    <h4 className="font-medium mb-1">Step 1</h4>
+                    <p className="text-sm text-muted-foreground">Upload clear photo of prescription</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4 text-center">
+                    <FileText className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                    <h4 className="font-medium mb-1">Step 2</h4>
+                    <p className="text-sm text-muted-foreground">Our pharmacist will verify</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4 text-center">
+                    <ShoppingCart className="h-8 w-8 text-primary mx-auto mb-2" />
+                    <h4 className="font-medium mb-1">Step 3</h4>
+                    <p className="text-sm text-muted-foreground">Add to cart and checkout</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Instructions */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Important Instructions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                      Ensure the prescription is clearly visible and not blurred
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                      Doctor's signature and clinic stamp must be visible
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                      Prescription should not be older than 30 days
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                      For controlled medications, original prescription may be required
+                    </li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="cart" className="space-y-6">
           <Card>
             <CardHeader>
@@ -363,7 +628,7 @@ export default function Medicine() {
                   <Button 
                     className="mt-4" 
                     onClick={() => {
-                      const browseTab = document.querySelector('[data-testid="tab-browse"]') as HTMLElement;
+                      const browseTab = document.querySelector('[data-testid="tab-normal-medicine"]') as HTMLElement;
                       browseTab?.click();
                     }}
                   >
@@ -420,9 +685,19 @@ export default function Medicine() {
                   <div className="border-t pt-4">
                     <div className="flex justify-between items-center text-lg font-bold">
                       <span>Total: ₹{getCartTotal()}</span>
-                      <Button size="lg" data-testid="btn-checkout">
-                        Proceed to Checkout
-                      </Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button size="lg" data-testid="btn-checkout">
+                            Proceed to Checkout
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                          <DialogHeader>
+                            <DialogTitle>Order Details & Address</DialogTitle>
+                          </DialogHeader>
+                          <CheckoutForm medicines={medicines} cart={cart} total={getCartTotal()} />
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </div>
                 </div>

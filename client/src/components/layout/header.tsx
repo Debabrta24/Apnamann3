@@ -129,6 +129,7 @@ export default function Header() {
                         {[
                           { href: "/doctor", label: "Doctor", testId: "nav-doctor-mobile" },
                           { href: "/screening", label: "Screening", testId: "nav-screening-mobile" },
+                          { href: "/medicine", label: "Medical Store", testId: "nav-medicine-mobile" },
                         ].map((item) => (
                           <Button
                             key={item.href}
