@@ -7,10 +7,13 @@ interface ChatMessage {
   timestamp: Date;
 }
 
+export type ThemeType = "light" | "dark" | "ocean" | "sunset" | "forest" | "lavender" | "cosmic";
+
 interface AppContextType {
   currentUser: User | null;
   setCurrentUser: (user: User | null) => void;
-  theme: "light" | "dark";
+  theme: ThemeType;
+  setTheme: (theme: ThemeType) => void;
   toggleTheme: () => void;
   isAuthenticated: boolean;
   isOnboarding: boolean;
@@ -93,17 +96,17 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   // Quote overlay state
   const [showQuoteOverlay, setShowQuoteOverlay] = useState(false);
 
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
+  const [theme, setTheme] = useState<ThemeType>(() => {
     if (typeof window !== "undefined") {
       const savedTheme = localStorage.getItem("theme");
-      return (savedTheme as "light" | "dark") || "dark";
+      return (savedTheme as ThemeType) || "dark";
     }
     return "dark";
   });
 
   useEffect(() => {
     const root = window.document.documentElement;
-    root.classList.remove("light", "dark");
+    root.classList.remove("light", "dark", "ocean", "sunset", "forest", "lavender", "cosmic");
     root.classList.add(theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
@@ -208,7 +211,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     <AppContext.Provider value={{ 
       currentUser, 
       setCurrentUser, 
-      theme, 
+      theme,
+      setTheme, 
       toggleTheme,
       isAuthenticated,
       isOnboarding,
