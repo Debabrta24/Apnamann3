@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { ChevronDown, Play, Music, Gamepad2, Video, Radio, Users, Phone } from "lucide-react";
+import { ChevronDown, Play, Music, Gamepad2, Video, Radio, Users, Phone, Stethoscope, Brain, Flower, Moon, BookOpen, Save, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
   DropdownMenu, 
@@ -10,31 +10,45 @@ import {
 
 const navItems = [
   { href: "/", label: "Home", testId: "nav-home" },
-  { href: "/chat", label: "AI Support", testId: "nav-chat" },
-  { href: "/doctor", label: "Doctor", testId: "nav-doctor" },
-  { href: "/screening", label: "Screening", testId: "nav-screening" },
-  { href: "/yoga", label: "Yoga", testId: "nav-yoga" },
-  { href: "/resources", label: "Resources", testId: "nav-resources" },
+  { href: "/chat", label: "AI Assistant", testId: "nav-ai-assistant" },
 ];
 
-const entertainmentItems = [
-  { href: "/music", label: "Mind Fresh Music", icon: Music, testId: "nav-music" },
+const doctorScreeningItems = [
+  { href: "/doctor", label: "Doctor", icon: Stethoscope, testId: "nav-doctor" },
+  { href: "/screening", label: "Screening", icon: Brain, testId: "nav-screening" },
+];
+
+const wellnessItems = [
+  { href: "/yoga", label: "Yoga", icon: Flower, testId: "nav-yoga" },
+  { href: "/sleep", label: "Sleep Cycle Guide", icon: Moon, testId: "nav-sleep-cycle" },
+  { href: "/routine", label: "Routine Generator", icon: Play, testId: "nav-routine-generator" },
+];
+
+const relaxRefreshItems = [
   { href: "/games", label: "Games", icon: Gamepad2, testId: "nav-games" },
-  { href: "/videos", label: "Motivational Videos", icon: Video, testId: "nav-videos" },
-  { href: "/entertainment", label: "Entertainment Hub", icon: Play, testId: "nav-entertainment-hub" },
+  { href: "/music", label: "Mind Fresh Music", icon: Music, testId: "nav-music" },
+  { href: "/videos", label: "Motivation Videos", icon: Video, testId: "nav-videos" },
+  { href: "/live", label: "Live Sessions", icon: Radio, testId: "nav-live-sessions" },
 ];
 
-const liveItems = [
-  { href: "/live", label: "Live Sessions", icon: Radio, testId: "nav-live-sessions" },
-  { href: "/community", label: "Community", icon: Users, testId: "nav-community" },
-  { href: "/peer-calling", label: "Peer Calling", icon: Phone, testId: "nav-peer-calling" },
+const communityItems = [
+  { href: "/resources", label: "Resources", icon: BookOpen, testId: "nav-resources" },
+  { href: "/peer-calling", label: "Peer Call", icon: Phone, testId: "nav-peer-calling" },
+];
+
+const mySpaceItems = [
+  { href: "/diary", label: "My Diary", icon: BookOpen, testId: "nav-my-diary" },
+  { href: "/saved", label: "Saved Content", icon: Save, testId: "nav-saved-content" },
 ];
 
 export default function Navigation() {
   const [location, setLocation] = useLocation();
 
-  const isEntertainmentActive = entertainmentItems.some(item => location === item.href);
-  const isLiveActive = liveItems.some(item => location === item.href);
+  const isDoctorScreeningActive = doctorScreeningItems.some(item => location === item.href);
+  const isWellnessActive = wellnessItems.some(item => location === item.href);
+  const isRelaxRefreshActive = relaxRefreshItems.some(item => location === item.href);
+  const isCommunityActive = communityItems.some(item => location === item.href);
+  const isMySpaceActive = mySpaceItems.some(item => location === item.href);
 
   return (
     <nav className="hidden md:flex items-center space-x-4 lg:space-x-6">
@@ -52,17 +66,17 @@ export default function Navigation() {
         </button>
       ))}
       
-      {/* Entertainment Dropdown */}
+      {/* Doctor/Screening Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger className={cn(
           "flex items-center space-x-1 text-foreground hover:text-primary transition-colors focus:outline-none whitespace-nowrap text-sm lg:text-base",
-          isEntertainmentActive && "text-primary font-medium"
+          isDoctorScreeningActive && "text-primary font-medium"
         )}>
-          <span>Entertainment</span>
+          <span>Doctor/Screening</span>
           <ChevronDown className="h-3 w-3" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-56">
-          {entertainmentItems.map((item) => {
+          {doctorScreeningItems.map((item) => {
             const Icon = item.icon;
             return (
               <DropdownMenuItem
@@ -79,17 +93,98 @@ export default function Navigation() {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Live Dropdown */}
+      {/* Wellness Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger className={cn(
           "flex items-center space-x-1 text-foreground hover:text-primary transition-colors focus:outline-none whitespace-nowrap text-sm lg:text-base",
-          isLiveActive && "text-primary font-medium"
+          isWellnessActive && "text-primary font-medium"
         )}>
-          <span>Live</span>
+          <span>Wellness</span>
           <ChevronDown className="h-3 w-3" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-56">
-          {liveItems.map((item) => {
+          {wellnessItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <DropdownMenuItem
+                key={item.href}
+                onClick={() => setLocation(item.href)}
+                className="flex items-center space-x-2 cursor-pointer"
+                data-testid={item.testId}
+              >
+                <Icon className="h-4 w-4" />
+                <span>{item.label}</span>
+              </DropdownMenuItem>
+            );
+          })}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {/* Relax & Refresh Dropdown */}
+      <DropdownMenu>
+        <DropdownMenuTrigger className={cn(
+          "flex items-center space-x-1 text-foreground hover:text-primary transition-colors focus:outline-none whitespace-nowrap text-sm lg:text-base",
+          isRelaxRefreshActive && "text-primary font-medium"
+        )}>
+          <span>Relax & Refresh</span>
+          <ChevronDown className="h-3 w-3" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-56">
+          {relaxRefreshItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <DropdownMenuItem
+                key={item.href}
+                onClick={() => setLocation(item.href)}
+                className="flex items-center space-x-2 cursor-pointer"
+                data-testid={item.testId}
+              >
+                <Icon className="h-4 w-4" />
+                <span>{item.label}</span>
+              </DropdownMenuItem>
+            );
+          })}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {/* Community Dropdown */}
+      <DropdownMenu>
+        <DropdownMenuTrigger className={cn(
+          "flex items-center space-x-1 text-foreground hover:text-primary transition-colors focus:outline-none whitespace-nowrap text-sm lg:text-base",
+          isCommunityActive && "text-primary font-medium"
+        )}>
+          <span>Community</span>
+          <ChevronDown className="h-3 w-3" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-56">
+          {communityItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <DropdownMenuItem
+                key={item.href}
+                onClick={() => setLocation(item.href)}
+                className="flex items-center space-x-2 cursor-pointer"
+                data-testid={item.testId}
+              >
+                <Icon className="h-4 w-4" />
+                <span>{item.label}</span>
+              </DropdownMenuItem>
+            );
+          })}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {/* My Space Dropdown */}
+      <DropdownMenu>
+        <DropdownMenuTrigger className={cn(
+          "flex items-center space-x-1 text-foreground hover:text-primary transition-colors focus:outline-none whitespace-nowrap text-sm lg:text-base",
+          isMySpaceActive && "text-primary font-medium"
+        )}>
+          <span>My Space</span>
+          <ChevronDown className="h-3 w-3" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-56">
+          {mySpaceItems.map((item) => {
             const Icon = item.icon;
             return (
               <DropdownMenuItem

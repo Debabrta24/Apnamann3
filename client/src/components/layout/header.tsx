@@ -18,6 +18,7 @@ import { useAppContext } from "@/context/AppContext";
 import { useLocation } from "wouter";
 import GlobalSearch from "@/components/global-search";
 import NotificationCenter from "@/components/notifications/notification-center";
+import Navigation from "@/components/layout/navigation";
 
 const languages = [
   { code: "en", name: "English" },
@@ -69,11 +70,7 @@ export default function Header() {
                   {/* Main Navigation Items */}
                   {[
                     { href: "/", label: "Home", testId: "nav-home-mobile" },
-                    { href: "/chat", label: "AI Support", testId: "nav-chat-mobile" },
-                    { href: "/doctor", label: "Doctor", testId: "nav-doctor-mobile" },
-                    { href: "/screening", label: "Screening", testId: "nav-screening-mobile" },
-                    { href: "/diary", label: "My Diary", testId: "nav-diary-mobile" },
-                    { href: "/resources", label: "Resources", testId: "nav-resources-mobile" },
+                    { href: "/chat", label: "AI Assistant", testId: "nav-ai-assistant-mobile" },
                   ].map((item) => (
                     <Button
                       key={item.href}
@@ -89,17 +86,15 @@ export default function Header() {
                     </Button>
                   ))}
                   
-                  {/* Entertainment Section */}
+                  {/* Doctor/Screening Section */}
                   <div className="pt-4 border-t border-border">
                     <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
-                      Entertainment
+                      Doctor/Screening
                     </h3>
                     <div className="space-y-2">
                       {[
-                        { href: "/music", label: "Mind Fresh Music", testId: "nav-music-mobile" },
-                        { href: "/games", label: "Games", testId: "nav-games-mobile" },
-                        { href: "/videos", label: "Motivational Videos", testId: "nav-videos-mobile" },
-                        { href: "/entertainment", label: "Entertainment Hub", testId: "nav-entertainment-mobile" },
+                        { href: "/doctor", label: "Doctor", testId: "nav-doctor-mobile" },
+                        { href: "/screening", label: "Screening", testId: "nav-screening-mobile" },
                       ].map((item) => (
                         <Button
                           key={item.href}
@@ -117,16 +112,16 @@ export default function Header() {
                     </div>
                   </div>
 
-                  {/* Live Section */}
+                  {/* Wellness Section */}
                   <div className="pt-4 border-t border-border">
                     <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
-                      Live
+                      Wellness
                     </h3>
                     <div className="space-y-2">
                       {[
-                        { href: "/live", label: "Live Sessions", testId: "nav-live-sessions-mobile" },
-                        { href: "/community", label: "Community", testId: "nav-community-mobile" },
-                        { href: "/peer-calling", label: "Peer Calling", testId: "nav-peer-calling-mobile" },
+                        { href: "/yoga", label: "Yoga", testId: "nav-yoga-mobile" },
+                        { href: "/sleep", label: "Sleep Cycle Guide", testId: "nav-sleep-cycle-mobile" },
+                        { href: "/routine", label: "Routine Generator", testId: "nav-routine-generator-mobile" },
                       ].map((item) => (
                         <Button
                           key={item.href}
@@ -143,29 +138,84 @@ export default function Header() {
                       ))}
                     </div>
                   </div>
-                  
-                  {/* Wellness Tools Section for Mobile */}
+
+                  {/* Relax & Refresh Section */}
                   <div className="pt-4 border-t border-border">
                     <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
-                      Wellness Tools
+                      Relax & Refresh
                     </h3>
                     <div className="space-y-2">
-                      <Button
-                        variant="ghost"
-                        className="justify-start h-12 w-full"
-                        onClick={() => setMobileMenuOpen(false)}
-                        data-testid="routine-generator-mobile"
-                      >
-                        Routine Generator
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        className="justify-start h-12 w-full"
-                        onClick={() => setMobileMenuOpen(false)}
-                        data-testid="sleep-cycle-tool-mobile"
-                      >
-                        Sleep Cycle Guide
-                      </Button>
+                      {[
+                        { href: "/games", label: "Games", testId: "nav-games-mobile" },
+                        { href: "/music", label: "Mind Fresh Music", testId: "nav-music-mobile" },
+                        { href: "/videos", label: "Motivation Videos", testId: "nav-videos-mobile" },
+                        { href: "/live", label: "Live Sessions", testId: "nav-live-sessions-mobile" },
+                      ].map((item) => (
+                        <Button
+                          key={item.href}
+                          variant="ghost"
+                          className="justify-start h-12 w-full pl-6 text-left"
+                          onClick={() => {
+                            setLocation(item.href);
+                            setMobileMenuOpen(false);
+                          }}
+                          data-testid={item.testId}
+                        >
+                          {item.label}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Community Section */}
+                  <div className="pt-4 border-t border-border">
+                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
+                      Community
+                    </h3>
+                    <div className="space-y-2">
+                      {[
+                        { href: "/resources", label: "Resources", testId: "nav-resources-mobile" },
+                        { href: "/peer-calling", label: "Peer Call", testId: "nav-peer-call-mobile" },
+                      ].map((item) => (
+                        <Button
+                          key={item.href}
+                          variant="ghost"
+                          className="justify-start h-12 w-full pl-6 text-left"
+                          onClick={() => {
+                            setLocation(item.href);
+                            setMobileMenuOpen(false);
+                          }}
+                          data-testid={item.testId}
+                        >
+                          {item.label}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* My Space Section */}
+                  <div className="pt-4 border-t border-border">
+                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">
+                      My Space
+                    </h3>
+                    <div className="space-y-2">
+                      {[
+                        { href: "/diary", label: "My Diary", testId: "nav-my-diary-mobile" },
+                        { href: "/saved", label: "Saved Content", testId: "nav-saved-content-mobile" },
+                      ].map((item) => (
+                        <Button
+                          key={item.href}
+                          variant="ghost"
+                          className="justify-start h-12 w-full pl-6 text-left"
+                          onClick={() => {
+                            setLocation(item.href);
+                            setMobileMenuOpen(false);
+                          }}
+                          data-testid={item.testId}
+                        >
+                          {item.label}
+                        </Button>
+                      ))}
                     </div>
                   </div>
                 </nav>
@@ -173,8 +223,13 @@ export default function Header() {
             </Sheet>
           </div>
 
+          {/* Navigation - Desktop */}
+          <div className="hidden md:flex flex-1 justify-center">
+            <Navigation />
+          </div>
+
           {/* Global Search - Desktop */}
-          <div className="hidden md:flex flex-1 max-w-md">
+          <div className="hidden md:flex max-w-md">
             <GlobalSearch />
           </div>
 
