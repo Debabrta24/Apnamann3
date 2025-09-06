@@ -30,7 +30,7 @@ const motivationalVideos: Video[] = [
     views: 15420,
     category: "Motivation",
     thumbnailUrl: "https://via.placeholder.com/320x180/3b82f6/ffffff?text=Positive+Thinking",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Sample YouTube embed
+    videoUrl: "https://www.youtube.com/embed/27LIATkhqAU",
     speaker: "Dr. Sarah Johnson",
     tags: ["mindset", "positivity", "mental health"]
   },
@@ -48,15 +48,15 @@ const motivationalVideos: Video[] = [
   },
   {
     id: "3",
-    title: "Building Unshakeable Confidence",
-    description: "Discover the secrets to building lasting self-confidence and overcoming self-doubt.",
+    title: "Never Give Up - Motivational Video",
+    description: "Powerful motivational speech about perseverance and never giving up on your dreams.",
     duration: "15:20",
     views: 31200,
-    category: "Success",
-    thumbnailUrl: "https://via.placeholder.com/320x180/f59e0b/ffffff?text=Confidence",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    speaker: "Tony Maxwell",
-    tags: ["confidence", "self-esteem", "growth"]
+    category: "Motivation",
+    thumbnailUrl: "https://via.placeholder.com/320x180/f59e0b/ffffff?text=Never+Give+Up",
+    videoUrl: "https://www.youtube.com/embed/EP8VVr4fIj4",
+    speaker: "Motivational Speaker",
+    tags: ["motivation", "perseverance", "success"]
   },
   {
     id: "4",
@@ -72,15 +72,15 @@ const motivationalVideos: Video[] = [
   },
   {
     id: "5",
-    title: "From Failure to Success Story",
-    description: "Inspiring stories of people who turned their biggest failures into their greatest successes.",
+    title: "Believe in Yourself - Motivational Speech",
+    description: "Inspiring speech about self-belief and achieving your goals against all odds.",
     duration: "18:40",
     views: 42300,
-    category: "Inspiration",
-    thumbnailUrl: "https://via.placeholder.com/320x180/8b5cf6/ffffff?text=Success+Story",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    speaker: "Michael Roberts",
-    tags: ["inspiration", "success", "resilience"]
+    category: "Motivation",
+    thumbnailUrl: "https://via.placeholder.com/320x180/8b5cf6/ffffff?text=Believe",
+    videoUrl: "https://www.youtube.com/embed/9j0eUI4h1SE",
+    speaker: "Life Coach",
+    tags: ["motivation", "self-belief", "goals"]
   },
   {
     id: "6",
@@ -141,6 +141,66 @@ const motivationalVideos: Video[] = [
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     speaker: "Dr. Humor Smith",
     tags: ["therapy", "laughter", "healing"]
+  },
+  {
+    id: "11",
+    title: "Success Mindset - You Can Do It",
+    description: "Powerful motivational content to develop a winning mindset and achieve your goals.",
+    duration: "14:30",
+    views: 25600,
+    category: "Motivation",
+    thumbnailUrl: "https://via.placeholder.com/320x180/3b82f6/ffffff?text=Success+Mindset",
+    videoUrl: "https://www.youtube.com/embed/1QRriWmCAsc",
+    speaker: "Success Coach",
+    tags: ["motivation", "mindset", "achievement"]
+  },
+  {
+    id: "12",
+    title: "Overcome Your Fears - Motivational Speech",
+    description: "Inspiring speech about facing your fears and stepping out of your comfort zone.",
+    duration: "16:45",
+    views: 38200,
+    category: "Motivation",
+    thumbnailUrl: "https://via.placeholder.com/320x180/10b981/ffffff?text=Overcome+Fear",
+    videoUrl: "https://www.youtube.com/embed/ZfPISsIIKQw",
+    speaker: "Fear Coach",
+    tags: ["motivation", "fear", "courage"]
+  },
+  {
+    id: "13",
+    title: "Rise Above Challenges",
+    description: "Motivational video about resilience and rising above life's challenges.",
+    duration: "12:15",
+    views: 29800,
+    category: "Motivation",
+    thumbnailUrl: "https://via.placeholder.com/320x180/f59e0b/ffffff?text=Rise+Above",
+    videoUrl: "https://www.youtube.com/embed/wu0n7kWYIY4",
+    speaker: "Life Mentor",
+    tags: ["motivation", "resilience", "challenges"]
+  },
+  {
+    id: "14",
+    title: "Dream Big - Motivational Message",
+    description: "Inspirational content about setting big goals and pursuing your dreams.",
+    duration: "11:30",
+    views: 35400,
+    category: "Motivation",
+    thumbnailUrl: "https://via.placeholder.com/320x180/8b5cf6/ffffff?text=Dream+Big",
+    videoUrl: "https://www.youtube.com/embed/VJz_cM0Jg-Y",
+    speaker: "Dream Coach",
+    tags: ["motivation", "dreams", "goals"]
+  },
+  {
+    id: "15",
+    title: "Unstoppable You",
+    description: "Powerful motivational speech about becoming unstoppable in life.",
+    duration: "13:20",
+    views: 42100,
+    category: "Motivation",
+    thumbnailUrl: "https://via.placeholder.com/320x180/ef4444/ffffff?text=Unstoppable",
+    videoUrl: "https://www.youtube.com/embed/C7SmkXyeHVI",
+    speaker: "Power Coach",
+    tags: ["motivation", "unstoppable", "power"]
   }
 ];
 
