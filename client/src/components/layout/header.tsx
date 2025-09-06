@@ -18,7 +18,6 @@ import { useAppContext } from "@/context/AppContext";
 import { useLocation } from "wouter";
 import GlobalSearch from "@/components/global-search";
 import NotificationCenter from "@/components/notifications/notification-center";
-import Navigation from "@/components/layout/navigation";
 
 const languages = [
   { code: "en", name: "English" },
@@ -223,13 +222,8 @@ export default function Header() {
             </Sheet>
           </div>
 
-          {/* Navigation - Desktop */}
-          <div className="hidden md:flex flex-1 justify-center">
-            <Navigation />
-          </div>
-
           {/* Global Search - Desktop */}
-          <div className="hidden md:flex max-w-md">
+          <div className="hidden md:flex flex-1 max-w-md">
             <GlobalSearch />
           </div>
 
