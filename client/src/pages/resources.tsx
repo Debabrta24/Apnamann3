@@ -27,7 +27,7 @@ const categories = [
   { id: "sleep-hygiene", icon: Moon, label: "Sleep Hygiene", color: "bg-card border border-border text-card-foreground" },
   { id: "study-techniques", icon: Book, label: "Study Techniques", color: "bg-card border border-border text-card-foreground" },
   { id: "mindfulness", icon: Clover, label: "Mindfulness", color: "bg-card border border-border text-card-foreground" },
-  { id: "social-anxiety", icon: Users, label: "Social Confidence", color: "bg-card border border-border text-card-foreground" },
+  { id: "social-confidence", icon: Users, label: "Social Confidence", color: "bg-card border border-border text-card-foreground" },
   { id: "career-guidance", icon: Construction, label: "Career Guidance", color: "bg-card border border-border text-card-foreground" },
 ];
 
@@ -36,6 +36,8 @@ const resourceTypeIcons = {
   article: BookOpen,
   audio: Play,
   guide: Book,
+  tool: BookOpen,
+  activity: BookOpen,
 };
 
 const resourceTypeColors = {
@@ -43,6 +45,8 @@ const resourceTypeColors = {
   article: "bg-accent/20 text-accent", 
   audio: "bg-chart-4/20 text-chart-4",
   guide: "bg-secondary/20 text-secondary",
+  tool: "bg-primary/20 text-primary",
+  activity: "bg-green-500/20 text-green-700",
 };
 
 export default function Resources() {
@@ -51,6 +55,13 @@ export default function Resources() {
 
   const { data: resources, isLoading } = useQuery({
     queryKey: ["/api/resources", selectedCategory],
+    queryFn: async () => {
+      const response = await fetch(`/api/resources?category=${selectedCategory}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch resources');
+      }
+      return response.json();
+    },
     select: (data: Resource[]) => 
       data.filter(resource => 
         searchQuery === "" || 
@@ -176,9 +187,9 @@ export default function Resources() {
                         <Badge className={`text-xs font-medium ${typeColor}`}>
                           {resource.type}
                         </Badge>
-                        {resource.duration && (
+                        {(resource as any).duration && (
                           <span className="text-xs text-muted-foreground">
-                            {resource.duration} min
+                            {(resource as any).duration} min
                           </span>
                         )}
                       </div>
