@@ -54,9 +54,9 @@ export class WhatsAppChatParser {
         let [hours, minutes] = time.split(':').map(Number);
         
         // Convert to 24-hour format
-        if (period.toLowerCase() === 'pm' && hours !== 12) {
+        if (period && period.toLowerCase() === 'pm' && hours !== 12) {
           hours += 12;
-        } else if (period.toLowerCase() === 'am' && hours === 12) {
+        } else if (period && period.toLowerCase() === 'am' && hours === 12) {
           hours = 0;
         }
         
