@@ -21,6 +21,7 @@ import {
   type ForumReply,
   type InsertForumReply,
   type Resource,
+  type InsertResource,
   type MoodEntry,
   type InsertMoodEntry,
   type CrisisAlert,
@@ -64,6 +65,8 @@ export interface IStorage {
   // Resources
   getResources(category?: string, language?: string): Promise<Resource[]>;
   getResourceById(id: string): Promise<Resource | undefined>;
+  createResource(resource: InsertResource): Promise<Resource>;
+  createResourcesBulk(resources: InsertResource[]): Promise<Resource[]>;
   likeResource(id: string): Promise<void>;
 
   // Mood tracking
@@ -266,6 +269,16 @@ export class DatabaseStorage implements IStorage {
   async getResourceById(id: string): Promise<Resource | undefined> {
     const [resource] = await db().select().from(resources).where(eq(resources.id, id));
     return resource || undefined;
+  }
+
+  async createResource(resource: InsertResource): Promise<Resource> {
+    const [result] = await db().insert(resources).values(resource).returning();
+    return result;
+  }
+
+  async createResourcesBulk(resourcesData: InsertResource[]): Promise<Resource[]> {
+    const results = await db().insert(resources).values(resourcesData).returning();
+    return results;
   }
 
   async likeResource(id: string): Promise<void> {

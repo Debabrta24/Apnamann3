@@ -264,6 +264,12 @@ export const insertCustomPersonalitySchema = createInsertSchema(customPersonalit
   updatedAt: true,
 });
 
+export const insertResourceSchema = createInsertSchema(resources).omit({
+  id: true,
+  createdAt: true,
+  likes: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -276,6 +282,7 @@ export type InsertForumPost = z.infer<typeof insertForumPostSchema>;
 export type ForumReply = typeof forumReplies.$inferSelect;
 export type InsertForumReply = z.infer<typeof insertForumReplySchema>;
 export type Resource = typeof resources.$inferSelect;
+export type InsertResource = z.infer<typeof insertResourceSchema>;
 export type MoodEntry = typeof moodEntries.$inferSelect;
 export type InsertMoodEntry = z.infer<typeof insertMoodEntrySchema>;
 export type CrisisAlert = typeof crisisAlerts.$inferSelect;
