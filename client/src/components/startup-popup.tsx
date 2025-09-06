@@ -21,8 +21,8 @@ export default function StartupPopup({ isOpen, onClose }: StartupPopupProps) {
   const slides = [
     {
       icon: Brain,
-      title: "Welcome to DPIS",
-      subtitle: "Digital Psychological Intervention System",
+      title: "Welcome to Apnamann",
+      subtitle: "Mental Health Support Platform",
       description: "Your comprehensive mental health support platform designed specifically for Indian college students.",
       color: "text-blue-500"
     },

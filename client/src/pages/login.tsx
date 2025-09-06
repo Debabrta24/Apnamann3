@@ -174,7 +174,7 @@ export default function Login() {
 
 
             <div className="text-center text-sm text-muted-foreground">
-              <p className="mb-2">New to DPIS?</p>
+              <p className="mb-2">New to Apnamann?</p>
               <p className="text-xs">
                 Contact your institution's student services for account setup
               </p>
