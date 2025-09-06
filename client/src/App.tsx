@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppProvider, useAppContext } from "@/context/AppContext";
 import { useUsageAnalytics } from "@/lib/usage-analytics";
-import { Brain, User, Music, BookOpen, Video, MessageSquare, Gamepad2, Stethoscope, Play, Radio } from "lucide-react";
+import { Brain, User, Music, BookOpen, Video, MessageSquare, Gamepad2, Stethoscope, Play, Radio, Flower } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Header from "@/components/layout/header";
 import MotivationalQuote from "@/components/layout/motivational-quote";
@@ -109,6 +109,7 @@ function Router() {
                 { href: "/chat", label: "AI Support", icon: MessageSquare, testId: "nav-chat" },
                 { href: "/doctor", label: "Doctor", icon: Stethoscope, testId: "nav-doctor" },
                 { href: "/screening", label: "Screening", icon: Brain, testId: "nav-screening" },
+                { href: "/yoga", label: "Yoga", icon: Flower, testId: "nav-yoga" },
                 { href: "/games", label: "Games", icon: Gamepad2, testId: "nav-games" },
                 { href: "/music", label: "Mind Fresh Music", icon: Music, testId: "nav-music" },
                 { href: "/diary", label: "My Diary", icon: BookOpen, testId: "nav-diary" },
