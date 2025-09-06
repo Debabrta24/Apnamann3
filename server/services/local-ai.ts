@@ -334,12 +334,22 @@ export class LocalAIService {
   }
 
   private getDefaultResponse(): LocalAIResponse {
+    const supportiveResponses = [
+      "Hi! I'm your personalized AI companion. I'm here to listen and support you. What's on your mind today?",
+      "Hello! I'm learning to be your perfect conversation partner. How are you feeling right now?",
+      "Hey there! I'm your custom AI assistant, ready to chat about whatever you'd like to share.",
+      "Hi! I'm here to provide a safe space for conversation. What would you like to talk about?",
+      "Hello! As your personalized AI, I'm here to listen and help however I can. How's your day going?"
+    ];
+    
     return {
-      message: "Hi! I'm your personalized AI companion. I'm still learning from conversations, but I'm here to chat with you. What's on your mind today?",
+      message: supportiveResponses[Math.floor(Math.random() * supportiveResponses.length)],
       supportiveActions: [
         "Share what's been on your mind lately",
-        "Take a few deep breaths to center yourself",
-        "Think of one positive thing from your day"
+        "Take a few deep breaths to center yourself", 
+        "Think of one positive thing from your day",
+        "Try a quick mindfulness exercise",
+        "Consider talking to someone you trust"
       ],
       riskLevel: "low",
       escalationRequired: false

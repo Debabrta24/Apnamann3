@@ -88,15 +88,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
           let response;
           
           // Check if we should use local AI for custom personality
-          if (data.personality && data.personality.trainingData && data.personality.sourceType === 'file') {
-            // Use local AI service for custom personalities trained on chat files
-            const localAI = new LocalAIService();
-            localAI.learnFromChat(data.personality.trainingData);
-            
-            response = localAI.generateResponse([
-              ...data.chatHistory || [],
-              { role: 'user', content: data.message, timestamp: new Date() }
-            ]);
+          if (data.personality && (data.personality.trainingData || data.personality.customPrompt)) {
+            try {
+              // Use local AI service for custom personalities
+              const localAI = new LocalAIService();
+              if (data.personality.trainingData) {
+                localAI.learnFromChat(data.personality.trainingData);
+              }
+              
+              response = localAI.generateResponse([
+                ...data.chatHistory || [],
+                { role: 'user', content: data.message, timestamp: new Date() }
+              ]);
+            } catch (error) {
+              console.error('Local AI error, falling back to regular AI:', error);
+              // Fall back to regular AI with custom prompt
+              response = await aiService.generateResponse([
+                ...data.chatHistory || [],
+                { role: 'user', content: data.message, timestamp: new Date() }
+              ], data.personality);
+            }
           } else {
             // Use regular AI service for default responses
             response = await aiService.generateResponse([
