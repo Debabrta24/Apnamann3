@@ -18,6 +18,7 @@ import { useAppContext } from "@/context/AppContext";
 import { useLocation } from "wouter";
 import GlobalSearch from "@/components/global-search";
 import NotificationCenter from "@/components/notifications/notification-center";
+import logoUrl from '@/assets/logo.png';
 
 const languages = [
   { code: "en", name: "English" },
@@ -56,11 +57,11 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Mobile Logo and branding - only show on mobile */}
           <div className="flex items-center space-x-3 md:hidden">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <Brain className="text-primary-foreground h-6 w-6" />
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center">
+              <img src={logoUrl} alt="ApnaMann Logo" className="w-10 h-10 rounded-lg object-cover" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground">xyz</h1>
+              <h1 className="text-xl font-bold text-foreground">ApnaMann</h1>
             </div>
           </div>
 

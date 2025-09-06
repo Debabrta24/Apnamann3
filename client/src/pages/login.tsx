@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAppContext } from "@/context/AppContext";
 import { useToast } from "@/hooks/use-toast";
+import logoUrl from '@/assets/logo.png';
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -80,10 +81,10 @@ export default function Login() {
     <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 w-16 h-16 bg-primary rounded-full flex items-center justify-center">
-            <Brain className="text-primary-foreground h-8 w-8" />
+          <div className="mx-auto mb-4 w-16 h-16 rounded-full flex items-center justify-center">
+            <img src={logoUrl} alt="ApnaMann Logo" className="w-16 h-16 rounded-full object-cover" />
           </div>
-          <CardTitle className="text-2xl font-bold">Welcome to xyz</CardTitle>
+          <CardTitle className="text-2xl font-bold">Welcome to ApnaMann</CardTitle>
           <p className="text-muted-foreground">
             Mental Health Support Platform
           </p>
