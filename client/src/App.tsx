@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppProvider, useAppContext } from "@/context/AppContext";
 import { useUsageAnalytics } from "@/lib/usage-analytics";
-import { Brain, User, Music, BookOpen, Video, MessageSquare, Gamepad2 } from "lucide-react";
+import { Brain, User, Music, BookOpen, Video, MessageSquare, Gamepad2, Stethoscope, Play, Radio } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Header from "@/components/layout/header";
 import MotivationalQuote from "@/components/layout/motivational-quote";
@@ -29,6 +29,9 @@ import MusicPage from "@/pages/music";
 import DiaryPage from "@/pages/diary";
 import VideosPage from "@/pages/videos";
 import Games from "@/pages/games";
+import Doctor from "@/pages/doctor";
+import Entertainment from "@/pages/entertainment";
+import Live from "@/pages/live";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -103,11 +106,14 @@ function Router() {
               {[
                 { href: "/", label: "Home", icon: Brain, testId: "nav-home" },
                 { href: "/chat", label: "AI Support", icon: MessageSquare, testId: "nav-chat" },
+                { href: "/doctor", label: "Doctor", icon: Stethoscope, testId: "nav-doctor" },
                 { href: "/screening", label: "Screening", icon: Brain, testId: "nav-screening" },
                 { href: "/games", label: "Games", icon: Gamepad2, testId: "nav-games" },
                 { href: "/music", label: "Mind Fresh Music", icon: Music, testId: "nav-music" },
                 { href: "/diary", label: "My Diary", icon: BookOpen, testId: "nav-diary" },
                 { href: "/videos", label: "Motivational Videos", icon: Video, testId: "nav-videos" },
+                { href: "/entertainment", label: "Entertainment", icon: Play, testId: "nav-entertainment" },
+                { href: "/live", label: "Live", icon: Radio, testId: "nav-live" },
                 { href: "/resources", label: "Resources", icon: Brain, testId: "nav-resources" },
                 { href: "/community", label: "Community", icon: Brain, testId: "nav-community" },
                 { href: "/peer-calling", label: "Peer Calls", icon: Brain, testId: "nav-peer-calling" },
@@ -176,6 +182,9 @@ function Router() {
               <Route path="/resources" component={Resources} />
               <Route path="/community" component={Community} />
               <Route path="/peer-calling" component={PeerCalling} />
+              <Route path="/doctor" component={Doctor} />
+              <Route path="/entertainment" component={Entertainment} />
+              <Route path="/live" component={Live} />
               <Route path="/admin" component={Admin} />
               <Route path="/profile" component={Profile} />
               <Route component={NotFound} />

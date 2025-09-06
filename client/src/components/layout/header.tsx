@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, Brain, ChevronDown, Globe, Moon, Sun, Menu, X } from "lucide-react";
+import { Bell, Brain, ChevronDown, Globe, Moon, Sun, Menu, X, Stethoscope, Play, Radio } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
@@ -69,11 +69,14 @@ export default function Header() {
                   {[
                     { href: "/", label: "Home", testId: "nav-home-mobile" },
                     { href: "/chat", label: "AI Support", testId: "nav-chat-mobile" },
+                    { href: "/doctor", label: "Doctor", testId: "nav-doctor-mobile" },
                     { href: "/screening", label: "Screening", testId: "nav-screening-mobile" },
                     { href: "/games", label: "Games", testId: "nav-games-mobile" },
                     { href: "/music", label: "Mind Fresh Music", testId: "nav-music-mobile" },
                     { href: "/diary", label: "My Diary", testId: "nav-diary-mobile" },
                     { href: "/videos", label: "Motivational Videos", testId: "nav-videos-mobile" },
+                    { href: "/entertainment", label: "Entertainment", testId: "nav-entertainment-mobile" },
+                    { href: "/live", label: "Live", testId: "nav-live-mobile" },
                     { href: "/resources", label: "Resources", testId: "nav-resources-mobile" },
                     { href: "/community", label: "Community", testId: "nav-community-mobile" },
                     { href: "/peer-calling", label: "Peer Calls", testId: "nav-peer-calling-mobile" },
