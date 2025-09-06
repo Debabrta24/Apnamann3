@@ -22,13 +22,20 @@ import {
 import type { Resource } from "@/types";
 import { BackButton } from "@/components/ui/back-button";
 
+import stressImage from "@assets/generated_images/Stress_management_wellness_illustration_1f205959.png";
+import sleepImage from "@assets/generated_images/Sleep_hygiene_wellness_illustration_abeffba1.png";
+import studyImage from "@assets/generated_images/Study_techniques_educational_illustration_cc34a960.png";
+import mindfulnessImage from "@assets/generated_images/Mindfulness_meditation_wellness_illustration_da954077.png";
+import socialImage from "@assets/generated_images/Social_confidence_building_illustration_b05c2890.png";
+import careerImage from "@assets/generated_images/Career_guidance_professional_illustration_eb733775.png";
+
 const categories = [
-  { id: "stress-management", icon: Leaf, label: "Stress Management", color: "bg-primary text-primary-foreground" },
-  { id: "sleep-hygiene", icon: Moon, label: "Sleep Hygiene", color: "bg-card border border-border text-card-foreground" },
-  { id: "study-techniques", icon: Book, label: "Study Techniques", color: "bg-card border border-border text-card-foreground" },
-  { id: "mindfulness", icon: Clover, label: "Mindfulness", color: "bg-card border border-border text-card-foreground" },
-  { id: "social-confidence", icon: Users, label: "Social Confidence", color: "bg-card border border-border text-card-foreground" },
-  { id: "career-guidance", icon: Construction, label: "Career Guidance", color: "bg-card border border-border text-card-foreground" },
+  { id: "stress-management", icon: Leaf, label: "Stress Management", color: "bg-primary text-primary-foreground", image: stressImage },
+  { id: "sleep-hygiene", icon: Moon, label: "Sleep Hygiene", color: "bg-card border border-border text-card-foreground", image: sleepImage },
+  { id: "study-techniques", icon: Book, label: "Study Techniques", color: "bg-card border border-border text-card-foreground", image: studyImage },
+  { id: "mindfulness", icon: Clover, label: "Mindfulness", color: "bg-card border border-border text-card-foreground", image: mindfulnessImage },
+  { id: "social-confidence", icon: Users, label: "Social Confidence", color: "bg-card border border-border text-card-foreground", image: socialImage },
+  { id: "career-guidance", icon: Construction, label: "Career Guidance", color: "bg-card border border-border text-card-foreground", image: careerImage },
 ];
 
 const resourceTypeIcons = {
@@ -106,24 +113,35 @@ export default function Resources() {
           <div className="space-y-4">
             <div>
               <h3 className="text-xl font-semibold text-card-foreground mb-4">Browse Resources</h3>
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 gap-3">
                 {categories.map((category) => {
                   const IconComponent = category.icon;
                   return (
-                    <Button
+                    <div
                       key={category.id}
-                      variant="ghost"
-                      className={`w-full justify-start p-3 h-auto ${
+                      className={`cursor-pointer rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg border-2 ${
                         selectedCategory === category.id 
-                          ? "bg-primary text-primary-foreground" 
-                          : "bg-card border border-border text-card-foreground hover:bg-muted/50 transition-colors"
+                          ? "border-primary shadow-md" 
+                          : "border-border hover:border-primary/50"
                       }`}
                       onClick={() => handleCategoryChange(category.id)}
                       data-testid={`button-category-${category.id}`}
                     >
-                      <IconComponent className="h-4 w-4 mr-2" />
-                      {category.label}
-                    </Button>
+                      <div className="relative">
+                        <img 
+                          src={category.image} 
+                          alt={category.label}
+                          className="w-full h-32 object-cover"
+                        />
+                        <div className={`absolute inset-0 bg-gradient-to-t from-black/60 to-transparent`}></div>
+                        <div className="absolute bottom-2 left-2 right-2">
+                          <div className="flex items-center text-white">
+                            <IconComponent className="h-4 w-4 mr-2" />
+                            <span className="font-medium text-sm">{category.label}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   );
                 })}
               </div>

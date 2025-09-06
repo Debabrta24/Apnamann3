@@ -114,8 +114,8 @@ function Router() {
           <div className="flex flex-col h-screen bg-card border-r border-border">
             {/* Logo and branding */}
             <div className="flex items-center p-4 border-b border-border">
-              <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
-                <Heart className="text-white h-6 w-6" />
+              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                <Brain className="text-primary-foreground h-6 w-6" />
               </div>
               <div className="ml-3">
                 <h1 className="text-xl font-bold text-foreground">ApnaMann</h1>
