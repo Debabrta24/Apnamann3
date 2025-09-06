@@ -124,6 +124,161 @@
   --shadow-2xl: 0px 25px 50px -12px hsl(0 0% 0% / 0.4);
 }
 
+/* Ocean Theme - Deep blues and teals */
+.ocean {
+  --background: hsl(200 25% 8%);
+  --foreground: hsl(200 15% 90%);
+  --card: hsl(200 25% 12%);
+  --card-foreground: hsl(200 15% 85%);
+  --popover: hsl(200 25% 8%);
+  --popover-foreground: hsl(200 15% 90%);
+  --primary: hsl(186 100% 65%); /* Ocean cyan */
+  --primary-foreground: hsl(200 25% 8%);
+  --secondary: hsl(200 25% 16%);
+  --secondary-foreground: hsl(200 15% 80%);
+  --muted: hsl(200 25% 14%);
+  --muted-foreground: hsl(200 10% 60%);
+  --accent: hsl(192 40% 25%); /* Deep teal */
+  --accent-foreground: hsl(192 80% 85%);
+  --destructive: hsl(355 50% 55%);
+  --destructive-foreground: hsl(200 15% 90%);
+  --border: hsl(200 20% 18%);
+  --input: hsl(200 25% 16%);
+  --ring: hsl(186 100% 65%);
+  --sidebar: hsl(200 25% 12%);
+  --sidebar-foreground: hsl(200 15% 85%);
+  --sidebar-primary: hsl(186 100% 65%);
+  --sidebar-primary-foreground: hsl(200 25% 8%);
+  --sidebar-accent: hsl(200 25% 18%);
+  --sidebar-accent-foreground: hsl(186 100% 75%);
+  --sidebar-border: hsl(200 20% 22%);
+  --sidebar-ring: hsl(186 100% 65%);
+}
+
+/* Sunset Theme - Warm oranges and pinks */
+.sunset {
+  --background: hsl(15 20% 10%);
+  --foreground: hsl(15 10% 88%);
+  --card: hsl(15 20% 14%);
+  --card-foreground: hsl(15 10% 85%);
+  --popover: hsl(15 20% 10%);
+  --popover-foreground: hsl(15 10% 88%);
+  --primary: hsl(25 85% 65%); /* Sunset orange */
+  --primary-foreground: hsl(15 20% 10%);
+  --secondary: hsl(15 20% 18%);
+  --secondary-foreground: hsl(15 10% 78%);
+  --muted: hsl(15 20% 16%);
+  --muted-foreground: hsl(15 8% 58%);
+  --accent: hsl(340 40% 45%); /* Sunset pink */
+  --accent-foreground: hsl(340 60% 90%);
+  --destructive: hsl(355 50% 55%);
+  --destructive-foreground: hsl(15 10% 88%);
+  --border: hsl(15 18% 20%);
+  --input: hsl(15 20% 18%);
+  --ring: hsl(25 85% 65%);
+  --sidebar: hsl(15 20% 14%);
+  --sidebar-foreground: hsl(15 10% 85%);
+  --sidebar-primary: hsl(25 85% 65%);
+  --sidebar-primary-foreground: hsl(15 20% 10%);
+  --sidebar-accent: hsl(15 20% 20%);
+  --sidebar-accent-foreground: hsl(25 85% 75%);
+  --sidebar-border: hsl(15 18% 24%);
+  --sidebar-ring: hsl(25 85% 65%);
+}
+
+/* Forest Theme - Rich greens and earth tones */
+.forest {
+  --background: hsl(120 15% 8%);
+  --foreground: hsl(120 8% 88%);
+  --card: hsl(120 15% 12%);
+  --card-foreground: hsl(120 8% 85%);
+  --popover: hsl(120 15% 8%);
+  --popover-foreground: hsl(120 8% 88%);
+  --primary: hsl(142 60% 55%); /* Forest green */
+  --primary-foreground: hsl(120 15% 8%);
+  --secondary: hsl(120 15% 16%);
+  --secondary-foreground: hsl(120 8% 78%);
+  --muted: hsl(120 15% 14%);
+  --muted-foreground: hsl(120 6% 58%);
+  --accent: hsl(85 30% 45%); /* Moss green */
+  --accent-foreground: hsl(85 50% 88%);
+  --destructive: hsl(355 50% 55%);
+  --destructive-foreground: hsl(120 8% 88%);
+  --border: hsl(120 12% 18%);
+  --input: hsl(120 15% 16%);
+  --ring: hsl(142 60% 55%);
+  --sidebar: hsl(120 15% 12%);
+  --sidebar-foreground: hsl(120 8% 85%);
+  --sidebar-primary: hsl(142 60% 55%);
+  --sidebar-primary-foreground: hsl(120 15% 8%);
+  --sidebar-accent: hsl(120 15% 18%);
+  --sidebar-accent-foreground: hsl(142 60% 75%);
+  --sidebar-border: hsl(120 12% 22%);
+  --sidebar-ring: hsl(142 60% 55%);
+}
+
+/* Lavender Theme - Soft purples and pastels */
+.lavender {
+  --background: hsl(270 20% 10%);
+  --foreground: hsl(270 8% 88%);
+  --card: hsl(270 20% 14%);
+  --card-foreground: hsl(270 8% 85%);
+  --popover: hsl(270 20% 10%);
+  --popover-foreground: hsl(270 8% 88%);
+  --primary: hsl(260 60% 70%); /* Lavender purple */
+  --primary-foreground: hsl(270 20% 10%);
+  --secondary: hsl(270 20% 18%);
+  --secondary-foreground: hsl(270 8% 78%);
+  --muted: hsl(270 20% 16%);
+  --muted-foreground: hsl(270 6% 58%);
+  --accent: hsl(300 35% 50%); /* Rose purple */
+  --accent-foreground: hsl(300 50% 90%);
+  --destructive: hsl(355 50% 55%);
+  --destructive-foreground: hsl(270 8% 88%);
+  --border: hsl(270 15% 20%);
+  --input: hsl(270 20% 18%);
+  --ring: hsl(260 60% 70%);
+  --sidebar: hsl(270 20% 14%);
+  --sidebar-foreground: hsl(270 8% 85%);
+  --sidebar-primary: hsl(260 60% 70%);
+  --sidebar-primary-foreground: hsl(270 20% 10%);
+  --sidebar-accent: hsl(270 20% 20%);
+  --sidebar-accent-foreground: hsl(260 60% 80%);
+  --sidebar-border: hsl(270 15% 24%);
+  --sidebar-ring: hsl(260 60% 70%);
+}
+
+/* Cosmic Theme - Deep space with bright accents */
+.cosmic {
+  --background: hsl(240 25% 5%);
+  --foreground: hsl(240 10% 90%);
+  --card: hsl(240 25% 8%);
+  --card-foreground: hsl(240 10% 88%);
+  --popover: hsl(240 25% 5%);
+  --popover-foreground: hsl(240 10% 90%);
+  --primary: hsl(280 100% 75%); /* Cosmic purple */
+  --primary-foreground: hsl(240 25% 5%);
+  --secondary: hsl(240 25% 12%);
+  --secondary-foreground: hsl(240 10% 80%);
+  --muted: hsl(240 25% 10%);
+  --muted-foreground: hsl(240 8% 60%);
+  --accent: hsl(220 100% 65%); /* Electric blue */
+  --accent-foreground: hsl(220 100% 10%);
+  --destructive: hsl(355 70% 65%);
+  --destructive-foreground: hsl(240 10% 90%);
+  --border: hsl(240 20% 15%);
+  --input: hsl(240 25% 12%);
+  --ring: hsl(280 100% 75%);
+  --sidebar: hsl(240 25% 8%);
+  --sidebar-foreground: hsl(240 10% 88%);
+  --sidebar-primary: hsl(280 100% 75%);
+  --sidebar-primary-foreground: hsl(240 25% 5%);
+  --sidebar-accent: hsl(240 25% 15%);
+  --sidebar-accent-foreground: hsl(280 100% 80%);
+  --sidebar-border: hsl(240 20% 18%);
+  --sidebar-ring: hsl(280 100% 75%);
+}
+
 @layer base {
   * {
     @apply border-border;
