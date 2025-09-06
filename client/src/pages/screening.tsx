@@ -4,10 +4,12 @@ import PHQ9Form from "@/components/screening/phq9-form";
 import GAD7Form from "@/components/screening/gad7-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart, Brain, Info } from "lucide-react";
+import { BackButton } from "@/components/ui/back-button";
 
 export default function Screening() {
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <BackButton />
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">Mental Health Screening</h1>
         <p className="text-muted-foreground">

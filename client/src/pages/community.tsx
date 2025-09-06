@@ -26,6 +26,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import ForumPost from "@/components/community/forum-post";
 import type { ForumPost as ForumPostType } from "@/types";
+import { BackButton } from "@/components/ui/back-button";
 
 const categories = [
   "Exam Stress",
@@ -100,6 +101,7 @@ export default function Community() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <BackButton />
       {/* Header Section */}
       <div className="mb-8">
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-xl p-6 border border-blue-100 dark:border-blue-800">

@@ -14,6 +14,7 @@ import { useAppContext, type ThemeType } from "@/context/AppContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { BackButton } from "@/components/ui/back-button";
 
 export default function Profile() {
   const { currentUser, setCurrentUser, theme, setTheme, toggleTheme } = useAppContext();
@@ -167,6 +168,7 @@ export default function Profile() {
 
   return (
     <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <BackButton />
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">Profile & Settings</h1>
         <p className="text-muted-foreground">
