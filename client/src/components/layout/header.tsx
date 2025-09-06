@@ -311,7 +311,7 @@ export default function Header() {
             <NotificationCenter />
 
             {currentUser && (
-              <CoinDisplay userCoins={currentUser.coins || 0} />
+              <CoinDisplay userId={currentUser.id} />
             )}
 
             <Button

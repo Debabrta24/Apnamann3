@@ -834,5 +834,45 @@ This AI has learned from real conversation patterns and will respond authentical
     }
   });
 
+  // Coin management routes
+  app.get("/api/coins/transactions/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
+      const transactions = await storage.getUserCoinTransactions(userId, limit);
+      res.json(transactions);
+    } catch (error: any) {
+      console.error("Error fetching coin transactions:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/coins/balance/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const balance = await storage.getUserCoinBalance(userId);
+      res.json({ balance });
+    } catch (error: any) {
+      console.error("Error fetching coin balance:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/coins/add", async (req, res) => {
+    try {
+      const { userId, amount, type, description, relatedEntityId } = req.body;
+      
+      if (!userId || !amount || !type || !description) {
+        return res.status(400).json({ message: "UserId, amount, type, and description are required" });
+      }
+
+      const transaction = await storage.addCoins(userId, amount, type, description, relatedEntityId);
+      res.json(transaction);
+    } catch (error: any) {
+      console.error("Error adding coins:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
   return httpServer;
 }

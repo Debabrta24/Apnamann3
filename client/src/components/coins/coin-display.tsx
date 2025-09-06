@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { CoinTransaction } from "shared/schema";
 
 interface CoinDisplayProps {
-  userCoins: number;
+  userId: string;
   className?: string;
 }
 
@@ -66,13 +66,20 @@ const earningActivities: CoinEarningActivity[] = [
   }
 ];
 
-export default function CoinDisplay({ userCoins, className }: CoinDisplayProps) {
+export default function CoinDisplay({ userId, className }: CoinDisplayProps) {
   const [open, setOpen] = useState(false);
 
-  const { data: recentTransactions, isLoading } = useQuery<CoinTransaction[]>({
-    queryKey: ['/api/coins/transactions'],
-    enabled: open, // Only fetch when modal is open
+  const { data: balanceData } = useQuery<{ balance: number }>({
+    queryKey: [`/api/coins/balance/${userId}`],
+    enabled: !!userId,
   });
+
+  const { data: recentTransactions, isLoading } = useQuery<CoinTransaction[]>({
+    queryKey: [`/api/coins/transactions/${userId}`],
+    enabled: open && !!userId, // Only fetch when modal is open
+  });
+
+  const userCoins = balanceData?.balance || 0;
 
   const convertCoinsToRupees = (coins: number) => {
     return (coins / 10).toFixed(1);

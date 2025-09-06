@@ -10,6 +10,7 @@ import {
   counselors,
   chatSessions,
   customPersonalities,
+  coinTransactions,
   type User,
   type InsertUser,
   type ScreeningAssessment,
@@ -30,6 +31,8 @@ import {
   type ChatSession,
   type CustomPersonality,
   type InsertCustomPersonality,
+  type CoinTransaction,
+  type InsertCoinTransaction,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, gte, sql, count } from "drizzle-orm";
@@ -88,6 +91,11 @@ export interface IStorage {
   getUserCustomPersonalities(userId: string): Promise<CustomPersonality[]>;
   updateCustomPersonality(id: string, updates: Partial<CustomPersonality>): Promise<CustomPersonality>;
   deleteCustomPersonality(id: string, userId: string): Promise<void>;
+
+  // Coin management
+  addCoins(userId: string, amount: number, type: string, description: string, relatedEntityId?: string): Promise<CoinTransaction>;
+  getUserCoinTransactions(userId: string, limit?: number): Promise<CoinTransaction[]>;
+  getUserCoinBalance(userId: string): Promise<number>;
 
   // Analytics (anonymized)
   getAnalytics(): Promise<any>;
@@ -380,6 +388,49 @@ export class DatabaseStorage implements IStorage {
       .update(customPersonalities)
       .set({ isActive: false, updatedAt: new Date() })
       .where(and(eq(customPersonalities.id, id), eq(customPersonalities.userId, userId)));
+  }
+
+  async addCoins(userId: string, amount: number, type: string, description: string, relatedEntityId?: string): Promise<CoinTransaction> {
+    // Create transaction record
+    const [transaction] = await db()
+      .insert(coinTransactions)
+      .values({
+        userId,
+        amount,
+        type,
+        description,
+        relatedEntityId: relatedEntityId || null,
+      })
+      .returning();
+
+    // Update user's coin balance
+    await db()
+      .update(users)
+      .set({ 
+        coins: sql`${users.coins} + ${amount}`,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, userId));
+
+    return transaction;
+  }
+
+  async getUserCoinTransactions(userId: string, limit: number = 50): Promise<CoinTransaction[]> {
+    return await db()
+      .select()
+      .from(coinTransactions)
+      .where(eq(coinTransactions.userId, userId))
+      .orderBy(desc(coinTransactions.createdAt))
+      .limit(limit);
+  }
+
+  async getUserCoinBalance(userId: string): Promise<number> {
+    const [user] = await db()
+      .select({ coins: users.coins })
+      .from(users)
+      .where(eq(users.id, userId));
+    
+    return user?.coins || 0;
   }
 
   async getAnalytics(): Promise<any> {
