@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Play, Pause, SkipBack, SkipForward, Volume2, Heart, Search, Loader2, Upload, Plus, ChevronDown, Filter } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Volume2, Heart, Search, Loader2, Upload, Plus, ChevronDown, Filter, Shuffle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -12,9 +12,59 @@ import { localMusicManager, LocalTrack } from "@/lib/local-music";
 import { useQuery } from "@tanstack/react-query";
 import { BackButton } from "@/components/ui/back-button";
 
+// Import the uploaded audio files
+import audio1 from "@assets/WhatsApp Audio 2025-09-06 at 09.26.39_7516e2fa_1757131765090.mp3";
+import audio2 from "@assets/WhatsApp Audio 2025-09-06 at 09.26.40_42b10528_1757131765090.mp3";
+import audio3 from "@assets/WhatsApp Audio 2025-09-06 at 09.26.40_816527c1_1757131765090.mp3";
+import audio4 from "@assets/WhatsApp Audio 2025-09-06 at 09.26.40_f0a72bd0_1757131765090.mp3";
+
 const musicTracks = [
   {
     id: 1,
+    title: "Mind Fresh Track 1",
+    artist: "Mind Fresh Audio",
+    duration: "3:45",
+    category: "Uploaded",
+    type: "uploaded",
+    description: "Relaxing audio for mental wellness",
+    audioUrl: audio1,
+    isUploaded: true
+  },
+  {
+    id: 2,
+    title: "Mind Fresh Track 2",
+    artist: "Mind Fresh Audio", 
+    duration: "4:12",
+    category: "Uploaded",
+    type: "uploaded",
+    description: "Calming sounds for stress relief",
+    audioUrl: audio2,
+    isUploaded: true
+  },
+  {
+    id: 3,
+    title: "Mind Fresh Track 3",
+    artist: "Mind Fresh Audio",
+    duration: "2:58",
+    category: "Uploaded", 
+    type: "uploaded",
+    description: "Peaceful audio for relaxation",
+    audioUrl: audio3,
+    isUploaded: true
+  },
+  {
+    id: 4,
+    title: "Mind Fresh Track 4",
+    artist: "Mind Fresh Audio",
+    duration: "3:21",
+    category: "Uploaded",
+    type: "uploaded", 
+    description: "Soothing sounds for meditation",
+    audioUrl: audio4,
+    isUploaded: true
+  },
+  {
+    id: 5,
     title: "Peaceful Meditation",
     artist: "Mind Fresh Audio",
     duration: "∞",
@@ -23,7 +73,7 @@ const musicTracks = [
     description: "Gentle meditation tones to start your day peacefully"
   },
   {
-    id: 2,
+    id: 6,
     title: "Ocean Waves",
     artist: "Mind Fresh Audio",
     duration: "∞",
@@ -32,7 +82,7 @@ const musicTracks = [
     description: "Soothing ocean waves for deep relaxation"
   },
   {
-    id: 3,
+    id: 7,
     title: "Forest Ambience",
     artist: "Mind Fresh Audio",
     duration: "∞",
@@ -41,7 +91,7 @@ const musicTracks = [
     description: "Peaceful forest sounds to reduce stress"
   },
   {
-    id: 4,
+    id: 8,
     title: "Gentle Rain",
     artist: "Mind Fresh Audio",
     duration: "∞",
@@ -50,7 +100,7 @@ const musicTracks = [
     description: "Soft rainfall sounds for better sleep"
   },
   {
-    id: 5,
+    id: 9,
     title: "Focus Sounds",
     artist: "Mind Fresh Audio",
     duration: "∞",
@@ -59,7 +109,7 @@ const musicTracks = [
     description: "Clear focus sounds for better concentration"
   },
   {
-    id: 6,
+    id: 10,
     title: "Mountain Stream",
     artist: "Mind Fresh Audio",
     duration: "∞",
@@ -68,7 +118,7 @@ const musicTracks = [
     description: "Gentle flowing water sounds from mountain streams"
   },
   {
-    id: 7,
+    id: 11,
     title: "Deep Focus",
     artist: "Mind Fresh Audio",
     duration: "∞",
@@ -152,6 +202,7 @@ const musicTracks = [
 
 const categories = [
   { value: "All", label: "All Categories" },
+  { value: "Uploaded", label: "Uploaded Audio" },
   { value: "Meditation", label: "Meditation" },
   { value: "Relaxation", label: "Relaxation" },
   { value: "Nature", label: "Nature Sounds" },
@@ -174,6 +225,8 @@ export default function Music() {
   const [likedTracks, setLikedTracks] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [ambientTimer, setAmbientTimer] = useState<NodeJS.Timeout | null>(null);
+  const [isShuffleMode, setIsShuffleMode] = useState(false);
+  const [playedTracks, setPlayedTracks] = useState<number[]>([]);
   
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -217,9 +270,52 @@ export default function Music() {
     ? localMusicTracks 
     : ambientTracks;
 
+  // Shuffle function
+  const shuffleArray = (array: any[]) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  // Get next track for random playback
+  const getNextRandomTrack = () => {
+    const availableTracks = allTracks.filter((_, index) => !playedTracks.includes(index));
+    if (availableTracks.length === 0) {
+      // Reset played tracks if all have been played
+      setPlayedTracks([]);
+      return allTracks[Math.floor(Math.random() * allTracks.length)];
+    }
+    const randomTrack = availableTracks[Math.floor(Math.random() * availableTracks.length)];
+    const trackIndex = allTracks.findIndex(t => t.id === randomTrack.id);
+    setPlayedTracks(prev => [...prev, trackIndex]);
+    return randomTrack;
+  };
+
   const playAmbientTrack = async (track: any) => {
+    // Handle uploaded audio files
+    if (track.isUploaded && track.audioUrl) {
+      if (audioRef.current) {
+        audioRef.current.src = track.audioUrl;
+        await audioRef.current.play();
+        setIsPlaying(true);
+        setCurrentTrackType('ambient');
+        setCurrentTrack(track);
+      }
+      return;
+    }
+
     const trackType = track.type as string;
     switch (trackType) {
+      case 'uploaded':
+        // Handle uploaded files
+        if (audioRef.current && track.audioUrl) {
+          audioRef.current.src = track.audioUrl;
+          await audioRef.current.play();
+        }
+        break;
       case 'meditation':
         await ambientMusic.playMeditation();
         break;
@@ -330,9 +426,15 @@ export default function Music() {
 
   const skipToNext = async () => {
     if (currentTrackType === 'ambient') {
-      const currentIndex = ambientTracks.findIndex((track: any) => track.id === currentTrack.id);
-      const nextIndex = (currentIndex + 1) % ambientTracks.length;
-      const nextTrack = ambientTracks[nextIndex];
+      let nextTrack;
+      
+      if (isShuffleMode) {
+        nextTrack = getNextRandomTrack();
+      } else {
+        const currentIndex = ambientTracks.findIndex((track: any) => track.id === currentTrack.id);
+        const nextIndex = (currentIndex + 1) % ambientTracks.length;
+        nextTrack = ambientTracks[nextIndex];
+      }
       
       if (isPlaying) {
         ambientMusic.stop();
@@ -340,9 +442,16 @@ export default function Music() {
       }
       setCurrentTrack(nextTrack);
     } else if (currentApiTrack && apiTracks.length > 0) {
-      const currentIndex = apiTracks.findIndex((track: Track) => track.id === currentApiTrack.id);
-      const nextIndex = (currentIndex + 1) % apiTracks.length;
-      const nextTrack = apiTracks[nextIndex];
+      let nextTrack;
+      
+      if (isShuffleMode) {
+        const randomIndex = Math.floor(Math.random() * apiTracks.length);
+        nextTrack = apiTracks[randomIndex];
+      } else {
+        const currentIndex = apiTracks.findIndex((track: Track) => track.id === currentApiTrack.id);
+        const nextIndex = (currentIndex + 1) % apiTracks.length;
+        nextTrack = apiTracks[nextIndex];
+      }
       
       if (isPlaying && audioRef.current) {
         audioRef.current.pause();
@@ -588,6 +697,15 @@ export default function Music() {
 
               {/* Controls */}
               <div className="flex items-center justify-center space-x-4">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setIsShuffleMode(!isShuffleMode)}
+                  className={isShuffleMode ? 'bg-primary text-primary-foreground' : ''}
+                  data-testid="button-shuffle"
+                >
+                  <Shuffle className="h-4 w-4" />
+                </Button>
                 <Button variant="outline" size="sm" onClick={skipToPrevious}>
                   <SkipBack className="h-4 w-4" />
                 </Button>
