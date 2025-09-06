@@ -67,7 +67,17 @@ export default function CounselorBookingModal({ isOpen, onClose }: CounselorBook
 
   const bookingMutation = useMutation({
     mutationFn: async (data: any) => {
-      const scheduledFor = new Date(`${data.preferredDate}T${data.preferredTime.split(' - ')[0]}`);
+      // Convert time from "9:00 AM - 10:00 AM" format to "09:00"
+      const timeString = data.preferredTime.split(' - ')[0]; // Get "9:00 AM"
+      const [time, period] = timeString.split(' '); // Split "9:00" and "AM"
+      const [hours, minutes] = time.split(':'); // Split "9" and "00"
+      
+      let hour24 = parseInt(hours);
+      if (period === 'PM' && hour24 !== 12) hour24 += 12;
+      if (period === 'AM' && hour24 === 12) hour24 = 0;
+      
+      const formattedTime = `${hour24.toString().padStart(2, '0')}:${minutes}`;
+      const scheduledFor = new Date(`${data.preferredDate}T${formattedTime}:00`);
       
       return await apiRequest("POST", "/api/appointments", {
         userId: currentUser?.id,
