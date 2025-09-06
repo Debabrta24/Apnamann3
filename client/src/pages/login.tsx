@@ -49,10 +49,6 @@ export default function Login() {
     }
   };
 
-  const handleDemoLogin = () => {
-    setEmail("demo@student.edu");
-    setPassword("demo123");
-  };
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
@@ -175,23 +171,6 @@ export default function Login() {
               {isLoading ? "Signing in..." : "Sign in with Google"}
             </Button>
 
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">Demo Access</span>
-              </div>
-            </div>
-
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={handleDemoLogin}
-              data-testid="button-demo-login"
-            >
-              Try Demo Account
-            </Button>
 
             <div className="text-center text-sm text-muted-foreground">
               <p className="mb-2">New to DPIS?</p>
