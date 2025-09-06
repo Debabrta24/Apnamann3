@@ -331,6 +331,7 @@ export default function Doctor() {
               ))}
             </div>
           )}
+            </div>
           </TabsContent>
 
           <TabsContent value="register" className="mt-6">
@@ -484,7 +485,6 @@ export default function Doctor() {
             </Card>
           </TabsContent>
         </Tabs>
-        </div>
       </div>
     </div>
   );

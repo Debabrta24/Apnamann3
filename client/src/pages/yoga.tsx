@@ -3,7 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Play, Pause, RotateCcw, Timer, Heart, Zap, Moon, Sun } from "lucide-react";
+import { Play, Pause, RotateCcw, Timer, Heart, Zap, Moon, Sun, Video, Users, Calendar, Clock } from "lucide-react";
+import { useAppContext } from "@/context/AppContext";
+import { BackButton } from "@/components/ui/back-button";
 
 interface YogaPose {
   id: string;
@@ -13,6 +15,19 @@ interface YogaPose {
   benefits: string[];
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   instructions: string[];
+  image: string;
+}
+
+interface LiveSession {
+  id: string;
+  title: string;
+  instructor: string;
+  time: string;
+  duration: number;
+  participants: number;
+  level: string;
+  type: string;
+  image: string;
 }
 
 interface YogaSession {
@@ -32,6 +47,7 @@ const yogaPoses: YogaPose[] = [
     description: "A foundational standing pose that improves posture and balance",
     benefits: ["Improves posture", "Increases awareness", "Strengthens thighs", "Reduces anxiety"],
     difficulty: "Beginner",
+    image: "https://images.unsplash.com/photo-1506629905607-d13b2b1b45e8?w=400&h=300&fit=crop&face=center",
     instructions: [
       "Stand with feet hip-width apart",
       "Ground down through all four corners of your feet",
@@ -47,6 +63,7 @@ const yogaPoses: YogaPose[] = [
     description: "A resting pose that calms the mind and relieves stress",
     benefits: ["Relieves stress", "Calms the mind", "Stretches hips", "Reduces anxiety"],
     difficulty: "Beginner",
+    image: "https://images.unsplash.com/photo-1588286840104-8957b019727f?w=400&h=300&fit=crop&face=center",
     instructions: [
       "Kneel on the floor with big toes touching",
       "Separate your knees about hip-width apart",
@@ -62,6 +79,7 @@ const yogaPoses: YogaPose[] = [
     description: "A gentle flow that warms up the spine and relieves tension",
     benefits: ["Improves spine flexibility", "Relieves back tension", "Massages organs", "Improves coordination"],
     difficulty: "Beginner",
+    image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop&face=center",
     instructions: [
       "Start on hands and knees in tabletop position",
       "Inhale, arch your back and look up (Cow)",
@@ -77,6 +95,7 @@ const yogaPoses: YogaPose[] = [
     description: "A powerful standing pose that builds strength and confidence",
     benefits: ["Strengthens legs", "Improves balance", "Opens hips", "Builds confidence"],
     difficulty: "Intermediate",
+    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&face=center",
     instructions: [
       "Step your left foot back about 3-4 feet",
       "Turn your left foot out 45 degrees",
@@ -92,6 +111,7 @@ const yogaPoses: YogaPose[] = [
     description: "A balancing pose that improves focus and stability",
     benefits: ["Improves balance", "Strengthens legs", "Enhances focus", "Calms the mind"],
     difficulty: "Intermediate",
+    image: "https://images.unsplash.com/photo-1545389336-cf090694435e?w=400&h=300&fit=crop&face=center",
     instructions: [
       "Stand in Mountain Pose",
       "Shift weight to your left foot",
@@ -107,6 +127,7 @@ const yogaPoses: YogaPose[] = [
     description: "An energizing pose that stretches the entire body",
     benefits: ["Strengthens arms", "Stretches hamstrings", "Energizes body", "Improves circulation"],
     difficulty: "Intermediate",
+    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&face=center",
     instructions: [
       "Start in tabletop position",
       "Tuck your toes under",
@@ -114,6 +135,53 @@ const yogaPoses: YogaPose[] = [
       "Straighten your legs as much as possible",
       "Press hands firmly into the ground"
     ]
+  }
+];
+
+const liveSessions: LiveSession[] = [
+  {
+    id: "1",
+    title: "Morning Mindfulness Flow",
+    instructor: "Sarah Johnson",
+    time: "8:00 AM",
+    duration: 30,
+    participants: 24,
+    level: "Beginner",
+    type: "Vinyasa Flow",
+    image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop&face=center"
+  },
+  {
+    id: "2", 
+    title: "Stress Relief & Relaxation",
+    instructor: "Michael Chen",
+    time: "12:30 PM",
+    duration: 45,
+    participants: 18,
+    level: "All Levels",
+    type: "Restorative",
+    image: "https://images.unsplash.com/photo-1588286840104-8957b019727f?w=400&h=300&fit=crop&face=center"
+  },
+  {
+    id: "3",
+    title: "Power Yoga for Students",
+    instructor: "Emma Davis",
+    time: "6:00 PM", 
+    duration: 60,
+    participants: 31,
+    level: "Intermediate",
+    type: "Power Yoga",
+    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&face=center"
+  },
+  {
+    id: "4",
+    title: "Evening Gentle Stretch",
+    instructor: "Alex Thompson",
+    time: "8:30 PM",
+    duration: 25,
+    participants: 15,
+    level: "Beginner",
+    type: "Gentle Hatha",
+    image: "https://images.unsplash.com/photo-1545389336-cf090694435e?w=400&h=300&fit=crop&face=center"
   }
 ];
 
@@ -171,6 +239,7 @@ const yogaSessions: YogaSession[] = [
 ];
 
 export default function YogaPage() {
+  const { currentUser } = useAppContext();
   const [activeSession, setActiveSession] = useState<YogaSession | null>(null);
   const [currentPoseIndex, setCurrentPoseIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -304,21 +373,43 @@ export default function YogaPage() {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-6xl">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-primary mb-2">Yoga & Mindfulness</h1>
-        <p className="text-lg text-muted-foreground">
-          Find peace and balance with guided yoga sessions designed for mental wellness
-        </p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <BackButton />
+        
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+              <Heart className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">Yoga & Wellness</h1>
+              <p className="text-muted-foreground">Practice mindfulness and improve your mental wellbeing</p>
+            </div>
+          </div>
+        </div>
 
-      <Tabs defaultValue="sessions" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="sessions" data-testid="tab-sessions">Guided Sessions</TabsTrigger>
-          <TabsTrigger value="poses" data-testid="tab-poses">Individual Poses</TabsTrigger>
-        </TabsList>
+        <Tabs defaultValue="practice" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="practice" data-testid="tab-practice-sessions">
+              <Timer className="h-4 w-4 mr-2" />
+              Practice Sessions
+            </TabsTrigger>
+            <TabsTrigger value="live" data-testid="tab-live-sessions">
+              <Video className="h-4 w-4 mr-2" />
+              Live Classes
+            </TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="sessions" className="space-y-6">
+          <TabsContent value="practice" className="mt-6">
+
+            <Tabs defaultValue="sessions" className="space-y-6">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="sessions" data-testid="tab-sessions">Guided Sessions</TabsTrigger>
+                <TabsTrigger value="poses" data-testid="tab-poses">Individual Poses</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="sessions" className="space-y-6">
           <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
             {yogaSessions.map((session) => (
               <Card key={session.id} className="hover:shadow-lg transition-shadow cursor-pointer">
@@ -398,31 +489,68 @@ export default function YogaPage() {
               </Card>
             ))}
           </div>
-        </TabsContent>
-      </Tabs>
+              </TabsContent>
+            </Tabs>
+          </TabsContent>
 
-      <Card className="mt-8 bg-wellness/10 dark:bg-wellness/5 border-wellness/20">
-        <CardContent className="p-6">
-          <div className="text-center space-y-4">
-            <Heart className="h-12 w-12 text-wellness mx-auto" />
-            <h3 className="text-xl font-semibold text-wellness">Mindful Practice Tips</h3>
-            <div className="grid md:grid-cols-3 gap-4 text-sm">
-              <div className="space-y-2">
-                <h4 className="font-medium">Listen to Your Body</h4>
-                <p className="text-muted-foreground">Never force a pose. Move slowly and respect your limits.</p>
-              </div>
-              <div className="space-y-2">
-                <h4 className="font-medium">Focus on Breathing</h4>
-                <p className="text-muted-foreground">Deep, controlled breathing enhances the benefits of each pose.</p>
-              </div>
-              <div className="space-y-2">
-                <h4 className="font-medium">Be Consistent</h4>
-                <p className="text-muted-foreground">Regular practice, even just 10 minutes daily, creates lasting benefits.</p>
-              </div>
+          <TabsContent value="live" className="mt-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
+              {liveSessions.map((session) => (
+                <Card key={session.id} className="hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-xl">{session.title}</CardTitle>
+                      <Badge variant="secondary" className="bg-green-100 text-green-800">
+                        LIVE
+                      </Badge>
+                    </div>
+                    <CardDescription>with {session.instructor}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="aspect-video rounded-lg overflow-hidden mb-4">
+                      <img 
+                        src={session.image} 
+                        alt={session.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-1">
+                          <Clock className="h-4 w-4 text-muted-foreground" />
+                          <span>{session.time}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Timer className="h-4 w-4 text-muted-foreground" />
+                          <span>{session.duration} min</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-1">
+                          <Users className="h-4 w-4 text-muted-foreground" />
+                          <span>{session.participants} joining</span>
+                        </div>
+                        <Badge variant="outline">{session.level}</Badge>
+                      </div>
+                      
+                      <div className="text-sm text-muted-foreground">
+                        <span className="font-medium">Style:</span> {session.type}
+                      </div>
+                      
+                      <Button className="w-full" data-testid={`button-join-live-${session.id}`}>
+                        <Video className="h-4 w-4 mr-2" />
+                        Join Live Session
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }
