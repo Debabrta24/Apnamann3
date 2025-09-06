@@ -355,9 +355,9 @@ export default function Videos() {
           <p className="text-muted-foreground">Try adjusting your search criteria or category filter</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredVideos.map((video) => (
-            <Card key={video.id} className="hover:shadow-lg transition-shadow cursor-pointer group">
+            <Card key={video.id} className="hover:shadow-xl transition-all duration-300 cursor-pointer group hover:scale-[1.02] border-0 bg-card/50 backdrop-blur-sm">
               <div 
                 className="relative overflow-hidden rounded-t-lg"
                 onClick={() => setSelectedVideo(video)}
@@ -425,9 +425,15 @@ export default function Videos() {
                 </p>
                 
                 <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
-                  <div className="flex items-center gap-1">
-                    <Eye className="h-3 w-3" />
-                    {formatViews(video.views)} views
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1">
+                      <Eye className="h-3 w-3" />
+                      {formatViews(video.views)} views
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <MessageCircle className="h-3 w-3" />
+                      {(comments[video.id] || []).length}
+                    </div>
                   </div>
                   <Badge variant="outline" className="text-xs">
                     {video.category}
