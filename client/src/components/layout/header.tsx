@@ -68,7 +68,6 @@ export default function Header() {
                 <nav className="flex flex-col space-y-4">
                   {/* Main Navigation Items */}
                   {[
-                    { href: "/music", label: "Mind Fresh Music", testId: "nav-music-mobile" },
                     { href: "/", label: "Home", testId: "nav-home-mobile" },
                     { href: "/chat", label: "AI Support", testId: "nav-chat-mobile" },
                     { href: "/doctor", label: "Doctor", testId: "nav-doctor-mobile" },
@@ -97,6 +96,7 @@ export default function Header() {
                     </h3>
                     <div className="space-y-2">
                       {[
+                        { href: "/music", label: "Mind Fresh Music", testId: "nav-music-mobile" },
                         { href: "/games", label: "Games", testId: "nav-games-mobile" },
                         { href: "/videos", label: "Motivational Videos", testId: "nav-videos-mobile" },
                         { href: "/entertainment", label: "Entertainment Hub", testId: "nav-entertainment-mobile" },

@@ -9,17 +9,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navItems = [
-  { href: "/music", label: "Mind Fresh Music", testId: "nav-music" },
   { href: "/", label: "Home", testId: "nav-home" },
   { href: "/chat", label: "AI Support", testId: "nav-chat" },
   { href: "/doctor", label: "Doctor", testId: "nav-doctor" },
   { href: "/screening", label: "Screening", testId: "nav-screening" },
   { href: "/resources", label: "Resources", testId: "nav-resources" },
-  { href: "/games", label: "Games", testId: "nav-games" },
-  { href: "/videos", label: "Motivational Music", testId: "nav-videos" },
 ];
 
 const entertainmentItems = [
+  { href: "/music", label: "Mind Fresh Music", icon: Music, testId: "nav-music" },
+  { href: "/games", label: "Games", icon: Gamepad2, testId: "nav-games" },
+  { href: "/videos", label: "Motivational Videos", icon: Video, testId: "nav-videos" },
   { href: "/entertainment", label: "Entertainment Hub", icon: Play, testId: "nav-entertainment-hub" },
 ];
 
