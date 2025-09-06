@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,24 +24,66 @@ export default function MoodTracker({ moodHistory }: MoodTrackerProps) {
   const { currentUser } = useAppContext();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [localMoodHistory, setLocalMoodHistory] = useState<MoodEntry[]>([]);
+
+  // Load mood history from localStorage on component mount
+  useEffect(() => {
+    const loadMoodHistory = () => {
+      try {
+        const stored = localStorage.getItem('moodHistory');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          const moodsWithDates = parsed.map((mood: any) => ({
+            ...mood,
+            date: new Date(mood.date)
+          }));
+          setLocalMoodHistory(moodsWithDates);
+        }
+      } catch (error) {
+        console.error('Error loading mood history:', error);
+      }
+    };
+    
+    loadMoodHistory();
+  }, []);
 
   const addMoodMutation = useMutation({
     mutationFn: async (moodData: { moodLevel: number; moodType: string; notes?: string }) => {
-      return await apiRequest("POST", "/api/mood", {
-        userId: currentUser?.id,
-        ...moodData,
-      });
+      // Use local storage instead of API for mood tracking
+      const moodEntry = {
+        id: Date.now().toString(),
+        userId: currentUser?.id || 'default',
+        moodLevel: moodData.moodLevel,
+        moodType: moodData.moodType,
+        notes: moodData.notes,
+        date: new Date()
+      };
+      
+      const existingMoods = JSON.parse(localStorage.getItem('moodHistory') || '[]');
+      const updatedMoods = [...existingMoods, moodEntry];
+      localStorage.setItem('moodHistory', JSON.stringify(updatedMoods));
+      
+      return moodEntry;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/mood/history", currentUser?.id] });
       toast({
         title: "Mood recorded",
         description: "Your mood has been tracked successfully.",
       });
+      // Update local state and force re-render
+      const stored = localStorage.getItem('moodHistory');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        const moodsWithDates = parsed.map((mood: any) => ({
+          ...mood,
+          date: new Date(mood.date)
+        }));
+        setLocalMoodHistory(moodsWithDates);
+      }
     },
     onError: (error) => {
       toast({
-        title: "Error",
+        title: "Error", 
         description: "Failed to record mood. Please try again.",
         variant: "destructive",
       });
@@ -61,8 +103,9 @@ export default function MoodTracker({ moodHistory }: MoodTrackerProps) {
   });
 
   const getMoodForDate = (date: Date) => {
-    if (!moodHistory) return null;
-    return moodHistory.find(mood => {
+    // Use local mood history instead of prop
+    const historyToUse = localMoodHistory.length > 0 ? localMoodHistory : (moodHistory || []);
+    return historyToUse.find(mood => {
       const moodDate = new Date(mood.date);
       return moodDate.toDateString() === date.toDateString();
     });
@@ -134,7 +177,7 @@ export default function MoodTracker({ moodHistory }: MoodTrackerProps) {
         </div>
 
         <p className="text-sm text-muted-foreground mt-4">
-          {moodHistory && moodHistory.length > 0
+          {localMoodHistory.length > 0
             ? "Your mood has been mostly positive this week. Keep up the good self-care practices!"
             : "Start tracking your mood to get personalized insights and recommendations."}
         </p>
