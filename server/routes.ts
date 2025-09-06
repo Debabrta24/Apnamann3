@@ -366,6 +366,24 @@ This AI has learned from real conversation patterns and will respond authentical
         customPrompt = `Local AI trained on conversation data but no patterns were detected. Will use default supportive responses.`;
       }
 
+      // Check if user exists, if not create a basic user record
+      let user = await storage.getUser(userId);
+      if (!user) {
+        // Create a basic user record if it doesn't exist
+        const basicUser = await storage.createUser({
+          id: userId,
+          email: `user-${userId}@temp.com`,
+          password: 'temp-password',
+          firstName: 'User',
+          lastName: '',
+          institution: 'Unknown',
+          course: 'Unknown',
+          yearOfStudy: 1,
+          role: 'student'
+        });
+        console.log('Created basic user record for custom personality');
+      }
+
       // Validate input
       const personalityData = insertCustomPersonalitySchema.parse({
         userId,
