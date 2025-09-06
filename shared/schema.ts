@@ -27,6 +27,7 @@ export const users = pgTable("users", {
   year: integer("year"),
   language: text("language").default("en"),
   isAdmin: boolean("is_admin").default(false),
+  coins: integer("coins").default(0),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -159,6 +160,17 @@ export const customPersonalities = pgTable("custom_personalities", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Coin transactions
+export const coinTransactions = pgTable("coin_transactions", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  amount: integer("amount").notNull(), // Can be positive (earned) or negative (spent)
+  type: text("type").notNull(), // 'screening_completed', 'chat_session', 'daily_login', 'forum_post', 'mood_entry', 'profile_completion', 'spent'
+  description: text("description").notNull(),
+  relatedEntityId: uuid("related_entity_id"), // Reference to the related activity (e.g., screening ID)
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   screeningAssessments: many(screeningAssessments),
@@ -169,6 +181,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   moodEntries: many(moodEntries),
   crisisAlerts: many(crisisAlerts),
   customPersonalities: many(customPersonalities),
+  coinTransactions: many(coinTransactions),
 }));
 
 export const customPersonalitiesRelations = relations(customPersonalities, ({ one }) => ({
@@ -211,6 +224,13 @@ export const forumRepliesRelations = relations(forumReplies, ({ one }) => ({
   }),
   user: one(users, {
     fields: [forumReplies.userId],
+    references: [users.id],
+  }),
+}));
+
+export const coinTransactionsRelations = relations(coinTransactions, ({ one }) => ({
+  user: one(users, {
+    fields: [coinTransactions.userId],
     references: [users.id],
   }),
 }));
@@ -270,6 +290,11 @@ export const insertResourceSchema = createInsertSchema(resources).omit({
   likes: true,
 });
 
+export const insertCoinTransactionSchema = createInsertSchema(coinTransactions).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -291,3 +316,5 @@ export type Counselor = typeof counselors.$inferSelect;
 export type ChatSession = typeof chatSessions.$inferSelect;
 export type CustomPersonality = typeof customPersonalities.$inferSelect;
 export type InsertCustomPersonality = z.infer<typeof insertCustomPersonalitySchema>;
+export type CoinTransaction = typeof coinTransactions.$inferSelect;
+export type InsertCoinTransaction = z.infer<typeof insertCoinTransactionSchema>;
