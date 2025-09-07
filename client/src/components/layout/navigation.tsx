@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { ChevronDown, Play, Music, Gamepad2, Video, Radio, Users, Phone, Stethoscope, Brain, Flower, Moon, BookOpen, Save, MessageSquare, Pill } from "lucide-react";
+import { ChevronDown, Play, Music, Gamepad2, Video, Radio, Phone, Stethoscope, Brain, Flower, Moon, BookOpen, Save, Pill } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
   DropdownMenu, 
