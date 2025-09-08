@@ -272,6 +272,7 @@ function Router() {
                     {[
                       { href: "/resources", label: "Resources", icon: BookOpen, testId: "nav-resources" },
                       { href: "/peer-calling", label: "Peer Call", icon: Phone, testId: "nav-peer-call" },
+                      { href: "/showcase", label: "Showcase", icon: Play, testId: "nav-showcase" },
                     ].map((item) => {
                       const IconComponent = item.icon;
                       return (
