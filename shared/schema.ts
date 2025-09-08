@@ -229,6 +229,28 @@ export const skillEndorsements = pgTable("skill_endorsements", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Live sessions
+export const liveSessions = pgTable("live_sessions", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  category: text("category").notNull(), // 'Meditation', 'Study', 'Support', 'Wellness', 'Education'
+  status: text("status").default("scheduled"), // 'scheduled', 'live', 'ended'
+  scheduledStart: timestamp("scheduled_start"),
+  actualStart: timestamp("actual_start"),
+  actualEnd: timestamp("actual_end"),
+  isAudio: boolean("is_audio").default(false), // true for audio-only, false for video
+  maxParticipants: integer("max_participants").default(100),
+  currentViewers: integer("current_viewers").default(0),
+  totalViews: integer("total_views").default(0),
+  streamUrl: text("stream_url"), // URL for the actual stream
+  thumbnailUrl: text("thumbnail_url"),
+  tags: jsonb("tags").default([]), // Array of tags
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   screeningAssessments: many(screeningAssessments),
@@ -244,6 +266,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   userSkills: many(userSkills),
   skillShowcases: many(skillShowcases),
   skillEndorsements: many(skillEndorsements),
+  liveSessions: many(liveSessions),
 }));
 
 export const customPersonalitiesRelations = relations(customPersonalities, ({ one }) => ({
@@ -331,6 +354,13 @@ export const skillEndorsementsRelations = relations(skillEndorsements, ({ one })
   }),
   endorser: one(users, {
     fields: [skillEndorsements.endorserId],
+    references: [users.id],
+  }),
+}));
+
+export const liveSessionsRelations = relations(liveSessions, ({ one }) => ({
+  user: one(users, {
+    fields: [liveSessions.userId],
     references: [users.id],
   }),
 }));
@@ -423,6 +453,14 @@ export const insertSkillEndorsementSchema = createInsertSchema(skillEndorsements
   createdAt: true,
 });
 
+export const insertLiveSessionSchema = createInsertSchema(liveSessions).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  currentViewers: true,
+  totalViews: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -454,3 +492,5 @@ export type SkillShowcase = typeof skillShowcases.$inferSelect;
 export type InsertSkillShowcase = z.infer<typeof insertSkillShowcaseSchema>;
 export type SkillEndorsement = typeof skillEndorsements.$inferSelect;
 export type InsertSkillEndorsement = z.infer<typeof insertSkillEndorsementSchema>;
+export type LiveSession = typeof liveSessions.$inferSelect;
+export type InsertLiveSession = z.infer<typeof insertLiveSessionSchema>;
