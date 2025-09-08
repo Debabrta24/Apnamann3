@@ -54,46 +54,46 @@ import { useToast } from "@/hooks/use-toast";
 import { BackButton } from "@/components/ui/back-button";
 
 const skillCategories = [
-  { value: "art", label: "Art & Drawing", icon: Palette, color: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200" },
-  { value: "digital-art", label: "Digital Art", icon: Brush, color: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200" },
-  { value: "music", label: "Music", icon: Music, color: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200" },
-  { value: "instrumental", label: "Instrumental", icon: Guitar, color: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200" },
-  { value: "singing", label: "Singing", icon: Mic, color: "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200" },
-  { value: "writing", label: "Creative Writing", icon: PenTool, color: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" },
-  { value: "poetry", label: "Poetry", icon: FileText, color: "bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200" },
-  { value: "photography", label: "Photography", icon: Camera, color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200" },
-  { value: "videography", label: "Video Creation", icon: Video, color: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200" },
-  { value: "coding", label: "Programming", icon: Code, color: "bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-200" },
-  { value: "dance", label: "Dance", icon: Zap, color: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200" },
-  { value: "theater", label: "Theater & Acting", icon: Theater, color: "bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-200" },
-  { value: "gaming", label: "Game Development", icon: Gamepad2, color: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200" },
-  { value: "crafts", label: "Arts & Crafts", icon: Scissors, color: "bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200" },
-  { value: "cooking", label: "Cooking", icon: Utensils, color: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200" },
-  { value: "baking", label: "Baking", icon: Cake, color: "bg-lime-100 text-lime-800 dark:bg-lime-900 dark:text-lime-200" },
-  { value: "fashion", label: "Fashion Design", icon: Shirt, color: "bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-900 dark:text-fuchsia-200" },
-  { value: "automotive", label: "Automotive", icon: Car, color: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200" },
-  { value: "diy", label: "DIY Projects", icon: Wrench, color: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200" },
-  { value: "fitness", label: "Fitness", icon: Dumbbell, color: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200" },
-  { value: "gardening", label: "Gardening", icon: TreePine, color: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" },
-  { value: "coffee-art", label: "Coffee Art", icon: Coffee, color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200" },
-  { value: "nature", label: "Nature Art", icon: Flower, color: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200" },
-  { value: "languages", label: "Languages", icon: Languages, color: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200" },
-  { value: "cultural", label: "Cultural Arts", icon: Globe, color: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200" },
-  { value: "academic", label: "Academic Work", icon: BookOpen, color: "bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200" },
-  { value: "other", label: "Other", icon: Star, color: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200" }
+  { value: "art", label: "Art & Drawing", icon: Palette, color: "bg-gradient-to-r from-rose-100 to-pink-100 text-rose-800 border-rose-200 dark:from-rose-900 dark:to-pink-900 dark:text-rose-200 dark:border-rose-700" },
+  { value: "digital-art", label: "Digital Art", icon: Brush, color: "bg-gradient-to-r from-purple-100 to-violet-100 text-purple-800 border-purple-200 dark:from-purple-900 dark:to-violet-900 dark:text-purple-200 dark:border-purple-700" },
+  { value: "music", label: "Music", icon: Music, color: "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 border-blue-200 dark:from-blue-900 dark:to-indigo-900 dark:text-blue-200 dark:border-blue-700" },
+  { value: "instrumental", label: "Instrumental", icon: Guitar, color: "bg-gradient-to-r from-indigo-100 to-blue-100 text-indigo-800 border-indigo-200 dark:from-indigo-900 dark:to-blue-900 dark:text-indigo-200 dark:border-indigo-700" },
+  { value: "singing", label: "Singing", icon: Mic, color: "bg-gradient-to-r from-pink-100 to-rose-100 text-pink-800 border-pink-200 dark:from-pink-900 dark:to-rose-900 dark:text-pink-200 dark:border-pink-700" },
+  { value: "writing", label: "Creative Writing", icon: PenTool, color: "bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-800 border-emerald-200 dark:from-emerald-900 dark:to-teal-900 dark:text-emerald-200 dark:border-emerald-700" },
+  { value: "poetry", label: "Poetry", icon: FileText, color: "bg-gradient-to-r from-teal-100 to-cyan-100 text-teal-800 border-teal-200 dark:from-teal-900 dark:to-cyan-900 dark:text-teal-200 dark:border-teal-700" },
+  { value: "photography", label: "Photography", icon: Camera, color: "bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-800 border-amber-200 dark:from-amber-900 dark:to-yellow-900 dark:text-amber-200 dark:border-amber-700" },
+  { value: "videography", label: "Video Creation", icon: Video, color: "bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 border-orange-200 dark:from-orange-900 dark:to-red-900 dark:text-orange-200 dark:border-orange-700" },
+  { value: "coding", label: "Programming", icon: Code, color: "bg-gradient-to-r from-slate-100 to-gray-100 text-slate-800 border-slate-200 dark:from-slate-900 dark:to-gray-900 dark:text-slate-200 dark:border-slate-700" },
+  { value: "dance", label: "Dance", icon: Zap, color: "bg-gradient-to-r from-cyan-100 to-teal-100 text-cyan-800 border-cyan-200 dark:from-cyan-900 dark:to-teal-900 dark:text-cyan-200 dark:border-cyan-700" },
+  { value: "theater", label: "Theater & Acting", icon: Theater, color: "bg-gradient-to-r from-violet-100 to-purple-100 text-violet-800 border-violet-200 dark:from-violet-900 dark:to-purple-900 dark:text-violet-200 dark:border-violet-700" },
+  { value: "gaming", label: "Game Development", icon: Gamepad2, color: "bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border-green-200 dark:from-green-900 dark:to-emerald-900 dark:text-green-200 dark:border-green-700" },
+  { value: "crafts", label: "Arts & Crafts", icon: Scissors, color: "bg-gradient-to-r from-rose-100 to-pink-100 text-rose-800 border-rose-200 dark:from-rose-900 dark:to-pink-900 dark:text-rose-200 dark:border-rose-700" },
+  { value: "cooking", label: "Cooking", icon: Utensils, color: "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 border-amber-200 dark:from-amber-900 dark:to-orange-900 dark:text-amber-200 dark:border-amber-700" },
+  { value: "baking", label: "Baking", icon: Cake, color: "bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-800 border-yellow-200 dark:from-yellow-900 dark:to-amber-900 dark:text-yellow-200 dark:border-yellow-700" },
+  { value: "fashion", label: "Fashion Design", icon: Shirt, color: "bg-gradient-to-r from-fuchsia-100 to-pink-100 text-fuchsia-800 border-fuchsia-200 dark:from-fuchsia-900 dark:to-pink-900 dark:text-fuchsia-200 dark:border-fuchsia-700" },
+  { value: "automotive", label: "Automotive", icon: Car, color: "bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 border-gray-200 dark:from-gray-900 dark:to-slate-900 dark:text-gray-200 dark:border-gray-700" },
+  { value: "diy", label: "DIY Projects", icon: Wrench, color: "bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-800 border-blue-200 dark:from-blue-900 dark:to-cyan-900 dark:text-blue-200 dark:border-blue-700" },
+  { value: "fitness", label: "Fitness", icon: Dumbbell, color: "bg-gradient-to-r from-red-100 to-rose-100 text-red-800 border-red-200 dark:from-red-900 dark:to-rose-900 dark:text-red-200 dark:border-red-700" },
+  { value: "gardening", label: "Gardening", icon: TreePine, color: "bg-gradient-to-r from-green-100 to-lime-100 text-green-800 border-green-200 dark:from-green-900 dark:to-lime-900 dark:text-green-200 dark:border-green-700" },
+  { value: "coffee-art", label: "Coffee Art", icon: Coffee, color: "bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-800 border-amber-200 dark:from-amber-900 dark:to-yellow-900 dark:text-amber-200 dark:border-amber-700" },
+  { value: "nature", label: "Nature Art", icon: Flower, color: "bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-800 border-emerald-200 dark:from-emerald-900 dark:to-green-900 dark:text-emerald-200 dark:border-emerald-700" },
+  { value: "languages", label: "Languages", icon: Languages, color: "bg-gradient-to-r from-indigo-100 to-violet-100 text-indigo-800 border-indigo-200 dark:from-indigo-900 dark:to-violet-900 dark:text-indigo-200 dark:border-indigo-700" },
+  { value: "cultural", label: "Cultural Arts", icon: Globe, color: "bg-gradient-to-r from-purple-100 to-fuchsia-100 text-purple-800 border-purple-200 dark:from-purple-900 dark:to-fuchsia-900 dark:text-purple-200 dark:border-purple-700" },
+  { value: "academic", label: "Academic Work", icon: BookOpen, color: "bg-gradient-to-r from-teal-100 to-emerald-100 text-teal-800 border-teal-200 dark:from-teal-900 dark:to-emerald-900 dark:text-teal-200 dark:border-teal-700" },
+  { value: "other", label: "Other", icon: Star, color: "bg-gradient-to-r from-gray-100 to-zinc-100 text-gray-800 border-gray-200 dark:from-gray-900 dark:to-zinc-900 dark:text-gray-200 dark:border-gray-700" }
 ];
 
 const themes = [
-  { value: "inspiration", label: "Inspiration & Hope", color: "bg-blue-50 border-blue-200" },
-  { value: "healing", label: "Healing Journey", color: "bg-green-50 border-green-200" },
-  { value: "mindfulness", label: "Mindfulness & Peace", color: "bg-purple-50 border-purple-200" },
-  { value: "community", label: "Community Support", color: "bg-orange-50 border-orange-200" },
-  { value: "cultural", label: "Cultural Heritage", color: "bg-yellow-50 border-yellow-200" },
-  { value: "nature", label: "Nature & Environment", color: "bg-emerald-50 border-emerald-200" },
-  { value: "education", label: "Learning & Growth", color: "bg-indigo-50 border-indigo-200" },
-  { value: "innovation", label: "Innovation & Tech", color: "bg-cyan-50 border-cyan-200" },
-  { value: "celebration", label: "Joy & Celebration", color: "bg-pink-50 border-pink-200" },
-  { value: "challenge", label: "Overcoming Challenges", color: "bg-red-50 border-red-200" }
+  { value: "inspiration", label: "Inspiration & Hope", color: "bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 dark:from-blue-900/20 dark:to-indigo-900/20 dark:border-blue-700" },
+  { value: "healing", label: "Healing Journey", color: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700" },
+  { value: "mindfulness", label: "Mindfulness & Peace", color: "bg-gradient-to-r from-purple-50 to-violet-50 border-purple-200 dark:from-purple-900/20 dark:to-violet-900/20 dark:border-purple-700" },
+  { value: "community", label: "Community Support", color: "bg-gradient-to-r from-orange-50 to-amber-50 border-orange-200 dark:from-orange-900/20 dark:to-amber-900/20 dark:border-orange-700" },
+  { value: "cultural", label: "Cultural Heritage", color: "bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-200 dark:from-yellow-900/20 dark:to-amber-900/20 dark:border-yellow-700" },
+  { value: "nature", label: "Nature & Environment", color: "bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-200 dark:from-emerald-900/20 dark:to-teal-900/20 dark:border-emerald-700" },
+  { value: "education", label: "Learning & Growth", color: "bg-gradient-to-r from-indigo-50 to-blue-50 border-indigo-200 dark:from-indigo-900/20 dark:to-blue-900/20 dark:border-indigo-700" },
+  { value: "innovation", label: "Innovation & Tech", color: "bg-gradient-to-r from-cyan-50 to-teal-50 border-cyan-200 dark:from-cyan-900/20 dark:to-teal-900/20 dark:border-cyan-700" },
+  { value: "celebration", label: "Joy & Celebration", color: "bg-gradient-to-r from-pink-50 to-rose-50 border-pink-200 dark:from-pink-900/20 dark:to-rose-900/20 dark:border-pink-700" },
+  { value: "challenge", label: "Overcoming Challenges", color: "bg-gradient-to-r from-red-50 to-rose-50 border-red-200 dark:from-red-900/20 dark:to-rose-900/20 dark:border-red-700" }
 ];
 
 const sortOptions = [
@@ -336,26 +336,31 @@ export default function Showcase() {
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <BackButton />
       
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Creative Showcase</h1>
-        <p className="text-muted-foreground">
-          Share your creative talents and discover amazing work from the community
-        </p>
+      <div className="mb-10">
+        <div className="text-center max-w-3xl mx-auto">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent mb-4">
+            Creative Showcase
+          </h1>
+          <p className="text-lg text-muted-foreground leading-relaxed">
+            Share your creative talents, discover amazing work from the community, and celebrate the diverse skills of students across India
+          </p>
+        </div>
       </div>
 
       {/* Filters and Actions */}
-      <div className="space-y-4 mb-6">
+      <div className="space-y-6 mb-8">
         {/* Top Actions Bar */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Filters:</span>
-            </div>
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-40">
-                <SelectValue />
-              </SelectTrigger>
+        <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-6 shadow-sm">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+            <div className="flex flex-wrap items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Filter className="h-5 w-5 text-primary" />
+                <span className="text-base font-semibold text-foreground">Sort & View:</span>
+              </div>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-44 bg-background/50 border-border/50">
+                  <SelectValue />
+                </SelectTrigger>
               <SelectContent>
                 {sortOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
@@ -367,56 +372,64 @@ export default function Showcase() {
                 ))}
               </SelectContent>
             </Select>
-            <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
-              <Button
-                variant={viewMode === "grid" ? "default" : "ghost"}
-                size="sm"
-                onClick={() => setViewMode("grid")}
-                className="h-8 w-8 p-0"
-              >
-                <Users className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === "list" ? "default" : "ghost"}
-                size="sm"
-                onClick={() => setViewMode("list")}
-                className="h-8 w-8 p-0"
-              >
-                <Eye className="h-4 w-4" />
-              </Button>
+              <div className="flex items-center gap-1 bg-muted/50 rounded-lg p-1 border border-border/30">
+                <Button
+                  variant={viewMode === "grid" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setViewMode("grid")}
+                  className="h-9 w-9 p-0 transition-all duration-200"
+                >
+                  <Users className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={viewMode === "list" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setViewMode("list")}
+                  className="h-9 w-9 p-0 transition-all duration-200"
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
-          </div>
 
-          <Dialog open={isCreatePostOpen} onOpenChange={setIsCreatePostOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-primary hover:bg-primary/90" data-testid="button-create-showcase">
-                <Plus className="h-4 w-4 mr-2" />
-                Share Your Work
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
-              <DialogHeader>
-                <DialogTitle>Share Your Creative Work</DialogTitle>
+            <Dialog open={isCreatePostOpen} onOpenChange={setIsCreatePostOpen}>
+              <DialogTrigger asChild>
+                <Button 
+                  className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105" 
+                  data-testid="button-create-showcase"
+                  size="lg"
+                >
+                  <Plus className="h-5 w-5 mr-2" />
+                  Share Your Work
+                </Button>
+              </DialogTrigger>
+            <DialogContent className="sm:max-w-[700px] bg-gradient-to-br from-background to-background/80 border-border/50">
+              <DialogHeader className="text-center pb-4">
+                <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                  Share Your Creative Work
+                </DialogTitle>
+                <p className="text-muted-foreground mt-2">Showcase your talents and inspire the community</p>
               </DialogHeader>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="title">Title *</Label>
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="title" className="text-sm font-semibold text-foreground">Title *</Label>
                   <Input
                     id="title"
                     value={newPost.title}
                     onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
                     placeholder="Give your work a catchy title..."
+                    className="bg-background/50 border-border/50 focus:border-primary transition-colors"
                     data-testid="input-showcase-title"
                   />
                 </div>
                 
-                <div>
-                  <Label htmlFor="category">Category *</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="category" className="text-sm font-semibold text-foreground">Category *</Label>
                   <Select
                     value={newPost.category}
                     onValueChange={(value) => setNewPost({ ...newPost, category: value })}
                   >
-                    <SelectTrigger data-testid="select-showcase-category">
+                    <SelectTrigger className="bg-background/50 border-border/50 focus:border-primary" data-testid="select-showcase-category">
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -429,13 +442,13 @@ export default function Showcase() {
                   </Select>
                 </div>
 
-                <div>
-                  <Label htmlFor="theme">Theme (Optional)</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="theme" className="text-sm font-semibold text-foreground">Theme (Optional)</Label>
                   <Select
                     value={newPost.theme}
                     onValueChange={(value) => setNewPost({ ...newPost, theme: value })}
                   >
-                    <SelectTrigger data-testid="select-showcase-theme">
+                    <SelectTrigger className="bg-background/50 border-border/50 focus:border-primary" data-testid="select-showcase-theme">
                       <SelectValue placeholder="Select a theme" />
                     </SelectTrigger>
                     <SelectContent>
@@ -448,13 +461,14 @@ export default function Showcase() {
                   </Select>
                 </div>
 
-                <div>
-                  <Label htmlFor="tags">Tags (Optional)</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="tags" className="text-sm font-semibold text-foreground">Tags (Optional)</Label>
                   <Input
                     id="tags"
                     value={newPost.tags}
                     onChange={(e) => setNewPost({ ...newPost, tags: e.target.value })}
                     placeholder="creativity, mental-health, inspiration..."
+                    className="bg-background/50 border-border/50 focus:border-primary transition-colors"
                     data-testid="input-showcase-tags"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
@@ -462,25 +476,27 @@ export default function Showcase() {
                   </p>
                 </div>
 
-                <div>
-                  <Label htmlFor="description">Description *</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="description" className="text-sm font-semibold text-foreground">Description *</Label>
                   <Textarea
                     id="description"
                     value={newPost.description}
                     onChange={(e) => setNewPost({ ...newPost, description: e.target.value })}
                     placeholder="Tell us about your work, inspiration, or journey..."
                     rows={4}
+                    className="bg-background/50 border-border/50 focus:border-primary transition-colors resize-none"
                     data-testid="textarea-showcase-description"
                   />
                 </div>
 
-                <div>
-                  <Label htmlFor="file">Upload File (Optional)</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="file" className="text-sm font-semibold text-foreground">Upload File (Optional)</Label>
                   <Input
                     id="file"
                     type="file"
                     onChange={handleFileChange}
                     accept="image/*,audio/*,video/*,.pdf,.doc,.docx"
+                    className="bg-background/50 border-border/50 focus:border-primary transition-colors"
                     data-testid="input-showcase-file"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
@@ -488,10 +504,11 @@ export default function Showcase() {
                   </p>
                 </div>
 
-                <div className="flex justify-end space-x-3">
+                <div className="flex justify-end space-x-4 pt-4 border-t border-border/50">
                   <Button
                     variant="outline"
                     onClick={() => setIsCreatePostOpen(false)}
+                    className="transition-all duration-200 hover:scale-105"
                     data-testid="button-cancel-showcase"
                   >
                     Cancel
@@ -499,6 +516,7 @@ export default function Showcase() {
                   <Button
                     onClick={handleCreatePost}
                     disabled={createPostMutation.isPending}
+                    className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
                     data-testid="button-submit-showcase"
                   >
                     {createPostMutation.isPending ? "Sharing..." : "Share Work"}
@@ -509,26 +527,36 @@ export default function Showcase() {
           </Dialog>
         </div>
         
+          </div>
+        </div>
+        
         {/* Category Filters */}
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant={selectedCategory === "all" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setSelectedCategory("all")}
-          >
-            All Categories
-          </Button>
-          {skillCategories.slice(0, 8).map((category) => (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Palette className="h-5 w-5 text-primary" />
+            <span className="text-base font-semibold text-foreground">Categories:</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
             <Button
-              key={category.value}
-              variant={selectedCategory === category.value ? "default" : "outline"}
+              variant={selectedCategory === "all" ? "default" : "outline"}
               size="sm"
-              onClick={() => setSelectedCategory(category.value)}
+              onClick={() => setSelectedCategory("all")}
+              className="transition-all duration-200 hover:scale-105"
             >
-              <category.icon className="h-4 w-4 mr-1" />
-              {category.label}
+              All Categories
             </Button>
-          ))}
+            {skillCategories.slice(0, 8).map((category) => (
+              <Button
+                key={category.value}
+                variant={selectedCategory === category.value ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedCategory(category.value)}
+                className={`transition-all duration-200 hover:scale-105 ${selectedCategory === category.value ? category.color : ''}`}
+              >
+                <category.icon className="h-4 w-4 mr-1" />
+                {category.label}
+              </Button>
+            ))}
           {skillCategories.length > 8 && (
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
               <SelectTrigger className="w-32">
@@ -548,17 +576,19 @@ export default function Showcase() {
           )}
         </div>
         
+        
         {/* Theme Filters */}
-        <div className="space-y-2">
+        <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <Heart className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Themes:</span>
+            <Heart className="h-5 w-5 text-primary" />
+            <span className="text-base font-semibold text-foreground">Themes:</span>
           </div>
           <div className="flex flex-wrap gap-2">
             <Button
               variant={selectedTheme === "all" ? "default" : "outline"}
               size="sm"
               onClick={() => setSelectedTheme("all")}
+              className="transition-all duration-200 hover:scale-105"
             >
               All Themes
             </Button>
@@ -568,6 +598,7 @@ export default function Showcase() {
                 variant={selectedTheme === theme.value ? "default" : "outline"}
                 size="sm"
                 onClick={() => setSelectedTheme(theme.value)}
+                className={`transition-all duration-200 hover:scale-105 ${selectedTheme === theme.value ? theme.color : ''}`}
               >
                 {theme.label}
               </Button>
@@ -577,79 +608,88 @@ export default function Showcase() {
       </div>
 
       {/* Showcase Grid */}
-      <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>
+      <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" : "space-y-6"}>
         {mockPosts.map((post) => {
           const categoryInfo = skillCategories.find(cat => cat.value === post.category);
           const themeInfo = themes.find(t => t.value === post.theme);
           const CategoryIcon = categoryInfo?.icon || Star;
           
           return (
-            <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Badge variant="secondary" className={`flex items-center gap-1 ${categoryInfo?.color || ""}`}>
+            <Card key={post.id} className="group overflow-hidden hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1 border-border/50 bg-gradient-to-br from-background to-background/50 backdrop-blur-sm">
+              <CardHeader className="pb-4">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge className={`flex items-center gap-1 px-3 py-1 text-xs font-medium border ${categoryInfo?.color || "bg-secondary"}`}>
                       <CategoryIcon className="h-3 w-3" />
                       {categoryInfo?.label || post.category}
                     </Badge>
                     {post.theme && themeInfo && (
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="outline" className={`text-xs px-2 py-1 ${themeInfo.color}`}>
                         {themeInfo.label}
                       </Badge>
                     )}
                   </div>
-                  <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                  <div className="flex items-center space-x-1 text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-full">
                     <Eye className="h-3 w-3" />
-                    {post.views}
+                    <span className="font-medium">{post.views}</span>
                   </div>
                 </div>
-                <CardTitle className="text-lg font-semibold line-clamp-2">
+                <CardTitle className="text-xl font-bold line-clamp-2 group-hover:text-primary transition-colors duration-200">
                   {post.title}
                 </CardTitle>
               </CardHeader>
               
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-5">
                 {post.imageUrl && (
-                  <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                    <Image className="h-12 w-12 text-muted-foreground" />
+                  <div className="aspect-video bg-gradient-to-br from-muted/50 to-muted rounded-xl flex items-center justify-center border border-border/30 group-hover:border-primary/30 transition-colors duration-300">
+                    <Image className="h-16 w-16 text-muted-foreground/60 group-hover:text-primary/60 transition-colors duration-300" />
                   </div>
                 )}
                 
-                <p className="text-sm text-muted-foreground line-clamp-3">
+                <p className="text-sm text-muted-foreground/90 line-clamp-3 leading-relaxed">
                   {post.description}
                 </p>
 
                 {post.tags && post.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1">
+                  <div className="flex flex-wrap gap-1.5">
                     {post.tags.slice(0, 3).map((tag, index) => (
-                      <Badge key={index} variant="outline" className="text-xs">
+                      <Badge 
+                        key={index} 
+                        variant="outline" 
+                        className="text-xs px-2 py-0.5 bg-primary/5 border-primary/20 text-primary/80 hover:bg-primary/10 transition-colors cursor-pointer"
+                      >
                         #{tag}
                       </Badge>
                     ))}
                   </div>
                 )}
                 
-                <div className="flex items-center justify-between pt-2 border-t">
-                  <div className="text-xs text-muted-foreground">
-                    <p>{post.author.name}</p>
-                    <p>{post.author.institution}</p>
+                <div className="flex items-center justify-between pt-4 border-t border-border/50">
+                  <div className="text-xs text-muted-foreground space-y-1">
+                    <p className="font-medium text-foreground/80">{post.author.name}</p>
+                    <p className="text-muted-foreground/70">{post.author.institution}</p>
                   </div>
                   
-                  <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => likePostMutation.mutate(post.id)}
-                      className={post.isLiked ? "text-red-500" : ""}
+                      className={`transition-all duration-200 hover:scale-110 ${post.isLiked ? "text-red-500 hover:text-red-600" : "hover:text-red-500"}`}
                       data-testid={`button-like-${post.id}`}
                     >
-                      <Heart className={`h-4 w-4 mr-1 ${post.isLiked ? "fill-current" : ""}`} />
-                      {post.likes}
+                      <Heart className={`h-4 w-4 mr-1 transition-all duration-200 ${post.isLiked ? "fill-current scale-110" : ""}`} />
+                      <span className="font-medium">{post.likes}</span>
                     </Button>
                     
-                    <Button variant="ghost" size="sm" data-testid={`button-comment-${post.id}`}>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="transition-all duration-200 hover:scale-110 hover:text-blue-500"
+                      data-testid={`button-comment-${post.id}`}
+                    >
                       <MessageSquare className="h-4 w-4 mr-1" />
-                      {post.comments}
+                      <span className="font-medium">{post.comments}</span>
                     </Button>
                   </div>
                 </div>
@@ -661,17 +701,23 @@ export default function Showcase() {
 
       {/* Empty State */}
       {mockPosts.length === 0 && (
-        <Card className="text-center py-12">
+        <Card className="text-center py-16 bg-gradient-to-br from-background to-muted/20 border-dashed border-2 border-border/50">
           <CardContent>
-            <Trophy className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No showcases yet</h3>
-            <p className="text-muted-foreground mb-4">
-              Be the first to share your creative work with the community!
-            </p>
-            <Button onClick={() => setIsCreatePostOpen(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Share Your Work
-            </Button>
+            <div className="max-w-md mx-auto">
+              <Trophy className="h-16 w-16 text-muted-foreground/60 mx-auto mb-6" />
+              <h3 className="text-2xl font-bold mb-3 text-foreground">No showcases yet</h3>
+              <p className="text-muted-foreground mb-6 leading-relaxed">
+                Be the first to share your creative work with the community and inspire others!
+              </p>
+              <Button 
+                onClick={() => setIsCreatePostOpen(true)}
+                className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                size="lg"
+              >
+                <Plus className="h-5 w-5 mr-2" />
+                Share Your Work
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}
