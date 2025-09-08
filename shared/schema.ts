@@ -187,6 +187,48 @@ export const medicineAlarms = pgTable("medicine_alarms", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// User skills
+export const userSkills = pgTable("user_skills", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  skillName: text("skill_name").notNull(),
+  category: text("category").notNull(), // 'technical', 'creative', 'academic', 'sports', 'other'
+  proficiencyLevel: text("proficiency_level").notNull(), // 'beginner', 'intermediate', 'advanced', 'expert'
+  description: text("description"),
+  yearsOfExperience: integer("years_of_experience").default(0),
+  isVerified: boolean("is_verified").default(false),
+  endorsements: integer("endorsements").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Skill showcases
+export const skillShowcases = pgTable("skill_showcases", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  skillId: uuid("skill_id").notNull().references(() => userSkills.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  type: text("type").notNull(), // 'project', 'achievement', 'certificate', 'portfolio'
+  mediaUrl: text("media_url"), // Link to images, videos, documents
+  externalUrl: text("external_url"), // Link to project, repository, etc.
+  tags: jsonb("tags").default([]), // Array of tags
+  likes: integer("likes").default(0),
+  views: integer("views").default(0),
+  isFeatured: boolean("is_featured").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Skill endorsements
+export const skillEndorsements = pgTable("skill_endorsements", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  skillId: uuid("skill_id").notNull().references(() => userSkills.id, { onDelete: "cascade" }),
+  endorserId: uuid("endorser_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  comment: text("comment"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   screeningAssessments: many(screeningAssessments),
@@ -199,6 +241,9 @@ export const usersRelations = relations(users, ({ many }) => ({
   customPersonalities: many(customPersonalities),
   coinTransactions: many(coinTransactions),
   medicineAlarms: many(medicineAlarms),
+  userSkills: many(userSkills),
+  skillShowcases: many(skillShowcases),
+  skillEndorsements: many(skillEndorsements),
 }));
 
 export const customPersonalitiesRelations = relations(customPersonalities, ({ one }) => ({
@@ -255,6 +300,37 @@ export const coinTransactionsRelations = relations(coinTransactions, ({ one }) =
 export const medicineAlarmsRelations = relations(medicineAlarms, ({ one }) => ({
   user: one(users, {
     fields: [medicineAlarms.userId],
+    references: [users.id],
+  }),
+}));
+
+export const userSkillsRelations = relations(userSkills, ({ one, many }) => ({
+  user: one(users, {
+    fields: [userSkills.userId],
+    references: [users.id],
+  }),
+  showcases: many(skillShowcases),
+  endorsements: many(skillEndorsements),
+}));
+
+export const skillShowcasesRelations = relations(skillShowcases, ({ one }) => ({
+  user: one(users, {
+    fields: [skillShowcases.userId],
+    references: [users.id],
+  }),
+  skill: one(userSkills, {
+    fields: [skillShowcases.skillId],
+    references: [userSkills.id],
+  }),
+}));
+
+export const skillEndorsementsRelations = relations(skillEndorsements, ({ one }) => ({
+  skill: one(userSkills, {
+    fields: [skillEndorsements.skillId],
+    references: [userSkills.id],
+  }),
+  endorser: one(users, {
+    fields: [skillEndorsements.endorserId],
     references: [users.id],
   }),
 }));
@@ -325,6 +401,28 @@ export const insertMedicineAlarmSchema = createInsertSchema(medicineAlarms).omit
   updatedAt: true,
 });
 
+export const insertUserSkillSchema = createInsertSchema(userSkills).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  endorsements: true,
+  isVerified: true,
+});
+
+export const insertSkillShowcaseSchema = createInsertSchema(skillShowcases).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  likes: true,
+  views: true,
+  isFeatured: true,
+});
+
+export const insertSkillEndorsementSchema = createInsertSchema(skillEndorsements).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -350,3 +448,9 @@ export type CoinTransaction = typeof coinTransactions.$inferSelect;
 export type InsertCoinTransaction = z.infer<typeof insertCoinTransactionSchema>;
 export type MedicineAlarm = typeof medicineAlarms.$inferSelect;
 export type InsertMedicineAlarm = z.infer<typeof insertMedicineAlarmSchema>;
+export type UserSkill = typeof userSkills.$inferSelect;
+export type InsertUserSkill = z.infer<typeof insertUserSkillSchema>;
+export type SkillShowcase = typeof skillShowcases.$inferSelect;
+export type InsertSkillShowcase = z.infer<typeof insertSkillShowcaseSchema>;
+export type SkillEndorsement = typeof skillEndorsements.$inferSelect;
+export type InsertSkillEndorsement = z.infer<typeof insertSkillEndorsementSchema>;
