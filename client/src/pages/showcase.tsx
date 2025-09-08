@@ -46,7 +46,16 @@ import {
   Filter,
   TrendingUp,
   Clock,
-  Users
+  Users,
+  Share2,
+  Search,
+  Grid,
+  List,
+  Upload,
+  Sparkles,
+  ExternalLink,
+  Calendar,
+  MessageCircle
 } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
 import { apiRequest } from "@/lib/queryClient";
@@ -140,6 +149,8 @@ export default function Showcase() {
   const [selectedTheme, setSelectedTheme] = useState("all");
   const [sortBy, setSortBy] = useState("recent");
   const [viewMode, setViewMode] = useState("grid");
+  const [showTrending, setShowTrending] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [newPost, setNewPost] = useState({
     title: "",
     description: "",
@@ -387,6 +398,116 @@ export default function Showcase() {
           <p className="text-lg text-muted-foreground leading-relaxed">
             Share your creative talents, discover amazing work from the community, and celebrate the diverse skills of students across India
           </p>
+        </div>
+      </div>
+
+      {/* Featured Creators Section */}
+      <div className="mb-12">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <Trophy className="h-6 w-6 text-yellow-500" />
+            Featured Creators
+          </h2>
+          <Button variant="outline" size="sm" className="text-xs">
+            View All <ExternalLink className="h-3 w-3 ml-1" />
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            { name: "Anonymous Artist", works: 12, likes: 450, specialty: "Digital Art", avatar: "🎨" },
+            { name: "Music Lover", works: 8, likes: 380, specialty: "Music Production", avatar: "🎵" },
+            { name: "Word Weaver", works: 15, likes: 520, specialty: "Poetry & Writing", avatar: "✍️" },
+            { name: "Lens Artist", works: 20, likes: 670, specialty: "Photography", avatar: "📸" }
+          ].map((creator, index) => (
+            <Card key={`creator-${index}`} className="p-4 text-center hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-primary/5 to-secondary/5">
+              <div className="text-3xl mb-2">{creator.avatar}</div>
+              <h3 className="font-semibold text-sm mb-1">{creator.name}</h3>
+              <p className="text-xs text-muted-foreground mb-2">{creator.specialty}</p>
+              <div className="flex justify-center gap-3 text-xs">
+                <span className="flex items-center gap-1">
+                  <Award className="h-3 w-3" /> {creator.works}
+                </span>
+                <span className="flex items-center gap-1">
+                  <Heart className="h-3 w-3" /> {creator.likes}
+                </span>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Trending Now Section */}
+      <div className="mb-12">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <TrendingUp className="h-6 w-6 text-green-500" />
+            Trending This Week
+          </h2>
+          <Button 
+            variant={showTrending ? "default" : "outline"} 
+            size="sm" 
+            onClick={() => setShowTrending(!showTrending)}
+            className="text-xs"
+          >
+            {showTrending ? "Show All" : "Show Trending"}
+          </Button>
+        </div>
+        {showTrending && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {mockPosts.slice(0, 3).map((post) => {
+              const categoryInfo = skillCategories.find(cat => cat.value === post.category);
+              const CategoryIcon = categoryInfo?.icon || Star;
+              return (
+                <Card key={`trending-${post.id}`} className="group overflow-hidden hover:shadow-xl transition-all duration-300 border-2 border-green-200 dark:border-green-800">
+                  <div className="relative">
+                    {post.imageUrl && (
+                      <div className="aspect-video overflow-hidden">
+                        <img src={post.imageUrl} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      </div>
+                    )}
+                    <Badge className="absolute top-2 right-2 bg-green-500 text-white">
+                      <TrendingUp className="h-3 w-3 mr-1" /> Trending
+                    </Badge>
+                  </div>
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <CategoryIcon className="h-4 w-4 text-primary" />
+                      <span className="text-sm font-medium">{categoryInfo?.label}</span>
+                    </div>
+                    <h3 className="font-bold text-lg mb-2 line-clamp-2">{post.title}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{post.description}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4 text-xs">
+                        <span className="flex items-center gap-1">
+                          <Heart className="h-3 w-3" /> {post.likes}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Eye className="h-3 w-3" /> {post.views}
+                        </span>
+                      </div>
+                      <Button size="sm" variant="outline" className="h-6 text-xs">
+                        <Share2 className="h-3 w-3 mr-1" /> Share
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Search Bar */}
+      <div className="mb-8">
+        <div className="relative max-w-md mx-auto">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search creative works..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 pr-4 py-3 text-base border-2 border-border/50 focus:border-primary/50 rounded-xl bg-background/80 backdrop-blur-sm"
+            data-testid="input-search"
+          />
         </div>
       </div>
 
