@@ -895,12 +895,78 @@ export default function Showcase() {
                       <MessageSquare className="h-4 w-4 mr-1" />
                       <span className="font-medium">{post.comments}</span>
                     </Button>
+                    
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="transition-all duration-200 hover:scale-110 hover:text-green-500"
+                      onClick={() => {
+                        navigator.share ? 
+                          navigator.share({
+                            title: post.title,
+                            text: post.description,
+                            url: window.location.href
+                          }) : 
+                          navigator.clipboard.writeText(window.location.href)
+                      }}
+                      data-testid={`button-share-${post.id}`}
+                    >
+                      <Share2 className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
           );
         })}
+      </div>
+
+      {/* Community Stats */}
+      <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6">
+        {[
+          { label: "Total Creations", value: "2,847", icon: Award, color: "text-blue-500" },
+          { label: "Active Creators", value: "1,203", icon: Users, color: "text-green-500" },
+          { label: "This Week", value: "89", icon: Calendar, color: "text-purple-500" },
+          { label: "Total Likes", value: "15.2K", icon: Heart, color: "text-red-500" }
+        ].map((stat, index) => (
+          <Card key={`stat-${index}`} className="p-4 text-center hover:shadow-lg transition-shadow duration-300 bg-gradient-to-br from-primary/5 to-secondary/5">
+            <stat.icon className={`h-8 w-8 mx-auto mb-2 ${stat.color}`} />
+            <p className="text-2xl font-bold mb-1">{stat.value}</p>
+            <p className="text-sm text-muted-foreground">{stat.label}</p>
+          </Card>
+        ))}
+      </div>
+
+      {/* Call to Action */}
+      <div className="mt-12 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 backdrop-blur-sm border border-primary/10 rounded-2xl p-6 sm:p-8 text-center max-w-2xl mx-auto shadow-lg">
+        <Sparkles className="h-12 w-12 sm:h-16 sm:w-16 text-primary mx-auto mb-4 sm:mb-6 animate-pulse" />
+        <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          Share Your Creative Journey
+        </h2>
+        <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
+          Join our vibrant community of creative minds. Upload your artwork, music, writing, or any creative expression
+          to inspire others and showcase your unique talents. Every creation tells a story of healing and hope.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Button
+            onClick={() => setIsCreatePostOpen(true)}
+            size="lg"
+            className="px-6 sm:px-8 py-2 sm:py-3 text-base sm:text-lg font-semibold bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            data-testid="button-upload-creation"
+          >
+            <Upload className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+            Upload Your Creation
+          </Button>
+          <Button
+            variant="outline"
+            size="lg"
+            className="px-6 sm:px-8 py-2 sm:py-3 text-base sm:text-lg font-semibold border-2 hover:bg-primary/10 transition-all duration-300"
+            data-testid="button-join-community"
+          >
+            <Users className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+            Join Community
+          </Button>
+        </div>
       </div>
 
       {/* Empty State */}
