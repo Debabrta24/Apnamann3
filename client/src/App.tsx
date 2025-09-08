@@ -39,6 +39,7 @@ import SleepPage from "@/pages/sleep";
 import RoutinePage from "@/pages/routine";
 import SavedContent from "@/pages/saved";
 import MedicineAlarmPage from "@/pages/medicine-alarm";
+import Showcase from "@/pages/showcase";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -352,6 +353,7 @@ function Router() {
               <Route path="/resources" component={Resources} />
               <Route path="/community" component={Community} />
               <Route path="/peer-calling" component={PeerCalling} />
+              <Route path="/showcase" component={Showcase} />
               <Route path="/doctor" component={Doctor} />
               <Route path="/medicine" component={Medicine} />
               <Route path="/entertainment" component={Entertainment} />
