@@ -16,6 +16,7 @@ import {
   insertForumReplySchema,
   insertMoodEntrySchema,
   insertCustomPersonalitySchema,
+  insertMedicineAlarmSchema,
   users
 } from "@shared/schema";
 import { db } from "./db";
@@ -831,6 +832,54 @@ This AI has learned from real conversation patterns and will respond authentical
       });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Medicine alarm routes
+  app.get("/api/medicine-alarms", async (req, res) => {
+    try {
+      const userId = req.query.userId as string || "d3025d97-c8b5-4b96-a170-a98c88a0b98b"; // Mock user ID for now
+      const alarms = await storage.getUserMedicineAlarms(userId);
+      res.json(alarms);
+    } catch (error: any) {
+      console.error("Error fetching medicine alarms:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/medicine-alarms", async (req, res) => {
+    try {
+      const validatedData = insertMedicineAlarmSchema.parse(req.body);
+      const alarm = await storage.createMedicineAlarm({
+        ...validatedData,
+        userId: validatedData.userId || "d3025d97-c8b5-4b96-a170-a98c88a0b98b"
+      });
+      res.json(alarm);
+    } catch (error: any) {
+      console.error("Error creating medicine alarm:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.patch("/api/medicine-alarms/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const alarm = await storage.updateMedicineAlarm(id, req.body);
+      res.json(alarm);
+    } catch (error: any) {
+      console.error("Error updating medicine alarm:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.delete("/api/medicine-alarms/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteMedicineAlarm(id);
+      res.json({ message: "Medicine alarm deleted successfully" });
+    } catch (error: any) {
+      console.error("Error deleting medicine alarm:", error);
+      res.status(400).json({ message: error.message });
     }
   });
 

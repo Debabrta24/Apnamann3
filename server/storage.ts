@@ -11,6 +11,7 @@ import {
   chatSessions,
   customPersonalities,
   coinTransactions,
+  medicineAlarms,
   type User,
   type InsertUser,
   type ScreeningAssessment,
@@ -33,6 +34,8 @@ import {
   type InsertCustomPersonality,
   type CoinTransaction,
   type InsertCoinTransaction,
+  type MedicineAlarm,
+  type InsertMedicineAlarm,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, gte, sql, count } from "drizzle-orm";
@@ -96,6 +99,12 @@ export interface IStorage {
   addCoins(userId: string, amount: number, type: string, description: string, relatedEntityId?: string): Promise<CoinTransaction>;
   getUserCoinTransactions(userId: string, limit?: number): Promise<CoinTransaction[]>;
   getUserCoinBalance(userId: string): Promise<number>;
+
+  // Medicine alarms
+  createMedicineAlarm(alarm: InsertMedicineAlarm): Promise<MedicineAlarm>;
+  getUserMedicineAlarms(userId: string): Promise<MedicineAlarm[]>;
+  updateMedicineAlarm(id: string, updates: Partial<MedicineAlarm>): Promise<MedicineAlarm>;
+  deleteMedicineAlarm(id: string): Promise<void>;
 
   // Analytics (anonymized)
   getAnalytics(): Promise<any>;
@@ -473,6 +482,38 @@ export class DatabaseStorage implements IStorage {
       riskDistribution,
     };
   }
+
+  // Medicine alarm methods
+  async createMedicineAlarm(alarm: InsertMedicineAlarm): Promise<MedicineAlarm> {
+    const [result] = await db()
+      .insert(medicineAlarms)
+      .values(alarm)
+      .returning();
+    return result;
+  }
+
+  async getUserMedicineAlarms(userId: string): Promise<MedicineAlarm[]> {
+    return await db()
+      .select()
+      .from(medicineAlarms)
+      .where(eq(medicineAlarms.userId, userId))
+      .orderBy(desc(medicineAlarms.createdAt));
+  }
+
+  async updateMedicineAlarm(id: string, updates: Partial<MedicineAlarm>): Promise<MedicineAlarm> {
+    const [alarm] = await db()
+      .update(medicineAlarms)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(medicineAlarms.id, id))
+      .returning();
+    return alarm;
+  }
+
+  async deleteMedicineAlarm(id: string): Promise<void> {
+    await db()
+      .delete(medicineAlarms)
+      .where(eq(medicineAlarms.id, id));
+  }
 }
 
 // Mock storage for development when database is not available
@@ -632,6 +673,51 @@ class MockStorage implements IStorage {
   async updateCustomPersonality(id: string, updates: Partial<CustomPersonality>): Promise<CustomPersonality> { throw new Error('Not implemented in mock'); }
   async deleteCustomPersonality(id: string, userId: string): Promise<void> { }
   async getAnalytics(): Promise<any> { return {}; }
+
+  // Medicine alarm implementations
+  private mockMedicineAlarms = new Map<string, MedicineAlarm[]>();
+
+  async createMedicineAlarm(alarm: InsertMedicineAlarm): Promise<MedicineAlarm> {
+    const mockAlarm: MedicineAlarm = {
+      id: `alarm_${Date.now()}`,
+      ...alarm,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (!this.mockMedicineAlarms.has(alarm.userId)) {
+      this.mockMedicineAlarms.set(alarm.userId, []);
+    }
+    
+    this.mockMedicineAlarms.get(alarm.userId)!.push(mockAlarm);
+    return mockAlarm;
+  }
+
+  async getUserMedicineAlarms(userId: string): Promise<MedicineAlarm[]> {
+    return this.mockMedicineAlarms.get(userId) || [];
+  }
+
+  async updateMedicineAlarm(id: string, updates: Partial<MedicineAlarm>): Promise<MedicineAlarm> {
+    for (const alarms of this.mockMedicineAlarms.values()) {
+      const alarm = alarms.find(a => a.id === id);
+      if (alarm) {
+        Object.assign(alarm, updates, { updatedAt: new Date().toISOString() });
+        return alarm;
+      }
+    }
+    throw new Error('Medicine alarm not found');
+  }
+
+  async deleteMedicineAlarm(id: string): Promise<void> {
+    for (const [userId, alarms] of this.mockMedicineAlarms.entries()) {
+      const index = alarms.findIndex(a => a.id === id);
+      if (index !== -1) {
+        alarms.splice(index, 1);
+        return;
+      }
+    }
+    throw new Error('Medicine alarm not found');
+  }
 }
 
 // Try to use DatabaseStorage, fall back to MockStorage if database is not available
