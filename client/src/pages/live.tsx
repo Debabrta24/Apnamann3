@@ -86,11 +86,7 @@ export default function Live() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  const [selectedStream, setSelectedStream] = useState(() => {
-    // Try to find first live session, otherwise fallback to mock data
-    const firstLiveSession = liveSessions?.find((session: any) => session.status === 'live');
-    return firstLiveSession || liveStreams[0];
-  });
+  const [selectedStream, setSelectedStream] = useState(liveStreams[0]);
   const [chatMessage, setChatMessage] = useState("");
   const [volume, setVolume] = useState([75]);
   const [isConnected, setIsConnected] = useState(false);
@@ -112,9 +108,12 @@ export default function Live() {
   });
 
   // Fetch live sessions from API
-  const { data: liveSessions, isLoading: isLoadingSessions } = useQuery({
+  const { data: liveSessions, isLoading: isLoadingSessions, error: sessionsError } = useQuery({
     queryKey: ["/api/live-sessions"],
   });
+  
+  // Debug log to check data
+  console.log("Live sessions data:", liveSessions, "Loading:", isLoadingSessions, "Error:", sessionsError);
 
   const createSessionMutation = useMutation({
     mutationFn: async (sessionData: any) => {
@@ -571,7 +570,7 @@ export default function Live() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {(liveSessions && liveSessions.length > 0) ? (
+                    {(Array.isArray(liveSessions) && liveSessions.length > 0) ? (
                       liveSessions.filter((session: any) => session.status === 'live').map((session: any) => (
                         <div key={session.id} className="p-3 border rounded-lg bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800">
                           <div className="flex items-center justify-between mb-2">
