@@ -86,7 +86,11 @@ export default function Live() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  const [selectedStream, setSelectedStream] = useState(liveStreams[0]);
+  const [selectedStream, setSelectedStream] = useState(() => {
+    // Try to find first live session, otherwise fallback to mock data
+    const firstLiveSession = liveSessions?.find((session: any) => session.status === 'live');
+    return firstLiveSession || liveStreams[0];
+  });
   const [chatMessage, setChatMessage] = useState("");
   const [volume, setVolume] = useState([75]);
   const [isConnected, setIsConnected] = useState(false);
@@ -548,6 +552,63 @@ export default function Live() {
                     </Button>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* Available Live Sessions */}
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Radio className="h-4 w-4 text-red-500" />
+                  Live Sessions
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isLoadingSessions ? (
+                  <div className="space-y-3">
+                    <div className="h-16 bg-gray-100 dark:bg-gray-800 rounded animate-pulse"></div>
+                    <div className="h-16 bg-gray-100 dark:bg-gray-800 rounded animate-pulse"></div>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {(liveSessions && liveSessions.length > 0) ? (
+                      liveSessions.filter((session: any) => session.status === 'live').map((session: any) => (
+                        <div key={session.id} className="p-3 border rounded-lg bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800">
+                          <div className="flex items-center justify-between mb-2">
+                            <Badge variant="destructive" className="animate-pulse">
+                              <Radio className="h-3 w-3 mr-1" />
+                              LIVE
+                            </Badge>
+                            <Badge variant="outline">{session.category}</Badge>
+                          </div>
+                          <h4 className="font-medium text-sm mb-1">{session.title}</h4>
+                          <p className="text-xs text-muted-foreground mb-2">{session.description}</p>
+                          <div className="flex items-center justify-between">
+                            <p className="text-xs font-medium">{session.hostName || currentUser?.firstName + ' ' + currentUser?.lastName}</p>
+                            <Button 
+                              size="sm" 
+                              onClick={() => handleJoinStream(session)}
+                              className="bg-red-600 hover:bg-red-700 text-white"
+                              data-testid={`button-join-session-${session.id}`}
+                            >
+                              Join Live
+                            </Button>
+                          </div>
+                          <div className="mt-2 text-xs text-muted-foreground">
+                            <Users className="h-3 w-3 inline mr-1" />
+                            {session.currentViewers || 0} watching
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-6 text-muted-foreground">
+                        <Radio className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                        <p>No live sessions right now</p>
+                        <p className="text-sm">Start your own session to connect with the community!</p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
 
