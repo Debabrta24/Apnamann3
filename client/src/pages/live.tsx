@@ -1,13 +1,19 @@
 import { useState, useEffect } from "react";
-import { Radio, Users, Calendar, Clock, Mic, Video, MessageSquare, Heart, Share2, Volume2 } from "lucide-react";
+import { Radio, Users, Calendar, Clock, Mic, Video, MessageSquare, Heart, Share2, Volume2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Slider } from "@/components/ui/slider";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppContext } from "@/context/AppContext";
 import { BackButton } from "@/components/ui/back-button";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 const liveStreams = [
   {
@@ -48,6 +54,14 @@ const liveStreams = [
   }
 ];
 
+const sessionCategories = [
+  "Meditation",
+  "Study", 
+  "Support",
+  "Wellness",
+  "Education"
+];
+
 const upcomingStreams = [
   {
     id: 4,
@@ -69,15 +83,80 @@ const upcomingStreams = [
 
 export default function Live() {
   const { currentUser } = useAppContext();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
   const [selectedStream, setSelectedStream] = useState(liveStreams[0]);
   const [chatMessage, setChatMessage] = useState("");
   const [volume, setVolume] = useState([75]);
   const [isConnected, setIsConnected] = useState(false);
+  const [isCreateSessionOpen, setIsCreateSessionOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
     { id: 1, user: "Alex M.", message: "This is really helpful, thanks!", time: "2 mins ago" },
     { id: 2, user: "Priya S.", message: "Can you share the breathing technique again?", time: "3 mins ago" },
     { id: 3, user: "Raj K.", message: "Joining from Mumbai 👋", time: "5 mins ago" },
   ]);
+  
+  const [newSession, setNewSession] = useState({
+    title: "",
+    description: "",
+    category: "",
+    isAudio: false,
+    scheduledStart: "",
+    maxParticipants: 100,
+    tags: [] as string[],
+  });
+
+  // Fetch live sessions from API
+  const { data: liveSessions, isLoading: isLoadingSessions } = useQuery({
+    queryKey: ["/api/live-sessions"],
+  });
+
+  const createSessionMutation = useMutation({
+    mutationFn: async (sessionData: any) => {
+      return await apiRequest("POST", "/api/live-sessions", {
+        ...sessionData,
+        userId: currentUser?.id,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/live-sessions"] });
+      setIsCreateSessionOpen(false);
+      setNewSession({
+        title: "",
+        description: "",
+        category: "",
+        isAudio: false,
+        scheduledStart: "",
+        maxParticipants: 100,
+        tags: [],
+      });
+      toast({
+        title: "Live session created",
+        description: "Your live session has been created successfully.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to create live session. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const startSessionMutation = useMutation({
+    mutationFn: async (sessionId: string) => {
+      return await apiRequest("POST", `/api/live-sessions/${sessionId}/start`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/live-sessions"] });
+      toast({
+        title: "Session started",
+        description: "Your live session is now live!",
+      });
+    },
+  });
 
   useEffect(() => {
     // Simulate connection status
@@ -103,6 +182,29 @@ export default function Live() {
     setIsConnected(false);
   };
 
+  const handleCreateSession = () => {
+    if (!newSession.title.trim() || !newSession.description.trim() || !newSession.category) {
+      toast({
+        title: "Missing information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    const sessionData = {
+      ...newSession,
+      status: "scheduled",
+      scheduledStart: newSession.scheduledStart ? new Date(newSession.scheduledStart) : null,
+    };
+    
+    createSessionMutation.mutate(sessionData);
+  };
+
+  const handleStartSession = (sessionId: string) => {
+    startSessionMutation.mutate(sessionId);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
@@ -113,14 +215,172 @@ export default function Live() {
             <div className="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center">
               <Radio className="h-6 w-6 text-red-500" />
             </div>
-            <div>
+            <div className="flex-1">
               <h1 className="text-3xl font-bold text-foreground">Live Sessions</h1>
               <p className="text-muted-foreground">Join live mental health and wellness sessions</p>
             </div>
-            <Badge variant="destructive" className="animate-pulse ml-auto">
-              <Radio className="h-3 w-3 mr-1" />
-              LIVE
-            </Badge>
+            <div className="flex items-center gap-3">
+              <Dialog open={isCreateSessionOpen} onOpenChange={setIsCreateSessionOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-red-600 hover:bg-red-700 text-white font-medium" data-testid="button-start-live-session">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Start Live Session
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">Start Live Session</DialogTitle>
+                  </DialogHeader>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Session Title *
+                      </label>
+                      <Input
+                        placeholder="e.g., Morning Mindfulness Session"
+                        value={newSession.title}
+                        onChange={(e) => setNewSession({ ...newSession, title: e.target.value })}
+                        data-testid="input-session-title"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Category *
+                      </label>
+                      <Select 
+                        value={newSession.category} 
+                        onValueChange={(value) => setNewSession({ ...newSession, category: value })}
+                      >
+                        <SelectTrigger data-testid="select-session-category">
+                          <SelectValue placeholder="Select category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {sessionCategories.map((category) => (
+                            <SelectItem key={category} value={category}>
+                              {category}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Description *
+                      </label>
+                      <Textarea
+                        placeholder="Describe what your session will cover..."
+                        rows={3}
+                        value={newSession.description}
+                        onChange={(e) => setNewSession({ ...newSession, description: e.target.value })}
+                        data-testid="textarea-session-description"
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Session Type
+                        </label>
+                        <div className="flex items-center space-x-4">
+                          <label className="flex items-center">
+                            <input
+                              type="radio"
+                              checked={!newSession.isAudio}
+                              onChange={() => setNewSession({ ...newSession, isAudio: false })}
+                              className="mr-2"
+                              data-testid="radio-video-session"
+                            />
+                            Video Session
+                          </label>
+                          <label className="flex items-center">
+                            <input
+                              type="radio"
+                              checked={newSession.isAudio}
+                              onChange={() => setNewSession({ ...newSession, isAudio: true })}
+                              className="mr-2"
+                              data-testid="radio-audio-session"
+                            />
+                            Audio Only
+                          </label>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          Max Participants
+                        </label>
+                        <Input
+                          type="number"
+                          min="1"
+                          max="500"
+                          value={newSession.maxParticipants}
+                          onChange={(e) => setNewSession({ ...newSession, maxParticipants: parseInt(e.target.value) || 100 })}
+                          data-testid="input-max-participants"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Scheduled Start (Optional)
+                      </label>
+                      <Input
+                        type="datetime-local"
+                        value={newSession.scheduledStart}
+                        onChange={(e) => setNewSession({ ...newSession, scheduledStart: e.target.value })}
+                        data-testid="input-scheduled-start"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Leave empty to start immediately</p>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Tags (Optional)
+                      </label>
+                      <Input
+                        placeholder="mindfulness, wellness, study (comma separated)"
+                        onChange={(e) => {
+                          const tags = e.target.value.split(',').map(tag => tag.trim()).filter(Boolean);
+                          setNewSession({ ...newSession, tags });
+                        }}
+                        data-testid="input-session-tags"
+                      />
+                    </div>
+                    
+                    <div className="bg-blue-50 dark:bg-blue-950/30 rounded-lg p-4 border border-blue-100 dark:border-blue-800">
+                      <p className="text-sm text-blue-700 dark:text-blue-300">
+                        <Radio className="inline h-4 w-4 mr-2" />
+                        Your session will be visible to all users. Make sure to follow community guidelines.
+                      </p>
+                    </div>
+                    
+                    <div className="flex justify-end space-x-2">
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setIsCreateSessionOpen(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button 
+                        onClick={handleCreateSession}
+                        disabled={createSessionMutation.isPending}
+                        className="bg-red-600 hover:bg-red-700 text-white font-medium"
+                        data-testid="button-create-session"
+                      >
+                        {createSessionMutation.isPending ? "Creating..." : "Create Session"}
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Badge variant="destructive" className="animate-pulse">
+                <Radio className="h-3 w-3 mr-1" />
+                LIVE
+              </Badge>
+            </div>
           </div>
         </div>
 
