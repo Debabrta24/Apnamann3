@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppProvider, useAppContext } from "@/context/AppContext";
 import { useUsageAnalytics } from "@/lib/usage-analytics";
-import { Brain, User, Music, BookOpen, Video, MessageSquare, Gamepad2, Stethoscope, Play, Radio, Flower, Moon, Save, Phone, ChevronDown, ChevronRight, Pill, Heart } from "lucide-react";
+import { Brain, User, Music, BookOpen, Video, MessageSquare, Gamepad2, Stethoscope, Play, Radio, Flower, Moon, Save, Phone, ChevronDown, ChevronRight, Pill, Heart, AlarmClock } from "lucide-react";
 import logoUrl from '@/assets/logo.png';
 import { cn } from "@/lib/utils";
 import Header from "@/components/layout/header";
@@ -38,6 +38,7 @@ import YogaPage from "@/pages/yoga";
 import SleepPage from "@/pages/sleep";
 import RoutinePage from "@/pages/routine";
 import SavedContent from "@/pages/saved";
+import MedicineAlarmPage from "@/pages/medicine-alarm";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -162,6 +163,7 @@ function Router() {
                       { href: "/doctor", label: "Doctor", icon: Stethoscope, testId: "nav-doctor" },
                       { href: "/screening", label: "Screening", icon: Brain, testId: "nav-screening" },
                       { href: "/medicine", label: "Medical Store", icon: Pill, testId: "nav-medicine" },
+                      { href: "/medicine-alarm", label: "Medicine Alarm", icon: AlarmClock, testId: "nav-medicine-alarm" },
                     ].map((item) => {
                       const IconComponent = item.icon;
                       return (
@@ -357,6 +359,7 @@ function Router() {
               <Route path="/sleep" component={SleepPage} />
               <Route path="/routine" component={RoutinePage} />
               <Route path="/saved" component={SavedContent} />
+              <Route path="/medicine-alarm" component={MedicineAlarmPage} />
               <Route path="/admin" component={Admin} />
               <Route path="/profile" component={Profile} />
               <Route component={NotFound} />
