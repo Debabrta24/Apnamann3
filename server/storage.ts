@@ -12,6 +12,9 @@ import {
   customPersonalities,
   coinTransactions,
   medicineAlarms,
+  userSkills,
+  skillShowcases,
+  skillEndorsements,
   type User,
   type InsertUser,
   type ScreeningAssessment,
@@ -36,6 +39,12 @@ import {
   type InsertCoinTransaction,
   type MedicineAlarm,
   type InsertMedicineAlarm,
+  type UserSkill,
+  type InsertUserSkill,
+  type SkillShowcase,
+  type InsertSkillShowcase,
+  type SkillEndorsement,
+  type InsertSkillEndorsement,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, gte, sql, count } from "drizzle-orm";
@@ -105,6 +114,23 @@ export interface IStorage {
   getUserMedicineAlarms(userId: string): Promise<MedicineAlarm[]>;
   updateMedicineAlarm(id: string, updates: Partial<MedicineAlarm>): Promise<MedicineAlarm>;
   deleteMedicineAlarm(id: string): Promise<void>;
+
+  // User skills
+  createUserSkill(skill: InsertUserSkill): Promise<UserSkill>;
+  getUserSkills(userId: string): Promise<UserSkill[]>;
+  updateUserSkill(id: string, updates: Partial<UserSkill>): Promise<UserSkill>;
+  deleteUserSkill(id: string): Promise<void>;
+
+  // Skill showcases
+  createSkillShowcase(showcase: InsertSkillShowcase): Promise<SkillShowcase>;
+  getUserSkillShowcases(userId: string): Promise<SkillShowcase[]>;
+  getAllSkillShowcases(): Promise<SkillShowcase[]>;
+  updateSkillShowcase(id: string, updates: Partial<SkillShowcase>): Promise<SkillShowcase>;
+  deleteSkillShowcase(id: string): Promise<void>;
+  likeSkillShowcase(id: string): Promise<void>;
+
+  // Skill endorsements
+  createSkillEndorsement(endorsement: InsertSkillEndorsement): Promise<SkillEndorsement>;
 
   // Analytics (anonymized)
   getAnalytics(): Promise<any>;
@@ -514,6 +540,107 @@ export class DatabaseStorage implements IStorage {
       .delete(medicineAlarms)
       .where(eq(medicineAlarms.id, id));
   }
+
+  // User skills methods
+  async createUserSkill(skill: InsertUserSkill): Promise<UserSkill> {
+    const [result] = await db()
+      .insert(userSkills)
+      .values(skill)
+      .returning();
+    return result;
+  }
+
+  async getUserSkills(userId: string): Promise<UserSkill[]> {
+    return await db()
+      .select()
+      .from(userSkills)
+      .where(eq(userSkills.userId, userId))
+      .orderBy(desc(userSkills.createdAt));
+  }
+
+  async updateUserSkill(id: string, updates: Partial<UserSkill>): Promise<UserSkill> {
+    const [skill] = await db()
+      .update(userSkills)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(userSkills.id, id))
+      .returning();
+    return skill;
+  }
+
+  async deleteUserSkill(id: string): Promise<void> {
+    await db()
+      .delete(userSkills)
+      .where(eq(userSkills.id, id));
+  }
+
+  // Skill showcases methods
+  async createSkillShowcase(showcase: InsertSkillShowcase): Promise<SkillShowcase> {
+    const [result] = await db()
+      .insert(skillShowcases)
+      .values(showcase)
+      .returning();
+    return result;
+  }
+
+  async getUserSkillShowcases(userId: string): Promise<SkillShowcase[]> {
+    return await db()
+      .select()
+      .from(skillShowcases)
+      .where(eq(skillShowcases.userId, userId))
+      .orderBy(desc(skillShowcases.createdAt));
+  }
+
+  async getAllSkillShowcases(): Promise<SkillShowcase[]> {
+    return await db()
+      .select()
+      .from(skillShowcases)
+      .orderBy(desc(skillShowcases.createdAt));
+  }
+
+  async updateSkillShowcase(id: string, updates: Partial<SkillShowcase>): Promise<SkillShowcase> {
+    const [showcase] = await db()
+      .update(skillShowcases)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(skillShowcases.id, id))
+      .returning();
+    return showcase;
+  }
+
+  async deleteSkillShowcase(id: string): Promise<void> {
+    await db()
+      .delete(skillShowcases)
+      .where(eq(skillShowcases.id, id));
+  }
+
+  async likeSkillShowcase(id: string): Promise<void> {
+    await db()
+      .update(skillShowcases)
+      .set({ 
+        likes: sql`${skillShowcases.likes} + 1`,
+        updatedAt: new Date()
+      })
+      .where(eq(skillShowcases.id, id));
+  }
+
+  // Skill endorsements methods
+  async createSkillEndorsement(endorsement: InsertSkillEndorsement): Promise<SkillEndorsement> {
+    // First create the endorsement
+    const [result] = await db()
+      .insert(skillEndorsements)
+      .values(endorsement)
+      .returning();
+
+    // Then increment the endorsement count on the skill
+    await db()
+      .update(userSkills)
+      .set({ 
+        endorsements: sql`${userSkills.endorsements} + 1`,
+        updatedAt: new Date()
+      })
+      .where(eq(userSkills.id, endorsement.skillId));
+
+    return result;
+  }
 }
 
 // Mock storage for development when database is not available
@@ -717,6 +844,146 @@ class MockStorage implements IStorage {
       }
     }
     throw new Error('Medicine alarm not found');
+  }
+
+  // Skills mock implementations
+  private mockUserSkills = new Map<string, UserSkill[]>();
+  private mockSkillShowcases = new Map<string, SkillShowcase[]>();
+  private mockSkillEndorsements = new Map<string, SkillEndorsement[]>();
+
+  async createUserSkill(skill: InsertUserSkill): Promise<UserSkill> {
+    const mockSkill: UserSkill = {
+      id: `skill_${Date.now()}`,
+      ...skill,
+      endorsements: 0,
+      isVerified: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (!this.mockUserSkills.has(skill.userId)) {
+      this.mockUserSkills.set(skill.userId, []);
+    }
+    
+    this.mockUserSkills.get(skill.userId)!.push(mockSkill);
+    return mockSkill;
+  }
+
+  async getUserSkills(userId: string): Promise<UserSkill[]> {
+    return this.mockUserSkills.get(userId) || [];
+  }
+
+  async updateUserSkill(id: string, updates: Partial<UserSkill>): Promise<UserSkill> {
+    for (const skills of this.mockUserSkills.values()) {
+      const skill = skills.find(s => s.id === id);
+      if (skill) {
+        Object.assign(skill, updates, { updatedAt: new Date().toISOString() });
+        return skill;
+      }
+    }
+    throw new Error('Skill not found');
+  }
+
+  async deleteUserSkill(id: string): Promise<void> {
+    for (const [userId, skills] of this.mockUserSkills.entries()) {
+      const index = skills.findIndex(s => s.id === id);
+      if (index !== -1) {
+        skills.splice(index, 1);
+        return;
+      }
+    }
+    throw new Error('Skill not found');
+  }
+
+  async createSkillShowcase(showcase: InsertSkillShowcase): Promise<SkillShowcase> {
+    const mockShowcase: SkillShowcase = {
+      id: `showcase_${Date.now()}`,
+      ...showcase,
+      likes: 0,
+      views: 0,
+      isFeatured: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (!this.mockSkillShowcases.has(showcase.userId)) {
+      this.mockSkillShowcases.set(showcase.userId, []);
+    }
+    
+    this.mockSkillShowcases.get(showcase.userId)!.push(mockShowcase);
+    return mockShowcase;
+  }
+
+  async getUserSkillShowcases(userId: string): Promise<SkillShowcase[]> {
+    return this.mockSkillShowcases.get(userId) || [];
+  }
+
+  async getAllSkillShowcases(): Promise<SkillShowcase[]> {
+    const allShowcases = [];
+    for (const showcases of this.mockSkillShowcases.values()) {
+      allShowcases.push(...showcases);
+    }
+    return allShowcases.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  async updateSkillShowcase(id: string, updates: Partial<SkillShowcase>): Promise<SkillShowcase> {
+    for (const showcases of this.mockSkillShowcases.values()) {
+      const showcase = showcases.find(s => s.id === id);
+      if (showcase) {
+        Object.assign(showcase, updates, { updatedAt: new Date().toISOString() });
+        return showcase;
+      }
+    }
+    throw new Error('Showcase not found');
+  }
+
+  async deleteSkillShowcase(id: string): Promise<void> {
+    for (const [userId, showcases] of this.mockSkillShowcases.entries()) {
+      const index = showcases.findIndex(s => s.id === id);
+      if (index !== -1) {
+        showcases.splice(index, 1);
+        return;
+      }
+    }
+    throw new Error('Showcase not found');
+  }
+
+  async likeSkillShowcase(id: string): Promise<void> {
+    for (const showcases of this.mockSkillShowcases.values()) {
+      const showcase = showcases.find(s => s.id === id);
+      if (showcase) {
+        showcase.likes = (showcase.likes || 0) + 1;
+        showcase.updatedAt = new Date().toISOString();
+        return;
+      }
+    }
+    throw new Error('Showcase not found');
+  }
+
+  async createSkillEndorsement(endorsement: InsertSkillEndorsement): Promise<SkillEndorsement> {
+    const mockEndorsement: SkillEndorsement = {
+      id: `endorsement_${Date.now()}`,
+      ...endorsement,
+      createdAt: new Date().toISOString(),
+    };
+
+    if (!this.mockSkillEndorsements.has(endorsement.skillId)) {
+      this.mockSkillEndorsements.set(endorsement.skillId, []);
+    }
+    
+    this.mockSkillEndorsements.get(endorsement.skillId)!.push(mockEndorsement);
+
+    // Update the skill's endorsement count
+    for (const skills of this.mockUserSkills.values()) {
+      const skill = skills.find(s => s.id === endorsement.skillId);
+      if (skill) {
+        skill.endorsements = (skill.endorsements || 0) + 1;
+        skill.updatedAt = new Date().toISOString();
+        break;
+      }
+    }
+
+    return mockEndorsement;
   }
 }
 

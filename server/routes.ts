@@ -17,6 +17,9 @@ import {
   insertMoodEntrySchema,
   insertCustomPersonalitySchema,
   insertMedicineAlarmSchema,
+  insertUserSkillSchema,
+  insertSkillShowcaseSchema,
+  insertSkillEndorsementSchema,
   users
 } from "@shared/schema";
 import { db } from "./db";
@@ -879,6 +882,136 @@ This AI has learned from real conversation patterns and will respond authentical
       res.json({ message: "Medicine alarm deleted successfully" });
     } catch (error: any) {
       console.error("Error deleting medicine alarm:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  // Skills routes
+  app.get("/api/skills", async (req, res) => {
+    try {
+      const userId = req.query.userId as string || "d3025d97-c8b5-4b96-a170-a98c88a0b98b"; // Mock user ID for now
+      const skills = await storage.getUserSkills(userId);
+      res.json(skills);
+    } catch (error: any) {
+      console.error("Error fetching skills:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/skills", async (req, res) => {
+    try {
+      const validatedData = insertUserSkillSchema.parse(req.body);
+      const skill = await storage.createUserSkill({
+        ...validatedData,
+        userId: validatedData.userId || "d3025d97-c8b5-4b96-a170-a98c88a0b98b"
+      });
+      res.json(skill);
+    } catch (error: any) {
+      console.error("Error creating skill:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.patch("/api/skills/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const skill = await storage.updateUserSkill(id, req.body);
+      res.json(skill);
+    } catch (error: any) {
+      console.error("Error updating skill:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.delete("/api/skills/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteUserSkill(id);
+      res.json({ message: "Skill deleted successfully" });
+    } catch (error: any) {
+      console.error("Error deleting skill:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  // Skill showcase routes
+  app.get("/api/skill-showcases", async (req, res) => {
+    try {
+      const userId = req.query.userId as string;
+      if (userId) {
+        const showcases = await storage.getUserSkillShowcases(userId);
+        res.json(showcases);
+      } else {
+        const showcases = await storage.getAllSkillShowcases();
+        res.json(showcases);
+      }
+    } catch (error: any) {
+      console.error("Error fetching skill showcases:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/skill-showcases", async (req, res) => {
+    try {
+      const validatedData = insertSkillShowcaseSchema.parse(req.body);
+      const showcase = await storage.createSkillShowcase({
+        ...validatedData,
+        userId: validatedData.userId || "d3025d97-c8b5-4b96-a170-a98c88a0b98b"
+      });
+      res.json(showcase);
+    } catch (error: any) {
+      console.error("Error creating skill showcase:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.patch("/api/skill-showcases/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const showcase = await storage.updateSkillShowcase(id, req.body);
+      res.json(showcase);
+    } catch (error: any) {
+      console.error("Error updating skill showcase:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.delete("/api/skill-showcases/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteSkillShowcase(id);
+      res.json({ message: "Skill showcase deleted successfully" });
+    } catch (error: any) {
+      console.error("Error deleting skill showcase:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/skills/:skillId/endorse", async (req, res) => {
+    try {
+      const { skillId } = req.params;
+      const validatedData = insertSkillEndorsementSchema.parse({
+        ...req.body,
+        skillId,
+      });
+      const endorsement = await storage.createSkillEndorsement({
+        ...validatedData,
+        endorserId: validatedData.endorserId || "d3025d97-c8b5-4b96-a170-a98c88a0b98b"
+      });
+      res.json(endorsement);
+    } catch (error: any) {
+      console.error("Error endorsing skill:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/skill-showcases/:id/like", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.likeSkillShowcase(id);
+      res.json({ message: "Showcase liked successfully" });
+    } catch (error: any) {
+      console.error("Error liking showcase:", error);
       res.status(400).json({ message: error.message });
     }
   });
