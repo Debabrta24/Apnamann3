@@ -53,6 +53,13 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { BackButton } from "@/components/ui/back-button";
 
+// Import local assets
+import showcaseImage1 from '@/assets/showcase/images/image_1757128213806.png';
+import showcaseImage2 from '@/assets/showcase/images/image_1757134410950.png';
+import showcaseImage3 from '@/assets/showcase/images/image_1757136142731.png';
+import audioSample1 from '@/assets/showcase/audio/WhatsApp Audio 2025-09-06 at 09.26.39_7516e2fa_1757131765090.mp3';
+import audioSample2 from '@/assets/showcase/audio/WhatsApp Audio 2025-09-06 at 09.26.40_42b10528_1757131765090.mp3';
+
 const skillCategories = [
   { value: "art", label: "Art & Drawing", icon: Palette, color: "bg-gradient-to-r from-rose-100 to-pink-100 text-rose-800 border-rose-200 dark:from-rose-900 dark:to-pink-900 dark:text-rose-200 dark:border-rose-700" },
   { value: "digital-art", label: "Digital Art", icon: Brush, color: "bg-gradient-to-r from-purple-100 to-violet-100 text-purple-800 border-purple-200 dark:from-purple-900 dark:to-violet-900 dark:text-purple-200 dark:border-purple-700" },
@@ -221,7 +228,7 @@ export default function Showcase() {
     }
   };
 
-  // Enhanced mock data for demonstration
+  // Enhanced mock data with local assets
   const mockPosts: ShowcasePost[] = [
     {
       id: "1",
@@ -230,7 +237,7 @@ export default function Showcase() {
       category: "art",
       theme: "healing",
       tags: ["watercolor", "nature", "peace"],
-      imageUrl: "/api/placeholder/400/300",
+      imageUrl: showcaseImage1,
       likes: 24,
       views: 156,
       comments: 8,
@@ -248,7 +255,7 @@ export default function Showcase() {
       category: "music",
       theme: "community",
       tags: ["original", "awareness", "mental-health"],
-      fileUrl: "/api/placeholder/audio.mp3",
+      fileUrl: audioSample1,
       likes: 18,
       views: 89,
       comments: 12,
@@ -283,7 +290,7 @@ export default function Showcase() {
       category: "digital-art",
       theme: "mindfulness",
       tags: ["digital", "portraits", "emotions"],
-      imageUrl: "/api/placeholder/400/300",
+      imageUrl: showcaseImage2,
       likes: 45,
       views: 234,
       comments: 19,
@@ -301,7 +308,7 @@ export default function Showcase() {
       category: "cooking",
       theme: "education",
       tags: ["healthy", "budget", "student-life"],
-      imageUrl: "/api/placeholder/400/300",
+      imageUrl: showcaseImage3,
       likes: 67,
       views: 401,
       comments: 23,
@@ -319,7 +326,7 @@ export default function Showcase() {
       category: "coding",
       theme: "innovation",
       tags: ["ui-design", "meditation", "tech"],
-      imageUrl: "/api/placeholder/400/300",
+      imageUrl: showcaseImage1,
       likes: 52,
       views: 312,
       comments: 16,
@@ -328,6 +335,42 @@ export default function Showcase() {
         institution: "NIT Warangal"
       },
       createdAt: "2024-01-10T16:45:00Z",
+      isLiked: false
+    },
+    {
+      id: "7",
+      title: "Inspiring Audio Journal",
+      description: "Personal reflections and motivational thoughts shared to inspire other students.",
+      category: "singing",
+      theme: "inspiration",
+      tags: ["motivation", "personal", "voice"],
+      fileUrl: audioSample2,
+      likes: 89,
+      views: 567,
+      comments: 34,
+      author: {
+        name: "Voice of Hope",
+        institution: "University of Delhi"
+      },
+      createdAt: "2024-01-09T11:30:00Z",
+      isLiked: true
+    },
+    {
+      id: "8",
+      title: "Creative Photography Series",
+      description: "Capturing the beauty and complexity of Indian college life through artistic photography.",
+      category: "photography",
+      theme: "cultural",
+      tags: ["photography", "college-life", "artistic"],
+      imageUrl: showcaseImage2,
+      likes: 38,
+      views: 189,
+      comments: 12,
+      author: {
+        name: "Lens Artist",
+        institution: "NIFT Mumbai"
+      },
+      createdAt: "2024-01-08T13:20:00Z",
       isLiked: false
     }
   ];
@@ -655,9 +698,30 @@ export default function Showcase() {
               </CardHeader>
               
               <CardContent className="space-y-5">
-                {post.imageUrl && (
-                  <div className="aspect-video bg-gradient-to-br from-muted/50 to-muted rounded-xl flex items-center justify-center border border-border/30 group-hover:border-primary/30 transition-colors duration-300">
-                    <Image className="h-16 w-16 text-muted-foreground/60 group-hover:text-primary/60 transition-colors duration-300" />
+                {(post.imageUrl || post.fileUrl) && (
+                  <div className="aspect-video bg-gradient-to-br from-muted/50 to-muted rounded-xl overflow-hidden border border-border/30 group-hover:border-primary/30 transition-colors duration-300">
+                    {post.imageUrl ? (
+                      <img 
+                        src={post.imageUrl} 
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                        }}
+                      />
+                    ) : post.fileUrl && post.category === 'music' || post.category === 'singing' ? (
+                      <div className="flex flex-col items-center justify-center h-full p-4 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
+                        <Music className="h-12 w-12 text-primary mb-2" />
+                        <audio controls className="w-full max-w-xs">
+                          <source src={post.fileUrl} type="audio/mpeg" />
+                          Your browser does not support the audio element.
+                        </audio>
+                      </div>
+                    ) : null}
+                    <div className="hidden flex items-center justify-center h-full">
+                      <Image className="h-16 w-16 text-muted-foreground/60 group-hover:text-primary/60 transition-colors duration-300" />
+                    </div>
                   </div>
                 )}
                 
