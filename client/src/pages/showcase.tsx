@@ -541,29 +541,29 @@ export default function Showcase() {
               variant={selectedCategory === "all" ? "default" : "outline"}
               size="sm"
               onClick={() => setSelectedCategory("all")}
-              className="transition-all duration-200 hover:scale-105"
+              className="transition-all duration-200 hover:scale-105 text-xs sm:text-sm"
             >
               All Categories
             </Button>
-            {skillCategories.slice(0, 8).map((category) => (
+            {skillCategories.slice(0, 6).map((category) => (
               <Button
                 key={category.value}
                 variant={selectedCategory === category.value ? "default" : "outline"}
                 size="sm"
                 onClick={() => setSelectedCategory(category.value)}
-                className={`transition-all duration-200 hover:scale-105 ${selectedCategory === category.value ? category.color : ''}`}
+                className={`transition-all duration-200 hover:scale-105 text-xs sm:text-sm ${selectedCategory === category.value ? category.color : ''}`}
               >
-                <category.icon className="h-4 w-4 mr-1" />
-                {category.label}
+                <category.icon className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                <span className="hidden sm:inline">{category.label}</span>
+                <span className="sm:hidden">{category.label.split(' ')[0]}</span>
               </Button>
             ))}
-          {skillCategories.length > 8 && (
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-32">
+              <SelectTrigger className="w-28 sm:w-36 text-xs sm:text-sm">
                 <SelectValue placeholder="More..." />
               </SelectTrigger>
               <SelectContent>
-                {skillCategories.slice(8).map((category) => (
+                {skillCategories.slice(6).map((category) => (
                   <SelectItem key={category.value} value={category.value}>
                     <div className="flex items-center gap-2">
                       <category.icon className="h-4 w-4" />
@@ -573,7 +573,7 @@ export default function Showcase() {
                 ))}
               </SelectContent>
             </Select>
-          )}
+          )
         </div>
         
         
@@ -588,27 +588,42 @@ export default function Showcase() {
               variant={selectedTheme === "all" ? "default" : "outline"}
               size="sm"
               onClick={() => setSelectedTheme("all")}
-              className="transition-all duration-200 hover:scale-105"
+              className="transition-all duration-200 hover:scale-105 text-xs sm:text-sm"
             >
               All Themes
             </Button>
-            {themes.map((theme) => (
+            {themes.slice(0, 5).map((theme) => (
               <Button
                 key={theme.value}
                 variant={selectedTheme === theme.value ? "default" : "outline"}
                 size="sm"
                 onClick={() => setSelectedTheme(theme.value)}
-                className={`transition-all duration-200 hover:scale-105 ${selectedTheme === theme.value ? theme.color : ''}`}
+                className={`transition-all duration-200 hover:scale-105 text-xs sm:text-sm ${selectedTheme === theme.value ? theme.color : ''}`}
               >
-                {theme.label}
+                <span className="hidden sm:inline">{theme.label}</span>
+                <span className="sm:hidden">{theme.label.split(' ')[0]}</span>
               </Button>
             ))}
+            {themes.length > 5 && (
+              <Select value={selectedTheme} onValueChange={setSelectedTheme}>
+                <SelectTrigger className="w-28 sm:w-36 text-xs sm:text-sm">
+                  <SelectValue placeholder="More themes..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {themes.slice(5).map((theme) => (
+                    <SelectItem key={theme.value} value={theme.value}>
+                      {theme.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
         </div>
       </div>
 
       {/* Showcase Grid */}
-      <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" : "space-y-6"}>
+      <div className={viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8" : "space-y-4 sm:space-y-6"}>
         {mockPosts.map((post) => {
           const categoryInfo = skillCategories.find(cat => cat.value === post.category);
           const themeInfo = themes.find(t => t.value === post.theme);
