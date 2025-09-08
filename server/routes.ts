@@ -1056,5 +1056,105 @@ This AI has learned from real conversation patterns and will respond authentical
     }
   });
 
+  // Live sessions routes
+  app.get("/api/live-sessions", async (req, res) => {
+    try {
+      const userId = req.query.userId as string;
+      if (userId) {
+        const sessions = await storage.getUserLiveSessions(userId);
+        res.json(sessions);
+      } else {
+        const sessions = await storage.getAllLiveSessions();
+        res.json(sessions);
+      }
+    } catch (error: any) {
+      console.error("Error fetching live sessions:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/live-sessions/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const session = await storage.getLiveSessionById(id);
+      if (!session) {
+        return res.status(404).json({ message: "Live session not found" });
+      }
+      res.json(session);
+    } catch (error: any) {
+      console.error("Error fetching live session:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/live-sessions", async (req, res) => {
+    try {
+      const sessionData = {
+        ...req.body,
+        userId: req.body.userId || "d3025d97-c8b5-4b96-a170-a98c88a0b98b"
+      };
+      const session = await storage.createLiveSession(sessionData);
+      res.json(session);
+    } catch (error: any) {
+      console.error("Error creating live session:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.patch("/api/live-sessions/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const session = await storage.updateLiveSession(id, req.body);
+      res.json(session);
+    } catch (error: any) {
+      console.error("Error updating live session:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/live-sessions/:id/start", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const session = await storage.startLiveSession(id);
+      res.json(session);
+    } catch (error: any) {
+      console.error("Error starting live session:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/live-sessions/:id/end", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const session = await storage.endLiveSession(id);
+      res.json(session);
+    } catch (error: any) {
+      console.error("Error ending live session:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/live-sessions/:id/join", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.incrementSessionViewers(id);
+      res.json({ message: "Joined session successfully" });
+    } catch (error: any) {
+      console.error("Error joining live session:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.delete("/api/live-sessions/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteLiveSession(id);
+      res.json({ message: "Live session deleted successfully" });
+    } catch (error: any) {
+      console.error("Error deleting live session:", error);
+      res.status(400).json({ message: error.message });
+    }
+  });
+
   return httpServer;
 }

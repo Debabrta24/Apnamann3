@@ -15,6 +15,7 @@ import {
   userSkills,
   skillShowcases,
   skillEndorsements,
+  liveSessions,
   type User,
   type InsertUser,
   type ScreeningAssessment,
@@ -45,6 +46,8 @@ import {
   type InsertSkillShowcase,
   type SkillEndorsement,
   type InsertSkillEndorsement,
+  type LiveSession,
+  type InsertLiveSession,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, gte, sql, count } from "drizzle-orm";
@@ -131,6 +134,17 @@ export interface IStorage {
 
   // Skill endorsements
   createSkillEndorsement(endorsement: InsertSkillEndorsement): Promise<SkillEndorsement>;
+
+  // Live sessions
+  createLiveSession(session: InsertLiveSession): Promise<LiveSession>;
+  getUserLiveSessions(userId: string): Promise<LiveSession[]>;
+  getAllLiveSessions(): Promise<LiveSession[]>;
+  getLiveSessionById(id: string): Promise<LiveSession | undefined>;
+  updateLiveSession(id: string, updates: Partial<LiveSession>): Promise<LiveSession>;
+  deleteLiveSession(id: string): Promise<void>;
+  startLiveSession(id: string): Promise<LiveSession>;
+  endLiveSession(id: string): Promise<LiveSession>;
+  incrementSessionViewers(id: string): Promise<void>;
 
   // Analytics (anonymized)
   getAnalytics(): Promise<any>;
@@ -641,12 +655,97 @@ export class DatabaseStorage implements IStorage {
 
     return result;
   }
+
+  // Live sessions methods
+  async createLiveSession(session: InsertLiveSession): Promise<LiveSession> {
+    const [result] = await db()
+      .insert(liveSessions)
+      .values(session)
+      .returning();
+    return result;
+  }
+
+  async getUserLiveSessions(userId: string): Promise<LiveSession[]> {
+    return await db()
+      .select()
+      .from(liveSessions)
+      .where(eq(liveSessions.userId, userId))
+      .orderBy(desc(liveSessions.createdAt));
+  }
+
+  async getAllLiveSessions(): Promise<LiveSession[]> {
+    return await db()
+      .select()
+      .from(liveSessions)
+      .orderBy(desc(liveSessions.createdAt));
+  }
+
+  async getLiveSessionById(id: string): Promise<LiveSession | undefined> {
+    const [session] = await db()
+      .select()
+      .from(liveSessions)
+      .where(eq(liveSessions.id, id));
+    return session || undefined;
+  }
+
+  async updateLiveSession(id: string, updates: Partial<LiveSession>): Promise<LiveSession> {
+    const [session] = await db()
+      .update(liveSessions)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(liveSessions.id, id))
+      .returning();
+    return session;
+  }
+
+  async deleteLiveSession(id: string): Promise<void> {
+    await db()
+      .delete(liveSessions)
+      .where(eq(liveSessions.id, id));
+  }
+
+  async startLiveSession(id: string): Promise<LiveSession> {
+    const [session] = await db()
+      .update(liveSessions)
+      .set({ 
+        status: 'live', 
+        actualStart: new Date(),
+        updatedAt: new Date()
+      })
+      .where(eq(liveSessions.id, id))
+      .returning();
+    return session;
+  }
+
+  async endLiveSession(id: string): Promise<LiveSession> {
+    const [session] = await db()
+      .update(liveSessions)
+      .set({ 
+        status: 'ended', 
+        actualEnd: new Date(),
+        updatedAt: new Date()
+      })
+      .where(eq(liveSessions.id, id))
+      .returning();
+    return session;
+  }
+
+  async incrementSessionViewers(id: string): Promise<void> {
+    await db()
+      .update(liveSessions)
+      .set({ 
+        currentViewers: sql`${liveSessions.currentViewers} + 1`,
+        totalViews: sql`${liveSessions.totalViews} + 1`,
+        updatedAt: new Date()
+      })
+      .where(eq(liveSessions.id, id));
+  }
 }
 
 // Mock storage for development when database is not available
 class MockStorage implements IStorage {
   private mockUsers = new Map<string, User>();
   private mockTransactions = new Map<string, CoinTransaction[]>();
+  private mockLiveSessions = new Map<string, LiveSession[]>();
 
   constructor() {
     // Initialize with some sample users and coins for testing
@@ -984,6 +1083,106 @@ class MockStorage implements IStorage {
     }
 
     return mockEndorsement;
+  }
+
+  // Live sessions methods
+  async createLiveSession(session: InsertLiveSession): Promise<LiveSession> {
+    const mockSession: LiveSession = {
+      id: `session_${Date.now()}`,
+      ...session,
+      currentViewers: 0,
+      totalViews: 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    if (!this.mockLiveSessions.has(session.userId)) {
+      this.mockLiveSessions.set(session.userId, []);
+    }
+    
+    this.mockLiveSessions.get(session.userId)!.push(mockSession);
+    return mockSession;
+  }
+
+  async getUserLiveSessions(userId: string): Promise<LiveSession[]> {
+    return this.mockLiveSessions.get(userId) || [];
+  }
+
+  async getAllLiveSessions(): Promise<LiveSession[]> {
+    const allSessions = [];
+    for (const sessions of this.mockLiveSessions.values()) {
+      allSessions.push(...sessions);
+    }
+    return allSessions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  async getLiveSessionById(id: string): Promise<LiveSession | undefined> {
+    for (const sessions of this.mockLiveSessions.values()) {
+      const session = sessions.find(s => s.id === id);
+      if (session) return session;
+    }
+    return undefined;
+  }
+
+  async updateLiveSession(id: string, updates: Partial<LiveSession>): Promise<LiveSession> {
+    for (const sessions of this.mockLiveSessions.values()) {
+      const session = sessions.find(s => s.id === id);
+      if (session) {
+        Object.assign(session, updates, { updatedAt: new Date() });
+        return session;
+      }
+    }
+    throw new Error('Session not found');
+  }
+
+  async deleteLiveSession(id: string): Promise<void> {
+    for (const [userId, sessions] of this.mockLiveSessions.entries()) {
+      const index = sessions.findIndex(s => s.id === id);
+      if (index !== -1) {
+        sessions.splice(index, 1);
+        return;
+      }
+    }
+    throw new Error('Session not found');
+  }
+
+  async startLiveSession(id: string): Promise<LiveSession> {
+    for (const sessions of this.mockLiveSessions.values()) {
+      const session = sessions.find(s => s.id === id);
+      if (session) {
+        session.status = 'live';
+        session.actualStart = new Date();
+        session.updatedAt = new Date();
+        return session;
+      }
+    }
+    throw new Error('Session not found');
+  }
+
+  async endLiveSession(id: string): Promise<LiveSession> {
+    for (const sessions of this.mockLiveSessions.values()) {
+      const session = sessions.find(s => s.id === id);
+      if (session) {
+        session.status = 'ended';
+        session.actualEnd = new Date();
+        session.updatedAt = new Date();
+        return session;
+      }
+    }
+    throw new Error('Session not found');
+  }
+
+  async incrementSessionViewers(id: string): Promise<void> {
+    for (const sessions of this.mockLiveSessions.values()) {
+      const session = sessions.find(s => s.id === id);
+      if (session) {
+        session.currentViewers = (session.currentViewers || 0) + 1;
+        session.totalViews = (session.totalViews || 0) + 1;
+        session.updatedAt = new Date();
+        return;
+      }
+    }
+    throw new Error('Session not found');
   }
 }
 
