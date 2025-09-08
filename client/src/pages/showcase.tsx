@@ -710,10 +710,14 @@ export default function Showcase() {
                           e.currentTarget.nextElementSibling?.classList.remove('hidden');
                         }}
                       />
-                    ) : post.fileUrl && post.category === 'music' || post.category === 'singing' ? (
+                    ) : post.fileUrl && (post.category === 'music' || post.category === 'singing') ? (
                       <div className="flex flex-col items-center justify-center h-full p-4 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
-                        <Music className="h-12 w-12 text-primary mb-2" />
-                        <audio controls className="w-full max-w-xs">
+                        <Music className="h-12 w-12 text-primary mb-3" />
+                        <div className="text-center mb-3">
+                          <p className="text-sm font-medium text-gray-700 dark:text-gray-300">🎵 Audio Content</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">Click play to listen</p>
+                        </div>
+                        <audio controls className="w-full max-w-xs rounded-lg shadow-sm">
                           <source src={post.fileUrl} type="audio/mpeg" />
                           Your browser does not support the audio element.
                         </audio>
@@ -733,9 +737,9 @@ export default function Showcase() {
                   <div className="flex flex-wrap gap-1.5">
                     {post.tags.slice(0, 3).map((tag, index) => (
                       <Badge 
-                        key={index} 
+                        key={`${post.id}-tag-${index}`}
                         variant="outline" 
-                        className="text-xs px-2 py-0.5 bg-primary/5 border-primary/20 text-primary/80 hover:bg-primary/10 transition-colors cursor-pointer"
+                        className="text-xs px-2 py-0.5 bg-gradient-to-r from-primary/10 to-primary/20 border-primary/20 text-primary/80 hover:bg-primary/20 hover:from-primary/20 hover:to-primary/30 transition-all duration-200 cursor-pointer"
                       >
                         #{tag}
                       </Badge>
