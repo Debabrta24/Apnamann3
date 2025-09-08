@@ -171,6 +171,22 @@ export const coinTransactions = pgTable("coin_transactions", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Medicine alarms
+export const medicineAlarms = pgTable("medicine_alarms", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  medicineName: text("medicine_name").notNull(),
+  dosage: text("dosage").notNull(),
+  frequency: text("frequency").notNull(), // 'daily', 'twice-daily', 'thrice-daily', 'weekly', 'custom'
+  times: jsonb("times").notNull(), // Array of time strings like ["08:00", "20:00"]
+  startDate: timestamp("start_date").notNull(),
+  endDate: timestamp("end_date"),
+  isActive: boolean("is_active").default(true),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   screeningAssessments: many(screeningAssessments),
@@ -182,6 +198,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   crisisAlerts: many(crisisAlerts),
   customPersonalities: many(customPersonalities),
   coinTransactions: many(coinTransactions),
+  medicineAlarms: many(medicineAlarms),
 }));
 
 export const customPersonalitiesRelations = relations(customPersonalities, ({ one }) => ({
@@ -231,6 +248,13 @@ export const forumRepliesRelations = relations(forumReplies, ({ one }) => ({
 export const coinTransactionsRelations = relations(coinTransactions, ({ one }) => ({
   user: one(users, {
     fields: [coinTransactions.userId],
+    references: [users.id],
+  }),
+}));
+
+export const medicineAlarmsRelations = relations(medicineAlarms, ({ one }) => ({
+  user: one(users, {
+    fields: [medicineAlarms.userId],
     references: [users.id],
   }),
 }));
@@ -295,6 +319,12 @@ export const insertCoinTransactionSchema = createInsertSchema(coinTransactions).
   createdAt: true,
 });
 
+export const insertMedicineAlarmSchema = createInsertSchema(medicineAlarms).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -318,3 +348,5 @@ export type CustomPersonality = typeof customPersonalities.$inferSelect;
 export type InsertCustomPersonality = z.infer<typeof insertCustomPersonalitySchema>;
 export type CoinTransaction = typeof coinTransactions.$inferSelect;
 export type InsertCoinTransaction = z.infer<typeof insertCoinTransactionSchema>;
+export type MedicineAlarm = typeof medicineAlarms.$inferSelect;
+export type InsertMedicineAlarm = z.infer<typeof insertMedicineAlarmSchema>;
