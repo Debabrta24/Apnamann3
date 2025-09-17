@@ -81,7 +81,7 @@ export default function Login() {
 
   return (
     <div className="h-[100svh] bg-gradient-to-br from-primary/20 via-background to-secondary/20 flex items-center justify-center p-3">
-      <Card className="w-full max-w-3xl h-[92svh] overflow-hidden flex flex-col bg-card/70 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:bg-card/50 dark:border-white/5">
+      <Card className="w-full max-w-sm sm:max-w-md lg:max-w-lg h-[92svh] overflow-hidden flex flex-col bg-card/70 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:bg-card/50 dark:border-white/5">
         <CardHeader className="py-3 text-center flex-shrink-0">
           <div className="mx-auto mb-2 w-10 h-10 rounded-full flex items-center justify-center">
             <img src={logoUrl} alt="ApnaMann Logo" className="w-10 h-10 rounded-full object-cover" />
@@ -141,10 +141,10 @@ export default function Login() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-1" data-testid="row-auth-buttons">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-1" data-testid="row-auth-buttons">
                   <Button
                     type="submit"
-                    className="h-9 text-xs bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary font-medium"
+                    className="h-10 text-sm sm:text-xs bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-lg hover:shadow-blue-500/25 transition-all duration-200"
                     disabled={isLoading}
                     data-testid="button-signin"
                   >
@@ -152,7 +152,7 @@ export default function Login() {
                   </Button>
                   <Button
                     type="button"
-                    className="h-9 text-xs bg-gradient-to-r from-secondary to-secondary/90 hover:from-secondary/90 hover:to-secondary font-medium"
+                    className="h-10 text-sm sm:text-xs bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-medium shadow-lg hover:shadow-emerald-500/25 transition-all duration-200"
                     onClick={handleLogin}
                     disabled={isLoading}
                     data-testid="button-login"
@@ -161,13 +161,14 @@ export default function Login() {
                   </Button>
                   <Button
                     variant="outline"
-                    className="h-9 text-xs bg-background/30 backdrop-blur-sm border-white/20 hover:bg-primary/5 font-medium"
+                    className="h-10 text-sm sm:text-xs bg-gradient-to-r from-red-50 to-red-100 dark:from-red-950 dark:to-red-900 border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900 text-red-700 dark:text-red-300 font-medium shadow-lg hover:shadow-red-500/25 transition-all duration-200"
                     onClick={handleGoogleLogin}
                     disabled={isLoading}
                     data-testid="button-google-login"
                   >
-                    <FaGoogle className="h-3 w-3 mr-1 text-red-500" />
-                    Google
+                    <FaGoogle className="h-4 w-4 mr-2 text-red-500" />
+                    <span className="hidden sm:inline">Google</span>
+                    <span className="sm:hidden">Sign in with Google</span>
                   </Button>
                 </div>
               </form>
@@ -200,7 +201,7 @@ export default function Login() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-7 text-xs bg-background/30 backdrop-blur-sm border-white/20 hover:bg-secondary/10"
+                    className="w-full h-8 text-xs bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-medium shadow-md hover:shadow-purple-500/25 transition-all duration-200"
                     onClick={() => setLocation("/parent-portal")}
                     data-testid="button-parent-portal"
                   >
