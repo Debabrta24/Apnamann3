@@ -181,7 +181,11 @@ export default function Login() {
                 <p className="leading-tight">Contact student services for account setup</p>
               </div>
 
-              <div className="p-3 bg-gradient-to-br from-primary/5 to-primary/10 backdrop-blur-sm rounded-lg text-[13px] border border-primary/20 text-center">
+              <div 
+                className="p-3 bg-gradient-to-br from-primary/5 to-primary/10 backdrop-blur-sm rounded-lg text-[13px] border border-primary/20 text-center cursor-pointer hover:from-primary/10 hover:to-primary/15 hover:border-primary/30 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                onClick={() => window.open('/privacy', '_blank')}
+                data-testid="div-privacy-security"
+              >
                 <h4 className="font-medium text-foreground mb-1 flex items-center justify-center">
                   <Lock className="h-3 w-3 mr-1 text-primary" />
                   Privacy & Security
@@ -189,6 +193,7 @@ export default function Login() {
                 <p className="text-muted-foreground leading-tight">
                   <span className="font-bold text-foreground">Nobody knows details - your parents, institute, or no one.</span>
                 </p>
+                <p className="text-xs text-primary/70 mt-1 font-medium">Click for full details →</p>
               </div>
 
               <div className="p-3 bg-gradient-to-br from-secondary/10 to-secondary/5 backdrop-blur-sm rounded-lg text-[13px] border border-secondary/20">
