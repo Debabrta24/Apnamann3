@@ -187,7 +187,7 @@ export default function Login() {
                   Privacy & Security
                 </h4>
                 <p className="text-muted-foreground leading-tight">
-                  End-to-end encrypted conversations with strict confidentiality protocols.
+                  End-to-end encrypted conversations with strict confidentiality protocols. Nobody knows details - your parents, institute, or no one.
                 </p>
               </div>
 
@@ -196,7 +196,7 @@ export default function Login() {
                   <Users className="h-5 w-5 mx-auto text-secondary mb-1" />
                   <h4 className="font-medium text-foreground mb-1">Parent Portal</h4>
                   <p className="text-muted-foreground mb-2 leading-tight">
-                    Monitor your child's mental health journey
+                    Check your child's mental health
                   </p>
                   <Button
                     variant="outline"
