@@ -105,7 +105,7 @@ export default function Login() {
                       placeholder="your.email@student.edu"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10 h-9 text-[13px] bg-blue-50/80 dark:bg-blue-950/50 backdrop-blur-sm border-blue-200/40 dark:border-blue-800/40 focus:border-blue-400 dark:focus:border-blue-500 focus:ring-0 focus:ring-offset-0 text-blue-900 dark:text-blue-100"
+                      className="pl-10 h-9 text-[13px] bg-blue-50/80 dark:bg-blue-950/50 backdrop-blur-sm border-blue-200/40 dark:border-blue-800/40 hover:border-blue-300 dark:hover:border-blue-700 hover:bg-blue-100/80 dark:hover:bg-blue-900/50 focus:border-blue-400 dark:focus:border-blue-500 focus:ring-0 focus:ring-offset-0 text-blue-900 dark:text-blue-100 transition-all duration-200"
                       data-testid="input-email"
                     />
                   </div>
@@ -121,7 +121,7 @@ export default function Login() {
                       placeholder="Enter password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10 pr-10 h-9 text-[13px] bg-green-50/80 dark:bg-green-950/50 backdrop-blur-sm border-green-200/40 dark:border-green-800/40 focus:border-green-400 dark:focus:border-green-500 focus:ring-0 focus:ring-offset-0 text-green-900 dark:text-green-100"
+                      className="pl-10 pr-10 h-9 text-[13px] bg-green-50/80 dark:bg-green-950/50 backdrop-blur-sm border-green-200/40 dark:border-green-800/40 hover:border-green-300 dark:hover:border-green-700 hover:bg-green-100/80 dark:hover:bg-green-900/50 focus:border-green-400 dark:focus:border-green-500 focus:ring-0 focus:ring-offset-0 text-green-900 dark:text-green-100 transition-all duration-200"
                       data-testid="input-password"
                     />
                     <Button
@@ -144,7 +144,7 @@ export default function Login() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-1" data-testid="row-auth-buttons">
                   <Button
                     type="submit"
-                    className="h-10 text-sm sm:text-xs bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium shadow-lg hover:shadow-blue-500/25 transition-all duration-200"
+                    className="h-10 text-sm sm:text-xs bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:scale-105 active:scale-95 text-white font-medium shadow-lg hover:shadow-blue-500/30 hover:shadow-xl transition-all duration-200"
                     disabled={isLoading}
                     data-testid="button-signin"
                   >
@@ -152,7 +152,7 @@ export default function Login() {
                   </Button>
                   <Button
                     type="button"
-                    className="h-10 text-sm sm:text-xs bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-medium shadow-lg hover:shadow-emerald-500/25 transition-all duration-200"
+                    className="h-10 text-sm sm:text-xs bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 hover:scale-105 active:scale-95 text-white font-medium shadow-lg hover:shadow-emerald-500/30 hover:shadow-xl transition-all duration-200"
                     onClick={handleLogin}
                     disabled={isLoading}
                     data-testid="button-login"
@@ -161,7 +161,7 @@ export default function Login() {
                   </Button>
                   <Button
                     variant="outline"
-                    className="h-10 text-sm sm:text-xs bg-gradient-to-r from-red-50 to-red-100 dark:from-red-950 dark:to-red-900 border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900 text-red-700 dark:text-red-300 font-medium shadow-lg hover:shadow-red-500/25 transition-all duration-200"
+                    className="h-10 text-sm sm:text-xs bg-gradient-to-r from-red-50 to-red-100 dark:from-red-950 dark:to-red-900 border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900 hover:scale-105 active:scale-95 text-red-700 dark:text-red-300 font-medium shadow-lg hover:shadow-red-500/30 hover:shadow-xl transition-all duration-200"
                     onClick={handleGoogleLogin}
                     disabled={isLoading}
                     data-testid="button-google-login"
@@ -187,7 +187,7 @@ export default function Login() {
                   Privacy & Security
                 </h4>
                 <p className="text-muted-foreground leading-tight">
-                  End-to-end encrypted conversations with strict confidentiality protocols. Nobody knows details - your parents, institute, or no one.
+                  End-to-end encrypted conversations with strict confidentiality protocols. <span className="font-bold text-foreground">Nobody knows details - your parents, institute, or no one.</span>
                 </p>
               </div>
 
@@ -201,7 +201,7 @@ export default function Login() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-8 text-xs bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900 text-purple-700 dark:text-purple-300 font-medium shadow-md hover:shadow-purple-500/25 transition-all duration-200"
+                    className="w-full h-8 text-xs bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900 hover:scale-105 active:scale-95 text-purple-700 dark:text-purple-300 font-medium shadow-md hover:shadow-purple-500/30 hover:shadow-lg transition-all duration-200"
                     onClick={() => setLocation("/parent-portal")}
                     data-testid="button-parent-portal"
                   >
