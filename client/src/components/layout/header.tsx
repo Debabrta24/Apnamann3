@@ -330,81 +330,91 @@ export default function Header() {
           </div>
 
           {/* User menu */}
-          <div className="flex items-center space-x-4">
-            <NotificationCenter />
+          <div className="flex items-center space-x-2 sm:space-x-3 lg:space-x-4">
+            <div className="hidden sm:block">
+              <NotificationCenter />
+            </div>
 
             {currentUser && (
-              <CoinDisplay userId={currentUser.id} />
+              <div className="hidden md:block">
+                <CoinDisplay userId={currentUser.id} />
+              </div>
             )}
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" data-testid="button-theme">
-                  {theme === "dark" ? <Moon className="h-4 w-4 mr-1" /> : <Sun className="h-4 w-4 mr-1" />}
-                  Theme
-                  <ChevronDown className="h-3 w-3 ml-1" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger data-testid="submenu-light-themes">
-                    <Sun className="h-4 w-4 mr-2" />
-                    Light
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
-                    {lightThemes.map((theme) => (
-                      <DropdownMenuItem
-                        key={theme.value}
-                        onClick={() => setTheme(theme.value as any)}
-                        data-testid={`option-theme-${theme.value}`}
-                      >
-                        {theme.label}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
-                
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger data-testid="submenu-dark-themes">
-                    <Moon className="h-4 w-4 mr-2" />
-                    Dark
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent>
-                    {darkThemes.map((theme) => (
-                      <DropdownMenuItem
-                        key={theme.value}
-                        onClick={() => setTheme(theme.value as any)}
-                        data-testid={`option-theme-${theme.value}`}
-                      >
-                        {theme.label}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {/* Theme and Language - Desktop */}
+            <div className="hidden lg:flex items-center space-x-3">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" data-testid="button-theme">
+                    {theme === "dark" ? <Moon className="h-4 w-4 mr-1" /> : <Sun className="h-4 w-4 mr-1" />}
+                    <span className="hidden xl:inline">Theme</span>
+                    <ChevronDown className="h-3 w-3 ml-1" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger data-testid="submenu-light-themes">
+                      <Sun className="h-4 w-4 mr-2" />
+                      Light
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent>
+                      {lightThemes.map((theme) => (
+                        <DropdownMenuItem
+                          key={theme.value}
+                          onClick={() => setTheme(theme.value as any)}
+                          data-testid={`option-theme-${theme.value}`}
+                        >
+                          {theme.label}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+                  
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger data-testid="submenu-dark-themes">
+                      <Moon className="h-4 w-4 mr-2" />
+                      Dark
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent>
+                      {darkThemes.map((theme) => (
+                        <DropdownMenuItem
+                          key={theme.value}
+                          onClick={() => setTheme(theme.value as any)}
+                          data-testid={`option-theme-${theme.value}`}
+                        >
+                          {theme.label}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" data-testid="button-language">
-                  <Globe className="h-4 w-4 mr-1" />
-                  {languages.find(l => l.code === selectedLanguage)?.name || "English"}
-                  <ChevronDown className="h-3 w-3 ml-1" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {languages.map((lang) => (
-                  <DropdownMenuItem
-                    key={lang.code}
-                    onClick={() => setSelectedLanguage(lang.code)}
-                    data-testid={`option-language-${lang.code}`}
-                  >
-                    {lang.name}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" data-testid="button-language">
+                    <Globe className="h-4 w-4 mr-1" />
+                    <span className="hidden xl:inline">
+                      {languages.find(l => l.code === selectedLanguage)?.name || "English"}
+                    </span>
+                    <ChevronDown className="h-3 w-3 ml-1" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {languages.map((lang) => (
+                    <DropdownMenuItem
+                      key={lang.code}
+                      onClick={() => setSelectedLanguage(lang.code)}
+                      data-testid={`option-language-${lang.code}`}
+                    >
+                      {lang.name}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
 
+            {/* User Menu with combined mobile options */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="w-8 h-8 bg-accent rounded-full p-0" data-testid="button-user-menu">
@@ -413,7 +423,7 @@ export default function Header() {
                   </span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuItem
                   onClick={() => setLocation("/profile")}
                   data-testid="menu-item-profile"
@@ -427,6 +437,72 @@ export default function Header() {
                 >
                   Admin Dashboard
                 </DropdownMenuItem>
+                
+                {/* Mobile-only options */}
+                <div className="lg:hidden">
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger data-testid="submenu-theme-mobile">
+                      {theme === "dark" ? <Moon className="h-4 w-4 mr-2" /> : <Sun className="h-4 w-4 mr-2" />}
+                      Theme
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger data-testid="submenu-light-themes-mobile">
+                          <Sun className="h-4 w-4 mr-2" />
+                          Light
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                          {lightThemes.map((theme) => (
+                            <DropdownMenuItem
+                              key={theme.value}
+                              onClick={() => setTheme(theme.value as any)}
+                              data-testid={`option-theme-${theme.value}-mobile`}
+                            >
+                              {theme.label}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
+                      
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger data-testid="submenu-dark-themes-mobile">
+                          <Moon className="h-4 w-4 mr-2" />
+                          Dark
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                          {darkThemes.map((theme) => (
+                            <DropdownMenuItem
+                              key={theme.value}
+                              onClick={() => setTheme(theme.value as any)}
+                              data-testid={`option-theme-${theme.value}-mobile`}
+                            >
+                              {theme.label}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger data-testid="submenu-language-mobile">
+                      <Globe className="h-4 w-4 mr-2" />
+                      Language
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent>
+                      {languages.map((lang) => (
+                        <DropdownMenuItem
+                          key={lang.code}
+                          onClick={() => setSelectedLanguage(lang.code)}
+                          data-testid={`option-language-${lang.code}-mobile`}
+                        >
+                          {lang.name}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+                </div>
+
                 <DropdownMenuItem
                   onClick={logout}
                   data-testid="menu-item-logout"
@@ -435,6 +511,11 @@ export default function Header() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* Mobile Notifications */}
+            <div className="sm:hidden">
+              <NotificationCenter />
+            </div>
           </div>
         </div>
       </div>
