@@ -7,6 +7,22 @@ import { useLocation } from "wouter";
 
 export default function Privacy() {
   const [, setLocation] = useLocation();
+  
+  const handleBack = () => {
+    // Check if there's history to go back to
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      // If opened in a new tab with no history, close the window
+      // or redirect to login page as fallback
+      if (window.opener) {
+        window.close();
+      } else {
+        // Fallback: redirect to login page
+        window.location.href = '/';
+      }
+    }
+  };
 
   const privacyFeatures = [
     {
@@ -72,7 +88,7 @@ export default function Privacy() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => window.history.back()}
+            onClick={handleBack}
             className="flex items-center gap-2"
             data-testid="button-back"
           >
