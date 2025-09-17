@@ -134,7 +134,7 @@ const categoryImages = {
 };
 
 // Resource ID to image mapping
-const resourceImages = {
+const resourceImages: Record<string, string> = {
   // Career Guidance Resources
   "career-1": resumeTemplateImage,
   "career-2": careerAssessmentImage,
@@ -739,12 +739,13 @@ export default function Resources() {
                   
                   return (
                     <Card key={resource.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-105 border-l-4 border-l-primary">
-                      {/* Beautiful Category Image */}
+                      {/* Beautiful Resource Image */}
                       <div className="h-32 relative overflow-hidden">
                         <img 
-                          src={categoryImages[selectedCategory as keyof typeof categoryImages]} 
-                          alt={currentCategoryData?.title}
+                          src={resourceImages[resource.id] || categoryImages[selectedCategory as keyof typeof categoryImages]} 
+                          alt={resource.title}
                           className="w-full h-full object-cover"
+                          data-testid={`img-resource-${resource.id}`}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                         <div className="absolute top-3 right-3">
