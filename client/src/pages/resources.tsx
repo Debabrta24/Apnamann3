@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Leaf, 
   Moon, 
@@ -586,6 +590,16 @@ const wellnessResourcesData = {
 export default function Resources() {
   const [selectedCategory, setSelectedCategory] = useState("career-guidance");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentResource, setCurrentResource] = useState<any>(null);
+  const [isResourceOpen, setIsResourceOpen] = useState(false);
+  const [timerState, setTimerState] = useState({ minutes: 25, seconds: 0, isRunning: false, isBreak: false });
+  const [breathingState, setBreathingState] = useState({ phase: 'ready', count: 0, currentCycle: 0, totalCycles: 4, isActive: false });
+  const [journalState, setJournalState] = useState({ triggers: '', response: '', strategies: '' });
+  const [bookmarkedResources, setBookmarkedResources] = useState<string[]>(() => {
+    const saved = localStorage.getItem('bookmarked-resources');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const { toast } = useToast();
 
   // Get current category data
   const currentCategoryData = wellnessResourcesData[selectedCategory as keyof typeof wellnessResourcesData];
@@ -615,31 +629,397 @@ export default function Resources() {
     }
   };
 
+  // Timer effect for Pomodoro
+  useEffect(() => {
+    let interval: number;
+    if (timerState.isRunning) {
+      interval = window.setInterval(() => {
+        setTimerState(prev => {
+          if (prev.seconds === 0) {
+            if (prev.minutes === 0) {
+              // Timer finished - auto-transition to next phase
+              toast({
+                title: prev.isBreak ? "Break finished!" : "Focus session complete!",
+                description: prev.isBreak ? "Time to get back to work." : "Take a well-deserved break."
+              });
+              return {
+                minutes: prev.isBreak ? 25 : 5,
+                seconds: 0,
+                isRunning: true,
+                isBreak: !prev.isBreak
+              };
+            }
+            return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
+          }
+          return { ...prev, seconds: prev.seconds - 1 };
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [timerState.isRunning, toast]);
+
+  // Breathing exercise effect
+  useEffect(() => {
+    let interval: number;
+    if (breathingState.isActive && breathingState.phase !== 'ready') {
+      interval = window.setInterval(() => {
+        setBreathingState(prev => {
+          if (prev.count === 1) {
+            // Move to next phase
+            if (prev.phase === 'inhale') {
+              return { ...prev, phase: 'hold', count: 7 };
+            } else if (prev.phase === 'hold') {
+              return { ...prev, phase: 'exhale', count: 8 };
+            } else if (prev.phase === 'exhale') {
+              // Complete cycle - increment first then check
+              const nextCycle = prev.currentCycle + 1;
+              if (nextCycle > prev.totalCycles) {
+                toast({
+                  title: "Breathing exercise complete!",
+                  description: "Well done! You've completed all 4 cycles."
+                });
+                return { phase: 'ready', count: 0, currentCycle: 0, totalCycles: 4, isActive: false };
+              } else {
+                return { ...prev, phase: 'inhale', count: 4, currentCycle: nextCycle };
+              }
+            }
+          }
+          return { ...prev, count: prev.count - 1 };
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [breathingState.isActive, breathingState.phase, toast]);
+
+  const saveJournalEntry = () => {
+    if (!journalState.triggers || !journalState.response) {
+      toast({
+        title: "Incomplete entry",
+        description: "Please fill in at least the triggers and response fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    const entry = {
+      ...journalState,
+      timestamp: new Date().toISOString(),
+      id: Date.now().toString()
+    };
+    
+    const savedEntries = localStorage.getItem('stress-journal-entries');
+    const entries = savedEntries ? JSON.parse(savedEntries) : [];
+    entries.push(entry);
+    localStorage.setItem('stress-journal-entries', JSON.stringify(entries));
+    
+    setJournalState({ triggers: '', response: '', strategies: '' });
+    toast({
+      title: "Journal entry saved",
+      description: "Your stress management entry has been recorded."
+    });
+  };
+
+  const toggleBookmark = (resourceId: string) => {
+    const isBookmarked = bookmarkedResources.includes(resourceId);
+    const newBookmarks = isBookmarked 
+      ? bookmarkedResources.filter(id => id !== resourceId)
+      : [...bookmarkedResources, resourceId];
+    
+    setBookmarkedResources(newBookmarks);
+    localStorage.setItem('bookmarked-resources', JSON.stringify(newBookmarks));
+    
+    toast({
+      title: isBookmarked ? "Bookmark removed" : "Bookmarked!",
+      description: `${resources.find(r => r.id === resourceId)?.title} ${isBookmarked ? 'removed from' : 'added to'} your bookmarks.`
+    });
+  };
+
   const handleResourceAction = (action: string, resourceId: string) => {
     const resource = resources.find(r => r.id === resourceId);
     if (!resource) return;
 
     if (action === 'view') {
-      // Open resource content based on type
-      if (resource.type === 'video' || resource.type === 'audio') {
-        // For video/audio - show a modal or redirect to media player
-        alert(`Playing: ${resource.title}\n\n${resource.description}\n\nDuration: ${resource.duration} minutes`);
-      } else if (resource.type === 'tool') {
-        // For tools - show interactive tool interface
-        alert(`Using Tool: ${resource.title}\n\n${resource.description}\n\nThis would open the interactive ${resource.category.toLowerCase()} tool.`);
-      } else if (resource.type === 'guide' || resource.type === 'article') {
-        // For guides/articles - show reading interface
-        alert(`Reading: ${resource.title}\n\n${resource.description}\n\nEstimated reading time: ${resource.duration} minutes\n\nThis would open the full content for reading.`);
-      } else {
-        // For activities - show step-by-step instructions
-        alert(`Starting Activity: ${resource.title}\n\n${resource.description}\n\nDuration: ${resource.duration} minutes\n\nThis would guide you through the ${resource.category.toLowerCase()} activity.`);
-      }
+      setCurrentResource(resource);
+      setIsResourceOpen(true);
     } else if (action === 'bookmark') {
-      // Add to saved resources
-      alert(`Bookmarked: ${resource.title}\n\nThis resource has been saved to your bookmarks for easy access later.`);
+      toggleBookmark(resourceId);
     } else if (action === 'download') {
-      // Download for offline access
-      alert(`Downloading: ${resource.title}\n\nThis resource is being prepared for offline access.`);
+      // Create a simple text file download for guides/articles
+      if (resource.type === 'guide' || resource.type === 'article') {
+        const content = `${resource.title}\n\n${resource.description}\n\nCategory: ${resource.category}\nDuration: ${resource.duration} minutes\n\nThis is a ${resource.type} resource that would contain detailed content in a real implementation.`;
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `${resource.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        toast({
+          title: "Download complete",
+          description: `${resource.title} has been downloaded as a text file.`
+        });
+      } else {
+        toast({
+          title: "Download not available",
+          description: `${resource.type} resources cannot be downloaded.`,
+          variant: "destructive"
+        });
+      }
+    }
+  };
+
+  const startTimer = () => {
+    setTimerState(prev => ({ ...prev, isRunning: !prev.isRunning }));
+  };
+
+  const resetTimer = () => {
+    setTimerState({ minutes: 25, seconds: 0, isRunning: false, isBreak: false });
+  };
+
+  const startBreathingExercise = () => {
+    if (breathingState.isActive) {
+      setBreathingState(prev => ({ ...prev, isActive: false, phase: 'ready' }));
+      return;
+    }
+    
+    setBreathingState({ phase: 'inhale', count: 4, currentCycle: 1, totalCycles: 4, isActive: true });
+    toast({
+      title: "Breathing exercise started",
+      description: "Follow the guided breathing pattern"
+    });
+  };
+
+  const renderResourceContent = (resource: any) => {
+    if (!resource) return null;
+
+    switch (resource.type) {
+      case 'video':
+      case 'audio':
+        return (
+          <div className="space-y-4" data-testid={`content-${resource.type}-${resource.id}`}>
+            <div className="space-y-2">
+              <p className="text-sm">{resource.description}</p>
+              <Badge variant="secondary">{resource.duration} min</Badge>
+            </div>
+            <div className="aspect-video bg-secondary/20 rounded-lg overflow-hidden">
+              {resource.type === 'video' ? (
+                <video 
+                  controls 
+                  className="w-full h-full"
+                  data-testid="video-player"
+                  poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNTAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2Y5ZmFmYiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNmI3Mjk2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+U2FtcGxlIFZpZGVvIC0gQ2xpY2sgUGxheSB0byBTdGFydDwvdGV4dD48L3N2Zz4="
+                >
+                  <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+                  <p className="p-4 text-center">Your browser does not support the video tag.</p>
+                </video>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-secondary/10">
+                  <audio 
+                    controls 
+                    className="w-full max-w-md"
+                    data-testid="audio-player"
+                  >
+                    <source src="https://www.soundjay.com/misc/sounds/fail-buzzer-02.wav" type="audio/wav" />
+                    <p className="text-center text-muted-foreground">Your browser does not support the audio tag.</p>
+                  </audio>
+                </div>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground text-center">Sample {resource.type} for demonstration purposes</p>
+          </div>
+        );
+
+      case 'tool':
+        if (resource.id === 'study-1') {
+          // Pomodoro Timer
+          return (
+            <div className="space-y-4" data-testid="content-pomodoro-timer">
+              <div className="text-center">
+                <div className="text-6xl font-bold mb-4">
+                  {String(timerState.minutes).padStart(2, '0')}:{String(timerState.seconds).padStart(2, '0')}
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {timerState.isBreak ? 'Break Time' : 'Focus Time'}
+                </p>
+                <div className="flex gap-2 justify-center">
+                  <Button onClick={startTimer} data-testid="button-start-timer">
+                    {timerState.isRunning ? 'Pause' : 'Start'}
+                  </Button>
+                  <Button variant="outline" onClick={resetTimer} data-testid="button-reset-timer">
+                    Reset
+                  </Button>
+                </div>
+              </div>
+            </div>
+          );
+        } else if (resource.id === 'stress-3') {
+          // Stress Journal
+          return (
+            <div className="space-y-4" data-testid="content-stress-journal">
+              <p className="text-sm text-muted-foreground">{resource.description}</p>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium">What's causing you stress today?</label>
+                  <Textarea 
+                    placeholder="Describe your stress triggers..." 
+                    className="mt-1"
+                    value={journalState.triggers}
+                    onChange={(e) => setJournalState(prev => ({ ...prev, triggers: e.target.value }))}
+                    data-testid="textarea-stress-triggers"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">How did you respond?</label>
+                  <Textarea 
+                    placeholder="Describe your response..." 
+                    className="mt-1"
+                    value={journalState.response}
+                    onChange={(e) => setJournalState(prev => ({ ...prev, response: e.target.value }))}
+                    data-testid="textarea-stress-response"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">What coping strategies helped?</label>
+                  <Textarea 
+                    placeholder="List effective coping strategies..." 
+                    className="mt-1"
+                    value={journalState.strategies}
+                    onChange={(e) => setJournalState(prev => ({ ...prev, strategies: e.target.value }))}
+                    data-testid="textarea-coping-strategies"
+                  />
+                </div>
+                <Button onClick={saveJournalEntry} data-testid="button-save-journal">
+                  <FileText className="h-4 w-4 mr-2" />
+                  Save Entry
+                </Button>
+              </div>
+            </div>
+          );
+        } else {
+          // Generic tool interface
+          return (
+            <div className="space-y-4" data-testid={`content-tool-${resource.id}`}>
+              <p className="text-sm">{resource.description}</p>
+              <div className="bg-secondary/10 p-4 rounded-lg">
+                <p className="text-center text-muted-foreground mb-3">Interactive {resource.category.toLowerCase()} tool</p>
+                <Button className="w-full" onClick={() => toast({ title: `Launching ${resource.title}`, description: "Tool is now active and ready to use." })} data-testid="button-launch-tool">
+                  <Zap className="h-4 w-4 mr-2" />
+                  Launch {resource.title}
+                </Button>
+              </div>
+            </div>
+          );
+        }
+
+      case 'activity':
+        if (resource.id === 'stress-1') {
+          // 4-7-8 Breathing Exercise
+          return (
+            <div className="space-y-4" data-testid="content-breathing-exercise">
+              <div className="text-center">
+                <h4 className="font-semibold mb-2">4-7-8 Breathing Exercise</h4>
+                <p className="text-sm text-muted-foreground mb-4">{resource.description}</p>
+                <div className="space-y-2">
+                  <div className="bg-secondary/10 p-4 rounded-lg">
+                    <p className="text-lg font-bold mb-2">Instructions:</p>
+                    <div className="space-y-1 text-sm text-left max-w-md mx-auto">
+                      <p>1. Inhale through nose for 4 counts</p>
+                      <p>2. Hold breath for 7 counts</p> 
+                      <p>3. Exhale through mouth for 8 counts</p>
+                      <p>4. Repeat cycle 4 times</p>
+                    </div>
+                  </div>
+                  {breathingState.isActive && breathingState.phase !== 'ready' ? (
+                    <div className="space-y-4">
+                      <div className="text-center">
+                        <div className="text-4xl font-bold text-primary mb-2">
+                          {breathingState.phase === 'inhale' ? 'Breathe In' : 
+                           breathingState.phase === 'hold' ? 'Hold' : 'Breathe Out'}
+                        </div>
+                        <div className="text-6xl font-bold mb-2">{breathingState.count}</div>
+                        <div className="text-sm text-muted-foreground">Cycle {breathingState.currentCycle} of {breathingState.totalCycles}</div>
+                        <Progress 
+                          value={((breathingState.currentCycle - 1) / breathingState.totalCycles) * 100 + 
+                                  (breathingState.phase === 'inhale' ? ((4 - breathingState.count) / 4) * (100 / breathingState.totalCycles / 3) :
+                                   breathingState.phase === 'hold' ? (25 / breathingState.totalCycles) + ((7 - breathingState.count) / 7) * (100 / breathingState.totalCycles / 3) :
+                                   (50 / breathingState.totalCycles) + ((8 - breathingState.count) / 8) * (100 / breathingState.totalCycles / 3))}
+                          className="w-full mt-4"
+                        />
+                        <Button variant="outline" onClick={startBreathingExercise} className="mt-4">
+                          Stop Exercise
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center">
+                      <Button className="mt-4" onClick={startBreathingExercise} data-testid="button-start-breathing">
+                        <Heart className="h-4 w-4 mr-2" />
+                        {breathingState.currentCycle > 0 && !breathingState.isActive ? 'Resume Exercise' : 'Start Breathing Exercise'}
+                      </Button>
+                      {breathingState.currentCycle > 0 && !breathingState.isActive && (
+                        <div className="text-sm text-muted-foreground mt-2">
+                          Paused at cycle {breathingState.currentCycle}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        } else {
+          // Generic activity interface
+          return (
+            <div className="space-y-4" data-testid={`content-activity-${resource.id}`}>
+              <p className="text-sm">{resource.description}</p>
+              <div className="bg-accent/10 p-4 rounded-lg text-center">
+                <BookOpen className="h-8 w-8 mx-auto mb-2 text-primary" />
+                <p className="font-semibold mb-2">Ready to start this activity?</p>
+                <Badge variant="secondary" className="mb-3">{resource.duration} minutes</Badge>
+                <br />
+                <Button onClick={() => toast({ title: `Starting ${resource.title}`, description: "Activity session has begun." })} data-testid="button-begin-activity">
+                  Begin Activity
+                </Button>
+              </div>
+            </div>
+          );
+        }
+
+      case 'guide':
+      case 'article':
+        return (
+          <div className="space-y-4" data-testid={`content-guide-${resource.id}`}>
+            <p className="text-sm">{resource.description}</p>
+            <div className="space-y-3">
+              <div className="bg-card border rounded-lg p-4">
+                <h4 className="font-semibold mb-2">Guide Contents</h4>
+                <ul className="space-y-1 text-sm text-muted-foreground">
+                  <li>• Introduction and Overview</li>
+                  <li>• Step-by-step Instructions</li>
+                  <li>• Tips and Best Practices</li>
+                  <li>• Common Mistakes to Avoid</li>
+                  <li>• Additional Resources</li>
+                </ul>
+                <Badge variant="outline" className="mt-2">{resource.duration} min read</Badge>
+              </div>
+              <Button onClick={() => toast({ title: `Opening ${resource.title}`, description: "Full guide content is now available." })} data-testid="button-read-guide">
+                <BookOpen className="h-4 w-4 mr-2" />
+                Read Full Guide
+              </Button>
+            </div>
+          </div>
+        );
+
+      default:
+        return (
+          <div className="text-center py-8" data-testid="content-default">
+            <p className="text-muted-foreground">Content not available</p>
+          </div>
+        );
     }
   };
 
@@ -810,12 +1190,12 @@ export default function Resources() {
                             
                             <Button 
                               size="sm" 
-                              variant="outline"
+                              variant={bookmarkedResources.includes(resource.id) ? "default" : "outline"}
                               className="h-8 w-8 p-0"
                               onClick={() => handleResourceAction('bookmark', resource.id)}
                               data-testid={`button-bookmark-resource-${resource.id}`}
                             >
-                              <Bookmark className="h-3 w-3" />
+                              <Bookmark className={`h-3 w-3 ${bookmarkedResources.includes(resource.id) ? 'fill-current' : ''}`} />
                             </Button>
                           </div>
                         </div>
@@ -828,6 +1208,26 @@ export default function Resources() {
           )}
         </div>
       </div>
+
+      {/* Resource Content Modal */}
+      <Dialog open={isResourceOpen} onOpenChange={setIsResourceOpen}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto" data-testid="dialog-resource-content">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2" data-testid="dialog-resource-title">
+              {currentResource?.icon && (
+                <currentResource.icon className="h-5 w-5 text-primary" />
+              )}
+              {currentResource?.title}
+            </DialogTitle>
+            <DialogDescription data-testid="dialog-resource-description">
+              {currentResource?.category} • {currentResource?.duration} {currentResource?.type === 'guide' || currentResource?.type === 'article' ? 'min read' : 'minutes'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">
+            {renderResourceContent(currentResource)}
+          </div>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
