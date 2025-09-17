@@ -38,13 +38,62 @@ import {
 import type { Resource } from "@/types";
 import { BackButton } from "@/components/ui/back-button";
 
-// Import generated wellness images
+// Import generated wellness images (category fallbacks)
 import stressImage from "@assets/generated_images/Stress_management_breathing_exercise_cea20dc4.png";
 import sleepImage from "@assets/generated_images/Sleep_hygiene_wellness_illustration_06246b3a.png";
 import studyImage from "@assets/generated_images/Study_techniques_educational_illustration_89d65f81.png";
 import mindfulnessImage from "@assets/generated_images/Mindfulness_meditation_wellness_illustration_1d2de5d2.png";
 import socialImage from "@assets/generated_images/Social_confidence_building_illustration_08d34b18.png";
 import careerImage from "@assets/generated_images/Career_guidance_professional_illustration_3fdaef7e.png";
+
+// Import individual resource images
+// Career Guidance Resources
+import resumeTemplateImage from "@assets/generated_images/Resume_cover_letter_template_05ce5519.png";
+import careerAssessmentImage from "@assets/generated_images/Career_personality_assessment_4033cd1c.png";
+import interviewPrepImage from "@assets/generated_images/Interview_preparation_kit_4a058855.png";
+import higherStudiesImage from "@assets/generated_images/Higher_studies_planning_af61ca8e.png";
+import internshipStrategyImage from "@assets/generated_images/Internship_strategy_toolkit_0d1769a0.png";
+import careerRoadmapImage from "@assets/generated_images/Career_roadmap_planning_af806bfb.png";
+
+// Stress Management Resources  
+import breathingExerciseImage from "@assets/generated_images/Breathing_exercise_visualization_77e51cdf.png";
+import muscleRelaxationImage from "@assets/generated_images/Muscle_relaxation_technique_43a66f6c.png";
+import stressJournalImage from "@assets/generated_images/Stress_journaling_template_7e3cc169.png";
+import deskReliefImage from "@assets/generated_images/Desk_stress_relief_12a92efc.png";
+import motivationalQuotesImage from "@assets/generated_images/Motivational_quotes_generator_722d6da0.png";
+import stressGamesImage from "@assets/generated_images/Stress_relief_games_058c09ee.png";
+
+// Sleep Hygiene Resources
+import sleepPlannerImage from "@assets/generated_images/Sleep_routine_planner_0af8795f.png";
+import sleepGuideImage from "@assets/generated_images/Sleep_hygiene_guide_3546547c.png";
+import bedtimeSoundsImage from "@assets/generated_images/Bedtime_sounds_interface_5193fa06.png";
+import sleepTrackerImage from "@assets/generated_images/Sleep_quality_tracker_123f2c82.png";
+import powerNapImage from "@assets/generated_images/Power_nap_guide_81cfa41b.png";
+import windDownImage from "@assets/generated_images/Bedtime_wind-down_routine_61f2a713.png";
+
+// Study Techniques Resources
+import pomodoroTimerImage from "@assets/generated_images/Pomodoro_study_timer_1811327b.png";
+import activeRecallImage from "@assets/generated_images/Active_recall_technique_ffc85078.png";
+import noteStrategyImage from "@assets/generated_images/Note-taking_strategies_guide_74d3ee40.png";
+import memoryPalaceImage from "@assets/generated_images/Memory_palace_builder_2871afba.png";
+import flashcardCreatorImage from "@assets/generated_images/Digital_flashcard_creator_b9d79bf2.png";
+import practiceTestImage from "@assets/generated_images/Practice_test_generator_e91ca28c.png";
+
+// Mindfulness Resources
+import dailyMeditationImage from "@assets/generated_images/Daily_meditation_practice_8bc47657.png";
+import gratitudeJournalImage from "@assets/generated_images/Gratitude_journal_prompts_d1e3f898.png";
+import mindfulBreathingImage from "@assets/generated_images/Mindful_breathing_exercises_b10fdf6b.png";
+import groundingTechniquesImage from "@assets/generated_images/Anxiety_grounding_techniques_8047483e.png";
+import calmingVisualizationImage from "@assets/generated_images/Calming_visualizations_0408780e.png";
+import mindfulMovementImage from "@assets/generated_images/Mindful_movement_practice_4f903034.png";
+
+// Social Confidence Resources
+import conversationStarterImage from "@assets/generated_images/Conversation_starter_toolkit_3f9aeeba.png";
+import publicSpeakingImage from "@assets/generated_images/Public_speaking_guide_c12690b7.png";
+import shynessReductionImage from "@assets/generated_images/Shyness_reduction_activities_880ac6c1.png";
+import socialSimulatorImage from "@assets/generated_images/Social_situation_simulator_5475e22f.png";
+import empathyListeningImage from "@assets/generated_images/Empathy_listening_skills_ab0affd8.png";
+import socialChallengesImage from "@assets/generated_images/Social_confidence_challenges_9f9da52a.png";
 
 
 const categories = [
@@ -74,7 +123,7 @@ const resourceTypeColors = {
   activity: "bg-green-500/20 text-green-700",
 };
 
-// Category to image mapping
+// Category to image mapping (fallback)
 const categoryImages = {
   "stress-management": stressImage,
   "sleep-hygiene": sleepImage,
@@ -82,6 +131,57 @@ const categoryImages = {
   "mindfulness": mindfulnessImage,
   "social-confidence": socialImage,
   "career-guidance": careerImage,
+};
+
+// Resource ID to image mapping
+const resourceImages = {
+  // Career Guidance Resources
+  "career-1": resumeTemplateImage,
+  "career-2": careerAssessmentImage,
+  "career-3": interviewPrepImage,
+  "career-4": higherStudiesImage,
+  "career-5": internshipStrategyImage,
+  "career-6": careerRoadmapImage,
+  
+  // Stress Management Resources
+  "stress-1": breathingExerciseImage,
+  "stress-2": muscleRelaxationImage,
+  "stress-3": stressJournalImage,
+  "stress-4": deskReliefImage,
+  "stress-5": motivationalQuotesImage,
+  "stress-6": stressGamesImage,
+  
+  // Sleep Hygiene Resources
+  "sleep-1": sleepPlannerImage,
+  "sleep-2": sleepGuideImage,
+  "sleep-3": bedtimeSoundsImage,
+  "sleep-4": sleepTrackerImage,
+  "sleep-5": powerNapImage,
+  "sleep-6": windDownImage,
+  
+  // Study Techniques Resources
+  "study-1": pomodoroTimerImage,
+  "study-2": activeRecallImage,
+  "study-3": noteStrategyImage,
+  "study-4": memoryPalaceImage,
+  "study-5": flashcardCreatorImage,
+  "study-6": practiceTestImage,
+  
+  // Mindfulness Resources
+  "mindful-1": dailyMeditationImage,
+  "mindful-2": gratitudeJournalImage,
+  "mindful-3": mindfulBreathingImage,
+  "mindful-4": groundingTechniquesImage,
+  "mindful-5": calmingVisualizationImage,
+  "mindful-6": mindfulMovementImage,
+  
+  // Social Confidence Resources
+  "social-1": conversationStarterImage,
+  "social-2": publicSpeakingImage,
+  "social-3": shynessReductionImage,
+  "social-4": socialSimulatorImage,
+  "social-5": empathyListeningImage,
+  "social-6": socialChallengesImage,
 };
 
 const wellnessResourcesData = {
