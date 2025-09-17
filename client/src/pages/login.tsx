@@ -148,7 +148,7 @@ export default function Login() {
                     disabled={isLoading}
                     data-testid="button-signin"
                   >
-                    {isLoading ? "Signing in..." : "Sign In"}
+                    {isLoading ? "Signing up..." : "Sign Up"}
                   </Button>
                   <Button
                     type="button"
