@@ -12,6 +12,8 @@ class TranslationService {
   private currentLanguage: string = 'en';
   private isTranslating: boolean = false;
   private listeners: Array<(language: string) => void> = [];
+  private translationTimeout: NodeJS.Timeout | null = null;
+  private lastTranslationTime: number = 0;
 
   constructor() {
     // Initialize language from localStorage
@@ -106,8 +108,36 @@ class TranslationService {
       return staticTranslation;
     }
 
-    // Fallback to API translation for non-static content (disable for now due to CORS issues)
-    // For now, return original text to avoid network errors
+    // Fallback to server-side translation or basic text replacement patterns
+    // For Hindi, try common English to Hindi word replacements
+    if (targetLanguage === 'hi') {
+      const commonTranslations: { [key: string]: string } = {
+        'Home': 'होम',
+        'Chat': 'चैट',
+        'Profile': 'प्रोफाइल',
+        'Settings': 'सेटिंग्स',
+        'Help': 'सहायता',
+        'Support': 'समर्थन',
+        'Mental Health': 'मानसिक स्वास्थ्य',
+        'Doctor': 'डॉक्टर',
+        'Screening': 'जांच',
+        'Resources': 'संसाधन',
+        'Community': 'समुदाय',
+        'Dashboard': 'डैशबोर्ड'
+      };
+      
+      // Check for exact matches in common translations
+      if (commonTranslations[trimmedText]) {
+        // Cache the translation
+        if (!this.cache[cacheKey]) {
+          this.cache[cacheKey] = {};
+        }
+        this.cache[cacheKey][targetLanguage] = commonTranslations[trimmedText];
+        return commonTranslations[trimmedText];
+      }
+    }
+    
+    // If no translation found, return original text
     return text;
 
     // TODO: Implement server-side translation endpoint if needed for dynamic content
@@ -147,6 +177,9 @@ class TranslationService {
     
     this.isTranslating = true;
     this.currentLanguage = targetLanguage;
+    this.lastTranslationTime = Date.now();
+
+    console.log('Starting page translation to:', targetLanguage);
 
     try {
       // Get all text nodes in the document
@@ -209,9 +242,10 @@ class TranslationService {
           })
         );
         
-        // Small delay between batches to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // Small delay between batches to avoid overwhelming the UI
+        await new Promise(resolve => setTimeout(resolve, 200));
       }
+      console.log('Page translation completed for:', targetLanguage);
     } catch (error) {
       console.error('Page translation failed:', error);
     } finally {
@@ -233,8 +267,30 @@ class TranslationService {
 
   // Auto-translate current page if language is not English
   async autoTranslateIfNeeded() {
-    if (this.currentLanguage !== 'en' && !this.isTranslating) {
-      await this.translatePage(this.currentLanguage);
+    if (this.currentLanguage === 'en' || this.isTranslating) {
+      return;
+    }
+
+    // Clear any existing timeout
+    if (this.translationTimeout) {
+      clearTimeout(this.translationTimeout);
+    }
+
+    // Debounce translation to prevent too frequent calls
+    const now = Date.now();
+    const timeSinceLastTranslation = now - this.lastTranslationTime;
+    const minimumDelay = 1500; // Wait at least 1.5 seconds between translations
+
+    if (timeSinceLastTranslation < minimumDelay) {
+      // Schedule translation for later
+      this.translationTimeout = setTimeout(() => {
+        this.translatePage(this.currentLanguage);
+      }, minimumDelay - timeSinceLastTranslation);
+    } else {
+      // Translate immediately but with a small delay to let DOM settle
+      this.translationTimeout = setTimeout(() => {
+        this.translatePage(this.currentLanguage);
+      }, 500);
     }
   }
 

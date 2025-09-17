@@ -96,10 +96,10 @@ function Router() {
   // Auto-translate pages when location changes
   useEffect(() => {
     if (isAuthenticated && !isOnboarding) {
-      // Small delay to let the DOM settle before translation
+      // Let the DOM settle and page load completely before checking translation
       const timer = setTimeout(() => {
         translationService.autoTranslateIfNeeded();
-      }, 300);
+      }, 800);
 
       return () => clearTimeout(timer);
     }
