@@ -22,6 +22,7 @@ import { useLocation } from "wouter";
 import GlobalSearch from "@/components/global-search";
 import NotificationCenter from "@/components/notifications/notification-center";
 import CoinDisplay from "@/components/coins/coin-display";
+import { translationService } from "@/lib/translation-service";
 import logoUrl from '@/assets/logo.png';
 
 const languages = [
@@ -56,6 +57,7 @@ export default function Header() {
   const { currentUser, theme, setTheme, logout } = useAppContext();
   const [, setLocation] = useLocation();
   const [selectedLanguage, setSelectedLanguage] = useState("en");
+  const [isTranslating, setIsTranslating] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileDropdowns, setMobileDropdowns] = useState({
     doctorScreening: false,
@@ -74,6 +76,27 @@ export default function Header() {
 
   const getInitials = (firstName?: string, lastName?: string) => {
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
+  };
+
+  const handleLanguageChange = async (languageCode: string) => {
+    if (languageCode === selectedLanguage) return;
+    
+    setIsTranslating(true);
+    setSelectedLanguage(languageCode);
+    
+    try {
+      if (languageCode === 'en') {
+        // Reset to English
+        await translationService.resetToEnglish();
+      } else {
+        // Translate to selected language
+        await translationService.translatePage(languageCode);
+      }
+    } catch (error) {
+      console.error('Translation failed:', error);
+    } finally {
+      setIsTranslating(false);
+    }
   };
 
   return (
@@ -396,7 +419,7 @@ export default function Header() {
                   <Button variant="ghost" size="sm" data-testid="button-language">
                     <Globe className="h-4 w-4 mr-1" />
                     <span className="hidden xl:inline">
-                      {languages.find(l => l.code === selectedLanguage)?.name || "English"}
+                      {isTranslating ? "Translating..." : (languages.find(l => l.code === selectedLanguage)?.name || "English")}
                     </span>
                     <ChevronDown className="h-3 w-3 ml-1" />
                   </Button>
@@ -405,10 +428,14 @@ export default function Header() {
                   {languages.map((lang) => (
                     <DropdownMenuItem
                       key={lang.code}
-                      onClick={() => setSelectedLanguage(lang.code)}
+                      onClick={() => handleLanguageChange(lang.code)}
                       data-testid={`option-language-${lang.code}`}
+                      disabled={isTranslating}
                     >
                       {lang.name}
+                      {isTranslating && selectedLanguage === lang.code && (
+                        <span className="ml-2 text-xs text-muted-foreground">Translating...</span>
+                      )}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
@@ -494,10 +521,14 @@ export default function Header() {
                       {languages.map((lang) => (
                         <DropdownMenuItem
                           key={lang.code}
-                          onClick={() => setSelectedLanguage(lang.code)}
+                          onClick={() => handleLanguageChange(lang.code)}
                           data-testid={`option-language-${lang.code}-mobile`}
+                          disabled={isTranslating}
                         >
                           {lang.name}
+                          {isTranslating && selectedLanguage === lang.code && (
+                            <span className="ml-2 text-xs text-muted-foreground">Translating...</span>
+                          )}
                         </DropdownMenuItem>
                       ))}
                     </DropdownMenuSubContent>
