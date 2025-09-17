@@ -5,6 +5,9 @@ import {
   DropdownMenu, 
   DropdownMenuContent, 
   DropdownMenuItem, 
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import {
@@ -28,8 +31,7 @@ const languages = [
   { code: "ta", name: "தমিழ্" },
 ];
 
-const themeOptions = [
-  // Light themes
+const lightThemes = [
   { value: "light", label: "Light" },
   { value: "coral", label: "Coral Warmth" },
   { value: "sky", label: "Sky Fresh" },
@@ -38,7 +40,9 @@ const themeOptions = [
   { value: "rose", label: "Rose Blush" },
   { value: "peach", label: "Peach Glow" },
   { value: "lavender-light", label: "Lavender Soft" },
-  // Dark themes
+];
+
+const darkThemes = [
   { value: "dark", label: "Dark" },
   { value: "ocean", label: "Ocean Breeze" },
   { value: "sunset", label: "Sunset Warm" },
@@ -342,15 +346,41 @@ export default function Header() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                {themeOptions.map((opt) => (
-                  <DropdownMenuItem
-                    key={opt.value}
-                    onClick={() => setTheme(opt.value as any)}
-                    data-testid={`option-theme-${opt.value}`}
-                  >
-                    {opt.label}
-                  </DropdownMenuItem>
-                ))}
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger data-testid="submenu-light-themes">
+                    <Sun className="h-4 w-4 mr-2" />
+                    Light
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent>
+                    {lightThemes.map((theme) => (
+                      <DropdownMenuItem
+                        key={theme.value}
+                        onClick={() => setTheme(theme.value as any)}
+                        data-testid={`option-theme-${theme.value}`}
+                      >
+                        {theme.label}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
+                
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger data-testid="submenu-dark-themes">
+                    <Moon className="h-4 w-4 mr-2" />
+                    Dark
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent>
+                    {darkThemes.map((theme) => (
+                      <DropdownMenuItem
+                        key={theme.value}
+                        onClick={() => setTheme(theme.value as any)}
+                        data-testid={`option-theme-${theme.value}`}
+                      >
+                        {theme.label}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
               </DropdownMenuContent>
             </DropdownMenu>
 
