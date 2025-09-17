@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppProvider, useAppContext } from "@/context/AppContext";
 import { useUsageAnalytics } from "@/lib/usage-analytics";
+import { translationService } from "@/lib/translation-service";
 import { Brain, User, Music, BookOpen, Video, MessageSquare, Gamepad2, Stethoscope, Play, Radio, Flower, Moon, Save, Phone, ChevronDown, ChevronRight, Pill, Heart, AlarmClock } from "lucide-react";
 import logoUrl from '@/assets/logo.png';
 import { cn } from "@/lib/utils";
@@ -90,6 +91,18 @@ function Router() {
       };
     }
   }, [location, isAuthenticated, isOnboarding, trackAction, trackPageDuration]);
+
+  // Auto-translate pages when location changes
+  useEffect(() => {
+    if (isAuthenticated && !isOnboarding) {
+      // Small delay to let the DOM settle before translation
+      const timer = setTimeout(() => {
+        translationService.autoTranslateIfNeeded();
+      }, 300);
+
+      return () => clearTimeout(timer);
+    }
+  }, [location, isAuthenticated, isOnboarding]);
 
   // Show startup popup first (if not seen before)
   if (showStartupPopup && !isAuthenticated) {

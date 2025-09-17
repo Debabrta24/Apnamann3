@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Bell, Brain, ChevronDown, ChevronRight, Globe, Moon, Sun, Menu, X, Stethoscope, Play, Radio, Flower, Gamepad2, Music, Video, BookOpen, Phone, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -56,7 +56,7 @@ const darkThemes = [
 export default function Header() {
   const { currentUser, theme, setTheme, logout } = useAppContext();
   const [, setLocation] = useLocation();
-  const [selectedLanguage, setSelectedLanguage] = useState("en");
+  const [selectedLanguage, setSelectedLanguage] = useState(() => translationService.getCurrentLanguage());
   const [isTranslating, setIsTranslating] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileDropdowns, setMobileDropdowns] = useState({
@@ -74,6 +74,15 @@ export default function Header() {
     }));
   };
 
+  // Listen for global language changes
+  useEffect(() => {
+    const unsubscribe = translationService.addLanguageChangeListener((language) => {
+      setSelectedLanguage(language);
+    });
+
+    return unsubscribe;
+  }, []);
+
   const getInitials = (firstName?: string, lastName?: string) => {
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
   };
@@ -82,9 +91,11 @@ export default function Header() {
     if (languageCode === selectedLanguage) return;
     
     setIsTranslating(true);
-    setSelectedLanguage(languageCode);
     
     try {
+      // Set language globally - this will trigger translation service
+      translationService.setCurrentLanguage(languageCode);
+      
       if (languageCode === 'en') {
         // Reset to English
         await translationService.resetToEnglish();

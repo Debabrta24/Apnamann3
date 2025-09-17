@@ -1,4 +1,6 @@
 // Translation service for real-time language translation
+import { getTranslation, staticTranslations } from './static-translations';
+
 export interface TranslationCache {
   [key: string]: {
     [languageCode: string]: string;
@@ -9,6 +11,57 @@ class TranslationService {
   private cache: TranslationCache = {};
   private currentLanguage: string = 'en';
   private isTranslating: boolean = false;
+  private listeners: Array<(language: string) => void> = [];
+
+  constructor() {
+    // Initialize language from localStorage
+    try {
+      this.currentLanguage = localStorage.getItem('apnamaan_language') || 'en';
+    } catch {
+      this.currentLanguage = 'en';
+    }
+  }
+
+  // Get stored language from localStorage
+  private getStoredLanguage(): string {
+    try {
+      return localStorage.getItem('apnamaan_language') || 'en';
+    } catch {
+      return 'en';
+    }
+  }
+
+  // Store language selection in localStorage
+  private setStoredLanguage(languageCode: string): void {
+    try {
+      localStorage.setItem('apnamaan_language', languageCode);
+    } catch {
+      // Silently fail if localStorage is not available
+    }
+  }
+
+  // Add listener for language changes
+  addLanguageChangeListener(listener: (language: string) => void): () => void {
+    this.listeners.push(listener);
+    // Return unsubscribe function
+    return () => {
+      const index = this.listeners.indexOf(listener);
+      if (index > -1) {
+        this.listeners.splice(index, 1);
+      }
+    };
+  }
+
+  // Notify all listeners of language change
+  private notifyLanguageChange(language: string): void {
+    this.listeners.forEach(listener => {
+      try {
+        listener(language);
+      } catch (error) {
+        console.warn('Language change listener error:', error);
+      }
+    });
+  }
 
   // Language code mappings for Google Translate API
   private languageMap: { [key: string]: string } = {
@@ -21,75 +74,71 @@ class TranslationService {
 
   setCurrentLanguage(languageCode: string) {
     this.currentLanguage = languageCode;
+    this.setStoredLanguage(languageCode);
+    this.notifyLanguageChange(languageCode);
   }
 
   getCurrentLanguage(): string {
     return this.currentLanguage;
   }
 
-  // Translate text using Google Translate (free tier) with CORS proxy
+  // Translate text using static translations with API fallback
   async translateText(text: string, targetLanguage: string): Promise<string> {
     if (!text || text.trim() === '') return text;
     if (targetLanguage === 'en') return text;
 
+    const trimmedText = text.trim();
+    const cacheKey = trimmedText.toLowerCase();
+
     // Check cache first
-    const cacheKey = text.trim().toLowerCase();
     if (this.cache[cacheKey] && this.cache[cacheKey][targetLanguage]) {
       return this.cache[cacheKey][targetLanguage];
     }
 
+    // Try static translations first (instant and reliable)
+    const staticTranslation = getTranslation(trimmedText, targetLanguage);
+    if (staticTranslation !== trimmedText) {
+      // Cache the static translation
+      if (!this.cache[cacheKey]) {
+        this.cache[cacheKey] = {};
+      }
+      this.cache[cacheKey][targetLanguage] = staticTranslation;
+      return staticTranslation;
+    }
+
+    // Fallback to API translation for non-static content (disable for now due to CORS issues)
+    // For now, return original text to avoid network errors
+    return text;
+
+    // TODO: Implement server-side translation endpoint if needed for dynamic content
+    /*
     try {
       // Use Google Translate via CORS proxy
       const encodedText = encodeURIComponent(text);
       const targetLang = this.languageMap[targetLanguage] || targetLanguage;
       
-      // Try multiple translation endpoints
-      const endpoints = [
-        `https://api.allorigins.win/get?url=${encodeURIComponent(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLang}&dt=t&q=${encodedText}`)}`,
-        `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLang}&dt=t&q=${encodedText}`
-      ];
+      // Try direct API call (may fail due to CORS)
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLang}&dt=t&q=${encodedText}`;
+      const response = await fetch(url);
+      const result = await response.json();
       
-      for (const url of endpoints) {
-        try {
-          const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-              'Accept': 'application/json',
-            }
-          });
-          
-          if (!response.ok) continue;
-          
-          let result;
-          if (url.includes('allorigins.win')) {
-            const data = await response.json();
-            result = JSON.parse(data.contents);
-          } else {
-            result = await response.json();
-          }
-          
-          if (result && result[0] && result[0][0] && result[0][0][0]) {
-            const translatedText = result[0][0][0];
-            
-            // Cache the translation
-            if (!this.cache[cacheKey]) {
-              this.cache[cacheKey] = {};
-            }
-            this.cache[cacheKey][targetLanguage] = translatedText;
-            
-            return translatedText;
-          }
-        } catch (endpointError) {
-          console.warn(`Translation endpoint failed: ${url}`, endpointError);
-          continue;
+      if (result && result[0] && result[0][0] && result[0][0][0]) {
+        const translatedText = result[0][0][0];
+        
+        // Cache the translation
+        if (!this.cache[cacheKey]) {
+          this.cache[cacheKey] = {};
         }
+        this.cache[cacheKey][targetLanguage] = translatedText;
+        
+        return translatedText;
       }
       
-      return text; // Return original text if all endpoints fail
+      return text;
     } catch (error) {
-      console.warn('Translation failed:', error);
       return text; // Return original text on error
     }
+    */
   }
 
   // Translate all text nodes in the page
@@ -180,6 +229,18 @@ class TranslationService {
 
   isCurrentlyTranslating(): boolean {
     return this.isTranslating;
+  }
+
+  // Auto-translate current page if language is not English
+  async autoTranslateIfNeeded() {
+    if (this.currentLanguage !== 'en' && !this.isTranslating) {
+      await this.translatePage(this.currentLanguage);
+    }
+  }
+
+  // Check if auto-translation is needed
+  shouldAutoTranslate(): boolean {
+    return this.currentLanguage !== 'en';
   }
 
   // Clear translation cache
