@@ -141,14 +141,23 @@ export default function Login() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2" data-testid="row-auth-buttons">
+                <div className="grid grid-cols-3 gap-1" data-testid="row-auth-buttons">
                   <Button
                     type="submit"
                     className="h-9 text-xs bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary font-medium"
                     disabled={isLoading}
-                    data-testid="button-login"
+                    data-testid="button-signin"
                   >
                     {isLoading ? "Signing in..." : "Sign In"}
+                  </Button>
+                  <Button
+                    type="button"
+                    className="h-9 text-xs bg-gradient-to-r from-secondary to-secondary/90 hover:from-secondary/90 hover:to-secondary font-medium"
+                    onClick={handleLogin}
+                    disabled={isLoading}
+                    data-testid="button-login"
+                  >
+                    {isLoading ? "Logging in..." : "Login"}
                   </Button>
                   <Button
                     variant="outline"
