@@ -40,6 +40,7 @@ import RoutinePage from "@/pages/routine";
 import SavedContent from "@/pages/saved";
 import MedicineAlarmPage from "@/pages/medicine-alarm";
 import Showcase from "@/pages/showcase";
+import ParentPortal from "@/pages/parent-portal";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -363,6 +364,7 @@ function Router() {
               <Route path="/routine" component={RoutinePage} />
               <Route path="/saved" component={SavedContent} />
               <Route path="/medicine-alarm" component={MedicineAlarmPage} />
+              <Route path="/parent-portal" component={ParentPortal} />
               <Route path="/admin" component={Admin} />
               <Route path="/profile" component={Profile} />
               <Route component={NotFound} />

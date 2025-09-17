@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Brain, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Brain, Mail, Lock, Eye, EyeOff, Users } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAppContext } from "@/context/AppContext";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
 import logoUrl from '@/assets/logo.png';
 
 export default function Login() {
@@ -16,6 +17,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAppContext();
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -187,6 +189,24 @@ export default function Login() {
               All conversations and data are confidential. This platform uses secure encryption 
               and follows strict privacy guidelines to protect your mental health information.
             </p>
+          </div>
+
+          <div className="mt-6 p-4 bg-secondary/20 rounded-lg border-2 border-dashed border-secondary">
+            <div className="text-center">
+              <Users className="h-8 w-8 mx-auto text-primary mb-2" />
+              <h4 className="text-sm font-medium text-foreground mb-2">Are you a parent?</h4>
+              <p className="text-xs text-muted-foreground mb-4">
+                Access the parent portal to monitor your child's mental health journey and connect with support resources.
+              </p>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => setLocation("/parent-portal")}
+                data-testid="button-parent-portal"
+              >
+                Access Parent Portal
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
