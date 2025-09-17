@@ -103,6 +103,40 @@ export default function ParentPortal() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Mental Health Pronunciation Notice */}
+        <Card className="mb-8 border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-secondary/5">
+          <CardContent className="p-6">
+            <div className="flex items-start space-x-4">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <Lightbulb className="h-6 w-6 text-primary" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-foreground mb-2 flex items-center">
+                  <span>Important Language Clarification</span>
+                  <Heart className="h-5 w-5 text-red-500 ml-2" />
+                </h3>
+                <div className="space-y-3">
+                  <p className="text-sm text-muted-foreground">
+                    <strong>Please note:</strong> When discussing "Mental Health" with your child, they might initially hear "Metal" instead of "Health" due to pronunciation. 
+                    This is completely normal! Please speak clearly and help them understand that we're talking about <strong>Mental HEALTH</strong> - 
+                    taking care of our minds, emotions, and feelings, just like we take care of our physical health.
+                  </p>
+                  <div className="bg-primary/10 rounded-lg p-4 border border-primary/20">
+                    <p className="text-sm font-medium text-foreground mb-2">💡 <strong>Motivational Message:</strong></p>
+                    <p className="text-sm text-primary italic">
+                      "Mental health is not a destination, but a process. It's about how you drive, not where you're going. 
+                      Your child's emotional well-being matters, and seeking support shows strength, not weakness."
+                    </p>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Remember: Clear communication about mental health creates a foundation for trust and understanding.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 h-auto p-2">
             <TabsTrigger value="signs" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center space-x-2 py-3" data-testid="tab-warning-signs">
