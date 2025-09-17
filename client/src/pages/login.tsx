@@ -196,7 +196,7 @@ export default function Login() {
                   <Users className="h-5 w-5 mx-auto text-secondary mb-1" />
                   <h4 className="font-medium text-foreground mb-1">Parent Portal</h4>
                   <p className="text-muted-foreground mb-2 leading-tight">
-                    <span className="font-bold text-foreground">Check your child's mental health</span>
+                    <span className="font-bold text-foreground">Register as a student parent</span>
                   </p>
                   <Button
                     variant="outline"
