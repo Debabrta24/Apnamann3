@@ -91,8 +91,8 @@ export default function Login() {
         </CardHeader>
         
         <CardContent className="p-4 flex-1 overflow-y-auto">
-          <div className="grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-4 h-full">
-            {/* Left Column - Main Login */}
+          <div className="space-y-4">
+            {/* Main Login Form */}
             <div className="space-y-2">
               <form onSubmit={handleLogin} className="space-y-2">
                 <div className="space-y-1">
@@ -164,7 +164,7 @@ export default function Login() {
               </form>
             </div>
 
-            {/* Right Column - Additional Info */}
+            {/* Additional Info Sections */}
             <div className="space-y-2">
               <div className="text-center text-[13px] text-muted-foreground p-3 bg-gradient-to-br from-muted/40 to-muted/20 backdrop-blur-sm rounded-lg border border-white/10">
                 <p className="font-medium mb-1 text-foreground">New User?</p>
