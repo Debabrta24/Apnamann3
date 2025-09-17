@@ -25,11 +25,21 @@ const languages = [
   { code: "en", name: "English" },
   { code: "hi", name: "हिंदी" },
   { code: "bn", name: "বাংলা" },
-  { code: "ta", name: "தமிழ்" },
+  { code: "ta", name: "தমিழ্" },
+];
+
+const themeOptions = [
+  { value: "light", label: "Light" },
+  { value: "dark", label: "Dark" },
+  { value: "ocean", label: "Ocean Breeze" },
+  { value: "sunset", label: "Sunset Warm" },
+  { value: "forest", label: "Forest Calm" },
+  { value: "lavender", label: "Lavender Dreams" },
+  { value: "cosmic", label: "Cosmic Space" },
 ];
 
 export default function Header() {
-  const { currentUser, theme, toggleTheme, logout } = useAppContext();
+  const { currentUser, theme, setTheme, logout } = useAppContext();
   const [, setLocation] = useLocation();
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -314,14 +324,26 @@ export default function Header() {
               <CoinDisplay userId={currentUser.id} />
             )}
 
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleTheme}
-              data-testid="button-theme-toggle"
-            >
-              {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" data-testid="button-theme">
+                  {theme === "dark" ? <Moon className="h-4 w-4 mr-1" /> : <Sun className="h-4 w-4 mr-1" />}
+                  Theme
+                  <ChevronDown className="h-3 w-3 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {themeOptions.map((opt) => (
+                  <DropdownMenuItem
+                    key={opt.value}
+                    onClick={() => setTheme(opt.value as any)}
+                    data-testid={`option-theme-${opt.value}`}
+                  >
+                    {opt.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
