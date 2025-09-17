@@ -8,7 +8,7 @@ interface ChatMessage {
   timestamp: Date;
 }
 
-export type ThemeType = "light" | "dark" | "ocean" | "sunset" | "forest" | "lavender" | "cosmic" | "coral" | "sky";
+export type ThemeType = "light" | "dark" | "ocean" | "sunset" | "forest" | "lavender" | "cosmic" | "coral" | "sky" | "mint" | "cream" | "rose" | "peach" | "lavender-light";
 
 interface AppContextType {
   currentUser: User | null;
@@ -107,7 +107,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
   useEffect(() => {
     const root = window.document.documentElement;
-    root.classList.remove("light", "dark", "ocean", "sunset", "forest", "lavender", "cosmic", "coral", "sky");
+    root.classList.remove("light", "dark", "ocean", "sunset", "forest", "lavender", "cosmic", "coral", "sky", "mint", "cream", "rose", "peach", "lavender-light");
     root.classList.add(theme);
     localStorage.setItem("theme", theme);
   }, [theme]);

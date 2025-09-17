@@ -375,6 +375,246 @@
   --sidebar-ring: hsl(200 85% 55%);
 }
 
+/* Mint Theme - Fresh greens and whites light mode */
+.mint {
+  --background: hsl(150 40% 98%);
+  --foreground: hsl(150 25% 15%);
+  --card: hsl(150 30% 96%);
+  --card-foreground: hsl(150 25% 18%);
+  --popover: hsl(150 40% 98%);
+  --popover-foreground: hsl(150 25% 15%);
+  --primary: hsl(150 65% 50%); /* Fresh mint */
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(150 40% 94%); /* Soft mint background */
+  --secondary-foreground: hsl(150 35% 25%);
+  --muted: hsl(150 25% 92%); /* Light mint-gray */
+  --muted-foreground: hsl(150 20% 45%);
+  --accent: hsl(170 50% 88%); /* Soft teal */
+  --accent-foreground: hsl(170 45% 25%);
+  --wellness: hsl(150 60% 55%); /* Mint wellness */
+  --wellness-foreground: hsl(0 0% 100%);
+  --focus: hsl(160 55% 85%); /* Soft mint-blue */
+  --focus-foreground: hsl(160 50% 25%);
+  --calm: hsl(140 45% 88%); /* Light green */
+  --calm-foreground: hsl(140 40% 25%);
+  --hope: hsl(60 75% 75%); /* Soft lime */
+  --hope-foreground: hsl(60 55% 25%);
+  --healing: hsl(120 35% 85%); /* Soft sage */
+  --healing-foreground: hsl(120 30% 25%);
+  --nature: hsl(135 40% 82%); /* Natural green */
+  --nature-foreground: hsl(135 45% 20%);
+  --destructive: hsl(15 70% 60%); /* Soft red */
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(150 20% 85%);
+  --input: hsl(150 30% 96%);
+  --ring: hsl(150 65% 50%);
+  --chart-1: hsl(150 65% 50%);
+  --chart-2: hsl(170 50% 65%);
+  --chart-3: hsl(60 75% 65%);
+  --chart-4: hsl(140 45% 65%);
+  --chart-5: hsl(120 35% 65%);
+  --sidebar: hsl(150 30% 96%);
+  --sidebar-foreground: hsl(150 25% 18%);
+  --sidebar-primary: hsl(150 65% 50%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(150 40% 90%);
+  --sidebar-accent-foreground: hsl(150 35% 30%);
+  --sidebar-border: hsl(150 20% 82%);
+  --sidebar-ring: hsl(150 65% 50%);
+}
+
+/* Cream Theme - Warm beiges and creams light mode */
+.cream {
+  --background: hsl(40 30% 98%);
+  --foreground: hsl(30 20% 15%);
+  --card: hsl(40 25% 96%);
+  --card-foreground: hsl(30 20% 18%);
+  --popover: hsl(40 30% 98%);
+  --popover-foreground: hsl(30 20% 15%);
+  --primary: hsl(35 55% 50%); /* Warm brown */
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(40 35% 94%); /* Soft cream background */
+  --secondary-foreground: hsl(40 30% 25%);
+  --muted: hsl(35 20% 92%); /* Light cream */
+  --muted-foreground: hsl(35 15% 45%);
+  --accent: hsl(45 40% 88%); /* Soft yellow */
+  --accent-foreground: hsl(45 35% 25%);
+  --wellness: hsl(35 50% 55%); /* Warm cream */
+  --wellness-foreground: hsl(0 0% 100%);
+  --focus: hsl(50 45% 85%); /* Soft butter */
+  --focus-foreground: hsl(50 40% 25%);
+  --calm: hsl(30 35% 88%); /* Light beige */
+  --calm-foreground: hsl(30 30% 25%);
+  --hope: hsl(55 70% 75%); /* Warm yellow */
+  --hope-foreground: hsl(55 50% 25%);
+  --healing: hsl(25 30% 85%); /* Soft tan */
+  --healing-foreground: hsl(25 25% 25%);
+  --nature: hsl(70 30% 82%); /* Soft olive */
+  --nature-foreground: hsl(70 35% 20%);
+  --destructive: hsl(15 70% 60%); /* Soft red */
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(35 15% 85%);
+  --input: hsl(40 25% 96%);
+  --ring: hsl(35 55% 50%);
+  --chart-1: hsl(35 55% 50%);
+  --chart-2: hsl(45 40% 65%);
+  --chart-3: hsl(55 70% 65%);
+  --chart-4: hsl(30 35% 65%);
+  --chart-5: hsl(70 30% 65%);
+  --sidebar: hsl(40 25% 96%);
+  --sidebar-foreground: hsl(30 20% 18%);
+  --sidebar-primary: hsl(35 55% 50%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(40 35% 90%);
+  --sidebar-accent-foreground: hsl(40 30% 30%);
+  --sidebar-border: hsl(35 15% 82%);
+  --sidebar-ring: hsl(35 55% 50%);
+}
+
+/* Rose Theme - Soft pinks and roses light mode */
+.rose {
+  --background: hsl(340 40% 98%);
+  --foreground: hsl(340 20% 15%);
+  --card: hsl(340 30% 96%);
+  --card-foreground: hsl(340 20% 18%);
+  --popover: hsl(340 40% 98%);
+  --popover-foreground: hsl(340 20% 15%);
+  --primary: hsl(340 65% 55%); /* Rose pink */
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(340 35% 94%); /* Soft rose background */
+  --secondary-foreground: hsl(340 30% 25%);
+  --muted: hsl(340 20% 92%); /* Light rose-gray */
+  --muted-foreground: hsl(340 15% 45%);
+  --accent: hsl(320 45% 88%); /* Soft magenta */
+  --accent-foreground: hsl(320 40% 25%);
+  --wellness: hsl(340 60% 60%); /* Rose wellness */
+  --wellness-foreground: hsl(0 0% 100%);
+  --focus: hsl(350 50% 85%); /* Soft pink */
+  --focus-foreground: hsl(350 45% 25%);
+  --calm: hsl(330 40% 88%); /* Light rose */
+  --calm-foreground: hsl(330 35% 25%);
+  --hope: hsl(45 80% 75%); /* Warm gold */
+  --hope-foreground: hsl(45 60% 25%);
+  --healing: hsl(320 35% 85%); /* Soft lavender-pink */
+  --healing-foreground: hsl(320 30% 25%);
+  --nature: hsl(120 30% 82%); /* Soft green */
+  --nature-foreground: hsl(120 35% 20%);
+  --destructive: hsl(15 70% 60%); /* Soft red */
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(340 15% 85%);
+  --input: hsl(340 30% 96%);
+  --ring: hsl(340 65% 55%);
+  --chart-1: hsl(340 65% 55%);
+  --chart-2: hsl(320 45% 65%);
+  --chart-3: hsl(45 80% 65%);
+  --chart-4: hsl(350 50% 65%);
+  --chart-5: hsl(330 40% 65%);
+  --sidebar: hsl(340 30% 96%);
+  --sidebar-foreground: hsl(340 20% 18%);
+  --sidebar-primary: hsl(340 65% 55%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(340 35% 90%);
+  --sidebar-accent-foreground: hsl(340 30% 30%);
+  --sidebar-border: hsl(340 15% 82%);
+  --sidebar-ring: hsl(340 65% 55%);
+}
+
+/* Peach Theme - Warm peaches and oranges light mode */
+.peach {
+  --background: hsl(25 45% 98%);
+  --foreground: hsl(25 25% 15%);
+  --card: hsl(25 35% 96%);
+  --card-foreground: hsl(25 25% 18%);
+  --popover: hsl(25 45% 98%);
+  --popover-foreground: hsl(25 25% 15%);
+  --primary: hsl(25 75% 60%); /* Peach orange */
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(25 40% 94%); /* Soft peach background */
+  --secondary-foreground: hsl(25 35% 25%);
+  --muted: hsl(25 25% 92%); /* Light peach-cream */
+  --muted-foreground: hsl(25 20% 45%);
+  --accent: hsl(35 50% 88%); /* Soft apricot */
+  --accent-foreground: hsl(35 45% 25%);
+  --wellness: hsl(25 70% 65%); /* Peach wellness */
+  --wellness-foreground: hsl(0 0% 100%);
+  --focus: hsl(30 55% 85%); /* Soft orange */
+  --focus-foreground: hsl(30 50% 25%);
+  --calm: hsl(20 40% 88%); /* Light peach */
+  --calm-foreground: hsl(20 35% 25%);
+  --hope: hsl(50 85% 75%); /* Bright yellow */
+  --hope-foreground: hsl(50 65% 25%);
+  --healing: hsl(15 35% 85%); /* Soft coral */
+  --healing-foreground: hsl(15 30% 25%);
+  --nature: hsl(90 35% 82%); /* Soft lime */
+  --nature-foreground: hsl(90 40% 20%);
+  --destructive: hsl(10 75% 60%); /* Soft red */
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(25 20% 85%);
+  --input: hsl(25 35% 96%);
+  --ring: hsl(25 75% 60%);
+  --chart-1: hsl(25 75% 60%);
+  --chart-2: hsl(35 50% 65%);
+  --chart-3: hsl(50 85% 65%);
+  --chart-4: hsl(30 55% 65%);
+  --chart-5: hsl(20 40% 65%);
+  --sidebar: hsl(25 35% 96%);
+  --sidebar-foreground: hsl(25 25% 18%);
+  --sidebar-primary: hsl(25 75% 60%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(25 40% 90%);
+  --sidebar-accent-foreground: hsl(25 35% 30%);
+  --sidebar-border: hsl(25 20% 82%);
+  --sidebar-ring: hsl(25 75% 60%);
+}
+
+/* Lavender Light Theme - Soft purples light mode */
+.lavender-light {
+  --background: hsl(270 35% 98%);
+  --foreground: hsl(270 20% 15%);
+  --card: hsl(270 25% 96%);
+  --card-foreground: hsl(270 20% 18%);
+  --popover: hsl(270 35% 98%);
+  --popover-foreground: hsl(270 20% 15%);
+  --primary: hsl(270 55% 60%); /* Soft lavender */
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(270 30% 94%); /* Soft lavender background */
+  --secondary-foreground: hsl(270 25% 25%);
+  --muted: hsl(270 15% 92%); /* Light lavender-gray */
+  --muted-foreground: hsl(270 10% 45%);
+  --accent: hsl(280 40% 88%); /* Soft violet */
+  --accent-foreground: hsl(280 35% 25%);
+  --wellness: hsl(270 50% 65%); /* Lavender wellness */
+  --wellness-foreground: hsl(0 0% 100%);
+  --focus: hsl(260 45% 85%); /* Soft periwinkle */
+  --focus-foreground: hsl(260 40% 25%);
+  --calm: hsl(280 35% 88%); /* Light violet */
+  --calm-foreground: hsl(280 30% 25%);
+  --hope: hsl(55 75% 75%); /* Soft yellow */
+  --hope-foreground: hsl(55 55% 25%);
+  --healing: hsl(290 30% 85%); /* Soft mauve */
+  --healing-foreground: hsl(290 25% 25%);
+  --nature: hsl(140 30% 82%); /* Soft mint */
+  --nature-foreground: hsl(140 35% 20%);
+  --destructive: hsl(15 70% 60%); /* Soft red */
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(270 10% 85%);
+  --input: hsl(270 25% 96%);
+  --ring: hsl(270 55% 60%);
+  --chart-1: hsl(270 55% 60%);
+  --chart-2: hsl(280 40% 65%);
+  --chart-3: hsl(55 75% 65%);
+  --chart-4: hsl(260 45% 65%);
+  --chart-5: hsl(290 30% 65%);
+  --sidebar: hsl(270 25% 96%);
+  --sidebar-foreground: hsl(270 20% 18%);
+  --sidebar-primary: hsl(270 55% 60%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(270 30% 90%);
+  --sidebar-accent-foreground: hsl(270 25% 30%);
+  --sidebar-border: hsl(270 10% 82%);
+  --sidebar-ring: hsl(270 55% 60%);
+}
+
 @layer base {
   * {
     @apply border-border;

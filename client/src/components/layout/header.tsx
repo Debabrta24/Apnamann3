@@ -33,6 +33,11 @@ const themeOptions = [
   { value: "light", label: "Light" },
   { value: "coral", label: "Coral Warmth" },
   { value: "sky", label: "Sky Fresh" },
+  { value: "mint", label: "Mint Fresh" },
+  { value: "cream", label: "Cream Comfort" },
+  { value: "rose", label: "Rose Blush" },
+  { value: "peach", label: "Peach Glow" },
+  { value: "lavender-light", label: "Lavender Soft" },
   // Dark themes
   { value: "dark", label: "Dark" },
   { value: "ocean", label: "Ocean Breeze" },
