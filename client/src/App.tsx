@@ -111,6 +111,7 @@ function Router() {
       <>
         <Switch>
           <Route path="/parent-portal" component={ParentPortal} />
+          <Route path="/privacy" component={Privacy} />
           <Route component={Login} />
         </Switch>
         <StartupPopup 
@@ -126,6 +127,7 @@ function Router() {
     return (
       <Switch>
         <Route path="/parent-portal" component={ParentPortal} />
+        <Route path="/privacy" component={Privacy} />
         <Route component={Login} />
       </Switch>
     );
