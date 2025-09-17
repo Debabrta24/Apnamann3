@@ -36,6 +36,8 @@ const themeOptions = [
   { value: "forest", label: "Forest Calm" },
   { value: "lavender", label: "Lavender Dreams" },
   { value: "cosmic", label: "Cosmic Space" },
+  { value: "coral", label: "Coral Warmth" },
+  { value: "sky", label: "Sky Fresh" },
 ];
 
 export default function Header() {
