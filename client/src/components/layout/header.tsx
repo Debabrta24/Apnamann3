@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Bell, Brain, ChevronDown, ChevronRight, Globe, Moon, Sun, Menu, X, Stethoscope, Play, Radio, Flower, Gamepad2, Music, Video, BookOpen, Phone, Save } from "lucide-react";
+import { useState } from "react";
+import { ChevronDown, ChevronRight, Globe, Moon, Sun, Menu, Stethoscope, Flower, Gamepad2, BookOpen, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
@@ -22,7 +22,7 @@ import { useLocation } from "wouter";
 import GlobalSearch from "@/components/global-search";
 import NotificationCenter from "@/components/notifications/notification-center";
 import CoinDisplay from "@/components/coins/coin-display";
-import { translationService } from "@/lib/translation-service";
+import { useTranslation } from "@/hooks/use-translation";
 import logoUrl from '@/assets/logo.png';
 
 const languages = [
@@ -56,8 +56,7 @@ const darkThemes = [
 export default function Header() {
   const { currentUser, theme, setTheme, logout } = useAppContext();
   const [, setLocation] = useLocation();
-  const [selectedLanguage, setSelectedLanguage] = useState(() => translationService.getCurrentLanguage());
-  const [isTranslating, setIsTranslating] = useState(false);
+  const { ts, changeLanguage, currentLanguage, isTranslating } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileDropdowns, setMobileDropdowns] = useState({
     doctorScreening: false,
@@ -74,40 +73,17 @@ export default function Header() {
     }));
   };
 
-  // Listen for global language changes
-  useEffect(() => {
-    const unsubscribe = translationService.addLanguageChangeListener((language) => {
-      setSelectedLanguage(language);
-    });
-
-    return unsubscribe;
-  }, []);
+  // Note: Language change listening is now handled by useTranslation hook
 
   const getInitials = (firstName?: string, lastName?: string) => {
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
   };
 
-  const handleLanguageChange = async (languageCode: string) => {
-    if (languageCode === selectedLanguage) return;
+  const handleLanguageChange = (languageCode: string) => {
+    if (languageCode === currentLanguage) return;
     
-    setIsTranslating(true);
-    
-    try {
-      // Set language globally - this will trigger translation service
-      translationService.setCurrentLanguage(languageCode);
-      
-      if (languageCode === 'en') {
-        // Reset to English
-        await translationService.resetToEnglish();
-      } else {
-        // Translate to selected language
-        await translationService.translatePage(languageCode);
-      }
-    } catch (error) {
-      console.error('Translation failed:', error);
-    } finally {
-      setIsTranslating(false);
-    }
+    // Use the React hook approach - this will trigger re-renders automatically
+    changeLanguage(languageCode);
   };
 
   return (
@@ -146,7 +122,7 @@ export default function Header() {
               </SheetTrigger>
               <SheetContent side="left" className="w-[280px] sm:w-[350px] overflow-y-auto">
                 <SheetHeader>
-                  <SheetTitle className="text-left">Navigation</SheetTitle>
+                  <SheetTitle className="text-left">{ts("Navigation")}</SheetTitle>
                 </SheetHeader>
                 <div className="mb-6">
                   <GlobalSearch />
@@ -167,7 +143,7 @@ export default function Header() {
                       }}
                       data-testid={item.testId}
                     >
-                      {item.label}
+                      {ts(item.label)}
                     </Button>
                   ))}
                   
@@ -180,7 +156,7 @@ export default function Header() {
                     >
                       <div className="flex items-center gap-2">
                         <Stethoscope className="h-4 w-4" />
-                        <span>Doctor/Screening</span>
+                        <span>{ts("Doctor/Screening")}</span>
                       </div>
                       {mobileDropdowns.doctorScreening ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                     </Button>
@@ -201,7 +177,7 @@ export default function Header() {
                             }}
                             data-testid={item.testId}
                           >
-                            {item.label}
+                            {ts(item.label)}
                           </Button>
                         ))}
                       </div>
@@ -217,7 +193,7 @@ export default function Header() {
                     >
                       <div className="flex items-center gap-2">
                         <Flower className="h-4 w-4" />
-                        <span>Wellness</span>
+                        <span>{ts("Wellness")}</span>
                       </div>
                       {mobileDropdowns.wellness ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                     </Button>
@@ -238,7 +214,7 @@ export default function Header() {
                             }}
                             data-testid={item.testId}
                           >
-                            {item.label}
+                            {ts(item.label)}
                           </Button>
                         ))}
                       </div>
@@ -254,7 +230,7 @@ export default function Header() {
                     >
                       <div className="flex items-center gap-2">
                         <Gamepad2 className="h-4 w-4" />
-                        <span>Relax & Refresh</span>
+                        <span>{ts("Relax & Refresh")}</span>
                       </div>
                       {mobileDropdowns.relaxRefresh ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                     </Button>
@@ -276,7 +252,7 @@ export default function Header() {
                             }}
                             data-testid={item.testId}
                           >
-                            {item.label}
+                            {ts(item.label)}
                           </Button>
                         ))}
                       </div>
@@ -292,7 +268,7 @@ export default function Header() {
                     >
                       <div className="flex items-center gap-2">
                         <BookOpen className="h-4 w-4" />
-                        <span>Community</span>
+                        <span>{ts("Community")}</span>
                       </div>
                       {mobileDropdowns.community ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                     </Button>
@@ -312,7 +288,7 @@ export default function Header() {
                             }}
                             data-testid={item.testId}
                           >
-                            {item.label}
+                            {ts(item.label)}
                           </Button>
                         ))}
                       </div>
@@ -328,7 +304,7 @@ export default function Header() {
                     >
                       <div className="flex items-center gap-2">
                         <Save className="h-4 w-4" />
-                        <span>My Space</span>
+                        <span>{ts("My Space")}</span>
                       </div>
                       {mobileDropdowns.mySpace ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                     </Button>
@@ -348,7 +324,7 @@ export default function Header() {
                             }}
                             data-testid={item.testId}
                           >
-                            {item.label}
+                            {ts(item.label)}
                           </Button>
                         ))}
                       </div>
@@ -382,7 +358,7 @@ export default function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" data-testid="button-theme">
                     {theme === "dark" ? <Moon className="h-4 w-4 mr-1" /> : <Sun className="h-4 w-4 mr-1" />}
-                    <span className="hidden xl:inline">Theme</span>
+                    <span className="hidden xl:inline">{ts("Theme")}</span>
                     <ChevronDown className="h-3 w-3 ml-1" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -390,7 +366,7 @@ export default function Header() {
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger data-testid="submenu-light-themes">
                       <Sun className="h-4 w-4 mr-2" />
-                      Light
+                      {ts("Light")}
                     </DropdownMenuSubTrigger>
                     <DropdownMenuSubContent>
                       {lightThemes.map((theme) => (
@@ -399,7 +375,7 @@ export default function Header() {
                           onClick={() => setTheme(theme.value as any)}
                           data-testid={`option-theme-${theme.value}`}
                         >
-                          {theme.label}
+                          {ts(theme.label)}
                         </DropdownMenuItem>
                       ))}
                     </DropdownMenuSubContent>
@@ -408,7 +384,7 @@ export default function Header() {
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger data-testid="submenu-dark-themes">
                       <Moon className="h-4 w-4 mr-2" />
-                      Dark
+                      {ts("Dark")}
                     </DropdownMenuSubTrigger>
                     <DropdownMenuSubContent>
                       {darkThemes.map((theme) => (
@@ -417,7 +393,7 @@ export default function Header() {
                           onClick={() => setTheme(theme.value as any)}
                           data-testid={`option-theme-${theme.value}`}
                         >
-                          {theme.label}
+                          {ts(theme.label)}
                         </DropdownMenuItem>
                       ))}
                     </DropdownMenuSubContent>
@@ -430,7 +406,7 @@ export default function Header() {
                   <Button variant="ghost" size="sm" data-testid="button-language">
                     <Globe className="h-4 w-4 mr-1" />
                     <span className="hidden xl:inline">
-                      {isTranslating ? "Translating..." : (languages.find(l => l.code === selectedLanguage)?.name || "English")}
+                      {isTranslating ? ts("Translating...") : (languages.find(l => l.code === currentLanguage)?.name || ts("English"))}
                     </span>
                     <ChevronDown className="h-3 w-3 ml-1" />
                   </Button>
@@ -444,8 +420,8 @@ export default function Header() {
                       disabled={isTranslating}
                     >
                       {lang.name}
-                      {isTranslating && selectedLanguage === lang.code && (
-                        <span className="ml-2 text-xs text-muted-foreground">Translating...</span>
+                      {isTranslating && currentLanguage === lang.code && (
+                        <span className="ml-2 text-xs text-muted-foreground">{ts("Translating...")}</span>
                       )}
                     </DropdownMenuItem>
                   ))}
@@ -467,14 +443,14 @@ export default function Header() {
                   onClick={() => setLocation("/profile")}
                   data-testid="menu-item-profile"
                 >
-                  Profile & Settings
+                  {ts("Profile & Settings")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setLocation("/admin")}
                   data-testid="menu-item-admin"
                   className={currentUser?.isAdmin ? "" : "hidden"}
                 >
-                  Admin Dashboard
+                  {ts("Admin Dashboard")}
                 </DropdownMenuItem>
                 
                 {/* Mobile-only options */}
@@ -482,13 +458,13 @@ export default function Header() {
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger data-testid="submenu-theme-mobile">
                       {theme === "dark" ? <Moon className="h-4 w-4 mr-2" /> : <Sun className="h-4 w-4 mr-2" />}
-                      Theme
+                      {ts("Theme")}
                     </DropdownMenuSubTrigger>
                     <DropdownMenuSubContent>
                       <DropdownMenuSub>
                         <DropdownMenuSubTrigger data-testid="submenu-light-themes-mobile">
                           <Sun className="h-4 w-4 mr-2" />
-                          Light
+                          {ts("Light")}
                         </DropdownMenuSubTrigger>
                         <DropdownMenuSubContent>
                           {lightThemes.map((theme) => (
@@ -497,7 +473,7 @@ export default function Header() {
                               onClick={() => setTheme(theme.value as any)}
                               data-testid={`option-theme-${theme.value}-mobile`}
                             >
-                              {theme.label}
+                              {ts(theme.label)}
                             </DropdownMenuItem>
                           ))}
                         </DropdownMenuSubContent>
@@ -506,7 +482,7 @@ export default function Header() {
                       <DropdownMenuSub>
                         <DropdownMenuSubTrigger data-testid="submenu-dark-themes-mobile">
                           <Moon className="h-4 w-4 mr-2" />
-                          Dark
+                          {ts("Dark")}
                         </DropdownMenuSubTrigger>
                         <DropdownMenuSubContent>
                           {darkThemes.map((theme) => (
@@ -515,7 +491,7 @@ export default function Header() {
                               onClick={() => setTheme(theme.value as any)}
                               data-testid={`option-theme-${theme.value}-mobile`}
                             >
-                              {theme.label}
+                              {ts(theme.label)}
                             </DropdownMenuItem>
                           ))}
                         </DropdownMenuSubContent>
@@ -526,7 +502,7 @@ export default function Header() {
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger data-testid="submenu-language-mobile">
                       <Globe className="h-4 w-4 mr-2" />
-                      Language
+                      {ts("Language")}
                     </DropdownMenuSubTrigger>
                     <DropdownMenuSubContent>
                       {languages.map((lang) => (
@@ -537,8 +513,8 @@ export default function Header() {
                           disabled={isTranslating}
                         >
                           {lang.name}
-                          {isTranslating && selectedLanguage === lang.code && (
-                            <span className="ml-2 text-xs text-muted-foreground">Translating...</span>
+                          {isTranslating && currentLanguage === lang.code && (
+                            <span className="ml-2 text-xs text-muted-foreground">{ts("Translating...")}</span>
                           )}
                         </DropdownMenuItem>
                       ))}
@@ -550,7 +526,7 @@ export default function Header() {
                   onClick={logout}
                   data-testid="menu-item-logout"
                 >
-                  Sign Out
+                  {ts("Sign Out")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

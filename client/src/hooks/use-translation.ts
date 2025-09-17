@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { translationService } from '@/lib/translation-service';
+import { getTranslation } from '@/lib/static-translations';
 
 /**
  * React hook for handling translations with automatic re-rendering
@@ -33,9 +34,8 @@ export function useTranslation() {
     const language = targetLanguage || currentLanguage;
     if (!text || language === 'en') return text;
     
-    // Import the getTranslation function properly
-    const staticTranslations = require('@/lib/static-translations');
-    return staticTranslations.getTranslation(text, language);
+    // Use the imported getTranslation function
+    return getTranslation(text, language);
   }, [currentLanguage]);
 
   // Function to change language
