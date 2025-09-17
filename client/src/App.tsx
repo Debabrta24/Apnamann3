@@ -95,7 +95,10 @@ function Router() {
   if (showStartupPopup && !isAuthenticated) {
     return (
       <>
-        <Login />
+        <Switch>
+          <Route path="/parent-portal" component={ParentPortal} />
+          <Route component={Login} />
+        </Switch>
         <StartupPopup 
           isOpen={showStartupPopup} 
           onClose={closeStartupPopup}
@@ -106,7 +109,12 @@ function Router() {
 
   // Show login if not authenticated
   if (!isAuthenticated) {
-    return <Login />;
+    return (
+      <Switch>
+        <Route path="/parent-portal" component={ParentPortal} />
+        <Route component={Login} />
+      </Switch>
+    );
   }
 
   // Show main app with onboarding popup if needed
