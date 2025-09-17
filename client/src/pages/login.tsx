@@ -181,8 +181,8 @@ export default function Login() {
                 <p className="leading-tight">Contact student services for account setup</p>
               </div>
 
-              <div className="p-3 bg-gradient-to-br from-primary/5 to-primary/10 backdrop-blur-sm rounded-lg text-[13px] border border-primary/20">
-                <h4 className="font-medium text-foreground mb-1 flex items-center">
+              <div className="p-3 bg-gradient-to-br from-primary/5 to-primary/10 backdrop-blur-sm rounded-lg text-[13px] border border-primary/20 text-center">
+                <h4 className="font-medium text-foreground mb-1 flex items-center justify-center">
                   <Lock className="h-3 w-3 mr-1 text-primary" />
                   Privacy & Security
                 </h4>
