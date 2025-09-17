@@ -80,55 +80,55 @@ export default function Login() {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center p-2">
-      <Card className="w-full max-w-lg h-[95vh] overflow-hidden flex flex-col">
-        <CardHeader className="text-center pb-2 flex-shrink-0">
-          <div className="mx-auto mb-1 w-12 h-12 rounded-full flex items-center justify-center">
-            <img src={logoUrl} alt="ApnaMann Logo" className="w-12 h-12 rounded-full object-cover" />
+    <div className="h-[100svh] bg-gradient-to-br from-primary/20 via-background to-secondary/20 flex items-center justify-center p-3">
+      <Card className="w-full max-w-3xl h-[92svh] overflow-hidden flex flex-col bg-card/70 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:bg-card/50 dark:border-white/5">
+        <CardHeader className="py-3 text-center flex-shrink-0">
+          <div className="mx-auto mb-2 w-10 h-10 rounded-full flex items-center justify-center">
+            <img src={logoUrl} alt="ApnaMann Logo" className="w-10 h-10 rounded-full object-cover" />
           </div>
-          <CardTitle className="text-xl font-bold">ApnaMann</CardTitle>
-          <p className="text-sm text-muted-foreground">Mental Health Support • Sign in to access your platform</p>
+          <CardTitle className="text-lg font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">ApnaMann</CardTitle>
+          <p className="text-[13px] text-muted-foreground leading-tight">Mental Health Support • Sign in to access your platform</p>
         </CardHeader>
         
-        <CardContent className="flex-1 overflow-y-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 h-full">
+        <CardContent className="p-4 flex-1 overflow-y-auto">
+          <div className="grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-4 h-full">
             {/* Left Column - Main Login */}
-            <div className="space-y-3">
-              <form onSubmit={handleLogin} className="space-y-3">
+            <div className="space-y-2">
+              <form onSubmit={handleLogin} className="space-y-2">
                 <div className="space-y-1">
-                  <Label htmlFor="email" className="text-xs">Email</Label>
+                  <Label htmlFor="email" className="text-[13px] font-medium">Email</Label>
                   <div className="relative">
-                    <Mail className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="email"
                       type="email"
                       placeholder="your.email@student.edu"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="pl-8 h-8 text-xs"
+                      className="pl-10 h-9 text-[13px] bg-background/50 backdrop-blur-sm border-white/20 focus:border-primary/50"
                       data-testid="input-email"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <Label htmlFor="password" className="text-xs">Password</Label>
+                  <Label htmlFor="password" className="text-[13px] font-medium">Password</Label>
                   <div className="relative">
-                    <Lock className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="pl-8 pr-8 h-8 text-xs"
+                      className="pl-10 pr-10 h-9 text-[13px] bg-background/50 backdrop-blur-sm border-white/20 focus:border-primary/50"
                       data-testid="input-password"
                     />
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="absolute right-0 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
+                      className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 hover:bg-primary/10"
                       onClick={() => setShowPassword(!showPassword)}
                       data-testid="button-toggle-password"
                     >
@@ -144,7 +144,7 @@ export default function Login() {
                 <div className="grid grid-cols-2 gap-2" data-testid="row-auth-buttons">
                   <Button
                     type="submit"
-                    className="h-9 text-xs"
+                    className="h-9 text-xs bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary font-medium"
                     disabled={isLoading}
                     data-testid="button-login"
                   >
@@ -152,7 +152,7 @@ export default function Login() {
                   </Button>
                   <Button
                     variant="outline"
-                    className="h-9 text-xs"
+                    className="h-9 text-xs bg-background/30 backdrop-blur-sm border-white/20 hover:bg-primary/5 font-medium"
                     onClick={handleGoogleLogin}
                     disabled={isLoading}
                     data-testid="button-google-login"
@@ -165,25 +165,25 @@ export default function Login() {
             </div>
 
             {/* Right Column - Additional Info */}
-            <div className="space-y-3">
-              <div className="text-center text-xs text-muted-foreground p-2 bg-muted/50 rounded">
-                <p className="font-medium mb-1">New User?</p>
-                <p>Contact student services for account setup</p>
+            <div className="space-y-2">
+              <div className="text-center text-[13px] text-muted-foreground p-3 bg-gradient-to-br from-muted/40 to-muted/20 backdrop-blur-sm rounded-lg border border-white/10">
+                <p className="font-medium mb-1 text-foreground">New User?</p>
+                <p className="leading-tight">Contact student services for account setup</p>
               </div>
 
-              <div className="p-2 bg-muted/30 rounded text-xs">
+              <div className="p-3 bg-gradient-to-br from-primary/5 to-primary/10 backdrop-blur-sm rounded-lg text-[13px] border border-primary/20">
                 <h4 className="font-medium text-foreground mb-1 flex items-center">
-                  <Lock className="h-3 w-3 mr-1" />
-                  Privacy
+                  <Lock className="h-3 w-3 mr-1 text-primary" />
+                  Privacy & Security
                 </h4>
                 <p className="text-muted-foreground leading-tight">
-                  Secure, confidential platform with encryption & strict privacy guidelines.
+                  End-to-end encrypted conversations with strict confidentiality protocols.
                 </p>
               </div>
 
-              <div className="p-2 bg-secondary/10 rounded text-xs border border-secondary/20">
+              <div className="p-3 bg-gradient-to-br from-secondary/10 to-secondary/5 backdrop-blur-sm rounded-lg text-[13px] border border-secondary/20">
                 <div className="text-center">
-                  <Users className="h-5 w-5 mx-auto text-primary mb-1" />
+                  <Users className="h-5 w-5 mx-auto text-secondary mb-1" />
                   <h4 className="font-medium text-foreground mb-1">Parent Portal</h4>
                   <p className="text-muted-foreground mb-2 leading-tight">
                     Monitor your child's mental health journey
@@ -191,7 +191,7 @@ export default function Login() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-7 text-xs"
+                    className="w-full h-7 text-xs bg-background/30 backdrop-blur-sm border-white/20 hover:bg-secondary/10"
                     onClick={() => setLocation("/parent-portal")}
                     data-testid="button-parent-portal"
                   >
