@@ -105,7 +105,7 @@ export default function Login() {
                       placeholder="your.email@student.edu"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10 h-9 text-[13px] bg-background/50 backdrop-blur-sm border-white/20 focus:border-primary/50"
+                      className="pl-10 h-9 text-[13px] bg-blue-50/80 dark:bg-blue-950/50 backdrop-blur-sm border-blue-200/40 dark:border-blue-800/40 focus:border-blue-400 dark:focus:border-blue-500 text-blue-900 dark:text-blue-100"
                       data-testid="input-email"
                     />
                   </div>
@@ -121,7 +121,7 @@ export default function Login() {
                       placeholder="Enter password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10 pr-10 h-9 text-[13px] bg-background/50 backdrop-blur-sm border-white/20 focus:border-primary/50"
+                      className="pl-10 pr-10 h-9 text-[13px] bg-green-50/80 dark:bg-green-950/50 backdrop-blur-sm border-green-200/40 dark:border-green-800/40 focus:border-green-400 dark:focus:border-green-500 text-green-900 dark:text-green-100"
                       data-testid="input-password"
                     />
                     <Button
@@ -141,23 +141,14 @@ export default function Login() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-1" data-testid="row-auth-buttons">
+                <div className="grid grid-cols-2 gap-2" data-testid="row-auth-buttons">
                   <Button
                     type="submit"
                     className="h-9 text-xs bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary font-medium"
                     disabled={isLoading}
-                    data-testid="button-signin"
-                  >
-                    {isLoading ? "Signing in..." : "Sign In"}
-                  </Button>
-                  <Button
-                    type="button"
-                    className="h-9 text-xs bg-gradient-to-r from-secondary to-secondary/90 hover:from-secondary/90 hover:to-secondary font-medium"
-                    onClick={handleLogin}
-                    disabled={isLoading}
                     data-testid="button-login"
                   >
-                    {isLoading ? "Logging in..." : "Login"}
+                    {isLoading ? "Signing in..." : "Sign In"}
                   </Button>
                   <Button
                     variant="outline"
