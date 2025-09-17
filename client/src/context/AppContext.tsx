@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import type { User } from "@/types";
+import { generateRandomName } from "@/utils/nameGenerator";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -145,12 +146,15 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       });
     };
 
+    const anonymousName = generateRandomName({ style: 'all', includeNumbers: true });
+    
     const newUser: User = {
       id: generateUUID(),
       username: `${data.firstName.toLowerCase()}.${data.lastName.toLowerCase()}`,
       firstName: data.firstName,
       lastName: data.lastName,
       email: tempEmail || "user@example.com",
+      anonymousName: anonymousName,
       institution: data.institution,
       course: data.course,
       year: data.year,
@@ -197,6 +201,13 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     
     if (savedUser) {
       const user = JSON.parse(savedUser);
+      
+      // Migration for existing users without anonymousName
+      if (!user.anonymousName) {
+        user.anonymousName = generateRandomName({ style: 'all', includeNumbers: true });
+        localStorage.setItem("user", JSON.stringify(user));
+      }
+      
       setCurrentUser(user);
       setIsAuthenticated(true);
       setIsOnboarding(false);

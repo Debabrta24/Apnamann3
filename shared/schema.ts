@@ -22,6 +22,7 @@ export const users = pgTable("users", {
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
   email: text("email").notNull().unique(),
+  anonymousName: text("anonymous_name"), // Random unique name for user privacy
   institution: text("institution").notNull(),
   course: text("course"),
   year: integer("year"),

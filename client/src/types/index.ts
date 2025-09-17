@@ -4,6 +4,7 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
+  anonymousName?: string; // Random unique name for user privacy
   institution: string;
   course?: string;
   year?: number;

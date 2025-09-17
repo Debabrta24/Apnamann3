@@ -15,6 +15,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { BackButton } from "@/components/ui/back-button";
+import { getAnonymousDisplayName } from "@/utils/nameGenerator";
 
 export default function Profile() {
   const { currentUser, setCurrentUser, theme, setTheme, toggleTheme } = useAppContext();
@@ -217,6 +218,24 @@ export default function Profile() {
                   <Camera className="h-4 w-4 mr-2" />
                   Change Photo
                 </Button>
+              </div>
+
+              <Separator />
+
+              {/* Anonymous Display Name */}
+              <div className="bg-accent/20 border border-accent rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <Label className="text-sm font-medium">Your Anonymous Name</Label>
+                    <p className="text-2xl font-bold text-primary" data-testid="text-anonymous-name">
+                      {getAnonymousDisplayName(currentUser || {})}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      This unique anonymous name represents you in community discussions and helps protect your privacy.
+                    </p>
+                  </div>
+                  <Badge variant="secondary" className="text-xs">Private</Badge>
+                </div>
               </div>
 
               <Separator />
