@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pill, ShoppingCart, Search, Star, Clock, MapPin, Plus, Minus, Upload, FileText, CheckCircle } from "lucide-react";
+import { Pill, ShoppingCart, Search, Star, Clock, MapPin, Plus, Minus, Upload, FileText, CheckCircle, AlertTriangle, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,51 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { BackButton } from "@/components/ui/back-button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+// Import psychiatric medicine images
+import valop500Image from "@assets/IMG-20250918-WA0009_1758138692176.jpg";
+import gabasign300Image from "@assets/IMG-20250918-WA0010_1758138692177.jpg";
+import mirzawell75Image from "@assets/IMG-20250918-WA0011_1758138692178.jpg";
+import elipam10Image from "@assets/IMG-20250918-WA0012_1758138692179.jpg";
+import lamotrigine100Image from "@assets/IMG-20250918-WA0013_1758138692180.jpg";
+import vilzocar20Image from "@assets/IMG-20250918-WA0014_1758138692181.jpg";
+import tryptiline25Image from "@assets/IMG-20250918-WA0015_1758138692182.jpg";
+import buspin10Image from "@assets/IMG-20250918-WA0016_1758138692182.jpg";
+import wellbutrinXL150Image from "@assets/IMG-20250918-WA0017_1758138692183.jpg";
+import perizon6ERImage from "@assets/IMG-20250918-WA0018_1758138692184.jpg";
+import erilop5MDImage from "@assets/IMG-20250918-WA0019_1758138692184.jpg";
+import eriquitc50Image from "@assets/IMG-20250918-WA0020_1758138692185.jpg";
+import cabrizepineCR200Image from "@assets/IMG-20250918-WA0021_1758138692186.jpg";
+import asprito15Image from "@assets/IMG-20250918-WA0022_1758138692187.jpg";
+import olanzapine10Image from "@assets/IMG-20250918-WA0023_1758138692188.jpg";
+import toppr25Image from "@assets/IMG-20250918-WA0024_1758138692189.jpg";
+import oza50Image from "@assets/IMG-20250918-WA0025_1758138692190.jpg";
+import edronax4mgImage from "@assets/IMG-20250918-WA0026_1758138692190.jpg";
+import pronon300Image from "@assets/IMG-20250918-WA0027_1758138692191.jpg";
+
+// Create image mapping for psychiatric medicines
+const psychiatricMedicineImages: {[key: number]: string} = {
+  7: valop500Image,
+  8: gabasign300Image,
+  9: mirzawell75Image,
+  10: elipam10Image,
+  11: lamotrigine100Image,
+  12: vilzocar20Image,
+  13: tryptiline25Image,
+  14: buspin10Image,
+  15: wellbutrinXL150Image,
+  16: perizon6ERImage,
+  17: erilop5MDImage,
+  18: eriquitc50Image,
+  19: cabrizepineCR200Image,
+  20: asprito15Image,
+  21: olanzapine10Image,
+  22: toppr25Image,
+  23: oza50Image,
+  24: edronax4mgImage,
+  25: pronon300Image,
+};
 
 interface Medicine {
   id: number;
@@ -138,10 +183,353 @@ const medicines: Medicine[] = [
     inStock: true,
     prescription: false,
     image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=300&h=200&fit=crop"
+  },
+  // Psychiatric Medications Section
+  {
+    id: 7,
+    name: "Valop-500 CR",
+    genericName: "Sodium Valproate and Valproic Acid",
+    category: "Psychiatric",
+    price: 485,
+    discountPrice: 425,
+    manufacturer: "Torrent Pharmaceuticals",
+    rating: 4.3,
+    reviewCount: 89,
+    description: "Extended-release tablets for epilepsy and bipolar disorder management",
+    uses: ["Epilepsy", "Bipolar disorder", "Mood stabilization", "Seizure control"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Dizziness", "Nausea", "Weight gain", "Hair loss"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[7]
+  },
+  {
+    id: 8,
+    name: "Gabasign-300",
+    genericName: "Gabapentin",
+    category: "Psychiatric",
+    price: 315,
+    discountPrice: 285,
+    manufacturer: "Lupin Ltd.",
+    rating: 4.2,
+    reviewCount: 156,
+    description: "Anticonvulsant medication for neuropathic pain and seizures",
+    uses: ["Neuropathic pain", "Epilepsy", "Anxiety disorders", "Restless leg syndrome"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Drowsiness", "Dizziness", "Fatigue", "Peripheral edema"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[8]
+  },
+  {
+    id: 9,
+    name: "Mirzawell 7.5",
+    genericName: "Mirtazapine",
+    category: "Psychiatric",
+    price: 285,
+    discountPrice: 255,
+    manufacturer: "Wellness Life Sciences",
+    rating: 4.4,
+    reviewCount: 92,
+    description: "Antidepressant medication for major depressive disorder",
+    uses: ["Depression", "Anxiety", "Sleep disorders", "Appetite stimulation"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Sedation", "Weight gain", "Dry mouth", "Constipation"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[9]
+  },
+  {
+    id: 10,
+    name: "Elipam-10",
+    genericName: "Diazepam",
+    category: "Psychiatric",
+    price: 125,
+    discountPrice: 95,
+    manufacturer: "Cadila Healthcare",
+    rating: 4.1,
+    reviewCount: 203,
+    description: "Benzodiazepine for anxiety, muscle spasms, and seizures",
+    uses: ["Anxiety disorders", "Muscle spasms", "Seizures", "Alcohol withdrawal"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Drowsiness", "Confusion", "Muscle weakness", "Dependency risk"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[10]
+  },
+  {
+    id: 11,
+    name: "Lamotrigine 100mg",
+    genericName: "Lamotrigine",
+    category: "Psychiatric",
+    price: 395,
+    discountPrice: 345,
+    manufacturer: "Cipla Ltd.",
+    rating: 4.3,
+    reviewCount: 124,
+    description: "Mood stabilizer and anticonvulsant for bipolar disorder and epilepsy",
+    uses: ["Bipolar disorder", "Epilepsy", "Mood stabilization", "Depression"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Skin rash", "Headache", "Nausea", "Blurred vision"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[11]
+  },
+  {
+    id: 12,
+    name: "Vilzocar-20",
+    genericName: "Vilazodone Hydrochloride",
+    category: "Psychiatric",
+    price: 685,
+    discountPrice: 595,
+    manufacturer: "Torrent Pharmaceuticals",
+    rating: 4.2,
+    reviewCount: 67,
+    description: "Antidepressant with partial serotonin agonist activity",
+    uses: ["Major depressive disorder", "Anxiety", "Depression with anxiety"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Nausea", "Diarrhea", "Vomiting", "Insomnia"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[12]
+  },
+  {
+    id: 13,
+    name: "Tryptiline-25",
+    genericName: "Amitriptyline Hydrochloride",
+    category: "Psychiatric",
+    price: 165,
+    discountPrice: 135,
+    manufacturer: "Torrent Pharmaceuticals",
+    rating: 4.0,
+    reviewCount: 187,
+    description: "Tricyclic antidepressant for depression and chronic pain",
+    uses: ["Depression", "Chronic pain", "Migraine prevention", "Neuropathic pain"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Dry mouth", "Constipation", "Drowsiness", "Weight gain"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[13]
+  },
+  {
+    id: 14,
+    name: "Buspin-10",
+    genericName: "Buspirone Hydrochloride",
+    category: "Psychiatric",
+    price: 185,
+    discountPrice: 155,
+    manufacturer: "Intas Pharmaceuticals",
+    rating: 4.1,
+    reviewCount: 143,
+    description: "Anti-anxiety medication for generalized anxiety disorder",
+    uses: ["Anxiety disorders", "Generalized anxiety", "Social anxiety"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Dizziness", "Nausea", "Headache", "Nervousness"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[14]
+  },
+  {
+    id: 15,
+    name: "Wellbutrin XL 150mg",
+    genericName: "Bupropion Hydrochloride",
+    category: "Psychiatric",
+    price: 1285,
+    discountPrice: 1125,
+    manufacturer: "GlaxoSmithKline",
+    rating: 4.5,
+    reviewCount: 234,
+    description: "Extended-release antidepressant and smoking cessation aid",
+    uses: ["Depression", "Smoking cessation", "Seasonal affective disorder"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Dry mouth", "Insomnia", "Headache", "Nausea"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[15]
+  },
+  {
+    id: 16,
+    name: "Perizon-6 ER",
+    genericName: "Paliperidone Extended Release",
+    category: "Psychiatric",
+    price: 485,
+    discountPrice: 425,
+    manufacturer: "Intas Pharmaceuticals",
+    rating: 4.2,
+    reviewCount: 76,
+    description: "Extended-release antipsychotic for schizophrenia and bipolar disorder",
+    uses: ["Schizophrenia", "Bipolar disorder", "Schizoaffective disorder"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Weight gain", "Sedation", "Extrapyramidal symptoms", "Prolactin elevation"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[16]
+  },
+  {
+    id: 17,
+    name: "Erilop 5 MD",
+    genericName: "Haloperidol Mouth Dissolving",
+    category: "Psychiatric",
+    price: 95,
+    discountPrice: 78,
+    manufacturer: "Sun Pharma",
+    rating: 4.0,
+    reviewCount: 112,
+    description: "Mouth dissolving antipsychotic tablet for acute agitation",
+    uses: ["Schizophrenia", "Acute psychosis", "Mania", "Tourette's syndrome"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Extrapyramidal symptoms", "Sedation", "Tardive dyskinesia", "Neuroleptic malignant syndrome"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[17]
+  },
+  {
+    id: 18,
+    name: "Eriquitc 50",
+    genericName: "Quetiapine Fumarate",
+    category: "Psychiatric",
+    price: 285,
+    discountPrice: 245,
+    manufacturer: "Sun Pharma",
+    rating: 4.3,
+    reviewCount: 189,
+    description: "Atypical antipsychotic for schizophrenia and bipolar disorder",
+    uses: ["Schizophrenia", "Bipolar disorder", "Major depressive disorder", "Insomnia"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Sedation", "Weight gain", "Dry mouth", "Constipation"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[18]
+  },
+  {
+    id: 19,
+    name: "Cabrizepine CR 200",
+    genericName: "Carbamazepine Sustained Release",
+    category: "Psychiatric",
+    price: 185,
+    discountPrice: 155,
+    manufacturer: "Sun Pharma",
+    rating: 4.1,
+    reviewCount: 98,
+    description: "Sustained-release mood stabilizer and anticonvulsant",
+    uses: ["Bipolar disorder", "Epilepsy", "Trigeminal neuralgia", "Mood stabilization"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Dizziness", "Nausea", "Skin rash", "Blood disorders"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[19]
+  },
+  {
+    id: 20,
+    name: "Asprito-15",
+    genericName: "Aripiprazole",
+    category: "Psychiatric",
+    price: 385,
+    discountPrice: 335,
+    manufacturer: "Torrent Pharmaceuticals",
+    rating: 4.4,
+    reviewCount: 156,
+    description: "Atypical antipsychotic with partial dopamine agonist activity",
+    uses: ["Schizophrenia", "Bipolar disorder", "Depression augmentation", "Autism irritability"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Akathisia", "Nausea", "Vomiting", "Constipation"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[20]
+  },
+  {
+    id: 21,
+    name: "Olanzapine-10",
+    genericName: "Olanzapine",
+    category: "Psychiatric",
+    price: 285,
+    discountPrice: 245,
+    manufacturer: "Cipla Ltd.",
+    rating: 4.2,
+    reviewCount: 143,
+    description: "Atypical antipsychotic for schizophrenia and bipolar disorder",
+    uses: ["Schizophrenia", "Bipolar disorder", "Treatment-resistant depression"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Weight gain", "Sedation", "Metabolic syndrome", "Extrapyramidal symptoms"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[21]
+  },
+  {
+    id: 22,
+    name: "Toppr-25",
+    genericName: "Topiramate",
+    category: "Psychiatric",
+    price: 245,
+    discountPrice: 195,
+    manufacturer: "Torrent Pharmaceuticals",
+    rating: 4.0,
+    reviewCount: 87,
+    description: "Anticonvulsant with mood stabilizing properties",
+    uses: ["Epilepsy", "Migraine prevention", "Bipolar disorder", "Weight loss"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Cognitive impairment", "Weight loss", "Kidney stones", "Paresthesia"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[22]
+  },
+  {
+    id: 23,
+    name: "Oza-50",
+    genericName: "Clozapine",
+    category: "Psychiatric",
+    price: 185,
+    discountPrice: 155,
+    manufacturer: "Sun Pharma",
+    rating: 4.1,
+    reviewCount: 65,
+    description: "Atypical antipsychotic for treatment-resistant schizophrenia",
+    uses: ["Treatment-resistant schizophrenia", "Suicidal behavior in schizophrenia"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Agranulocytosis", "Sedation", "Weight gain", "Hypersalivation"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[23]
+  },
+  {
+    id: 24,
+    name: "Edronax 4mg",
+    genericName: "Reboxetine",
+    category: "Psychiatric",
+    price: 485,
+    discountPrice: 425,
+    manufacturer: "Pfizer",
+    rating: 4.2,
+    reviewCount: 78,
+    description: "Selective noradrenaline reuptake inhibitor antidepressant",
+    uses: ["Major depressive disorder", "Panic disorder"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Dry mouth", "Constipation", "Insomnia", "Urinary retention"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[24]
+  },
+  {
+    id: 25,
+    name: "Pronon 300",
+    genericName: "Maprotiline Hydrochloride",
+    category: "Psychiatric",
+    price: 285,
+    discountPrice: 245,
+    manufacturer: "Intas Pharmaceuticals",
+    rating: 4.0,
+    reviewCount: 92,
+    description: "Tetracyclic antidepressant for depression and anxiety",
+    uses: ["Depression", "Anxiety disorders", "Chronic pain"],
+    dosage: "As prescribed by doctor",
+    sideEffects: ["Drowsiness", "Dry mouth", "Constipation", "Seizure risk"],
+    inStock: true,
+    prescription: true,
+    image: psychiatricMedicineImages[25]
   }
 ];
 
-const categories = ["All", "Pain Relief", "Vitamins", "Digestive", "Allergy", "Sleep Aid", "Stress Relief"];
+const categories = ["All", "Pain Relief", "Vitamins", "Digestive", "Allergy", "Sleep Aid", "Stress Relief", "Psychiatric"];
 
 interface CheckoutFormProps {
   medicines: Medicine[];
@@ -317,10 +705,159 @@ function CheckoutForm({ medicines, cart, total }: CheckoutFormProps) {
   );
 }
 
+// Prescription Upload Modal Component
+function PrescriptionUploadModal({ medicine, onUploadSuccess, isOpen, onClose }: {
+  medicine: Medicine;
+  onUploadSuccess: (medicineId: number, prescriptionData: any) => void;
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const { toast } = useToast();
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file type (PDF, JPG, PNG)
+      const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
+      if (!validTypes.includes(file.type)) {
+        toast({
+          title: "Invalid file type",
+          description: "Please upload a PDF, JPG, or PNG file.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: "Please upload a file smaller than 5MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      setUploadedFile(file);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!uploadedFile) {
+      toast({
+        title: "No file selected",
+        description: "Please select a prescription file to upload.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUploading(true);
+    
+    // Simulate upload process
+    setTimeout(() => {
+      const prescriptionData = {
+        fileName: uploadedFile.name,
+        fileSize: uploadedFile.size,
+        uploadDate: new Date().toISOString(),
+        medicineId: medicine.id,
+        medicineName: medicine.name,
+        verified: true, // In real app, this would be set after verification
+      };
+      
+      onUploadSuccess(medicine.id, prescriptionData);
+      setIsUploading(false);
+      setUploadedFile(null);
+      onClose();
+      
+      toast({
+        title: "Prescription uploaded successfully!",
+        description: `Prescription for ${medicine.name} has been verified. You can now add it to cart.`,
+      });
+    }, 2000);
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Shield className="h-5 w-5 text-blue-600" />
+            Upload Prescription
+          </DialogTitle>
+        </DialogHeader>
+        
+        <Alert className="mb-4">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Prescription Required</AlertTitle>
+          <AlertDescription>
+            <strong>{medicine.name}</strong> requires a valid prescription from a licensed healthcare provider.
+          </AlertDescription>
+        </Alert>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="prescription-file">Upload Prescription</Label>
+            <Input
+              id="prescription-file"
+              type="file"
+              accept=".pdf,.jpg,.jpeg,.png"
+              onChange={handleFileUpload}
+              className="cursor-pointer"
+              data-testid="input-prescription-file"
+            />
+            <p className="text-xs text-muted-foreground">
+              Accepted formats: PDF, JPG, PNG (Max size: 5MB)
+            </p>
+          </div>
+          
+          {uploadedFile && (
+            <div className="p-3 bg-muted rounded-lg">
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                <span className="text-sm font-medium">{uploadedFile.name}</span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Size: {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
+              </p>
+            </div>
+          )}
+          
+          <div className="flex gap-2 pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="flex-1"
+              data-testid="btn-cancel-prescription"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={!uploadedFile || isUploading}
+              className="flex-1"
+              data-testid="btn-upload-prescription"
+            >
+              {isUploading ? "Uploading..." : "Upload & Verify"}
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export default function Medicine() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [cart, setCart] = useState<{[key: number]: number}>({});
+  const [prescriptions, setPrescriptions] = useState<{[key: number]: any}>({});
+  const [showPrescriptionModal, setShowPrescriptionModal] = useState(false);
+  const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(null);
   const { toast } = useToast();
 
   const filteredMedicines = medicines.filter(medicine => {
@@ -379,6 +916,98 @@ export default function Medicine() {
         <p className="text-lg text-muted-foreground">
           Order medicines online with fast delivery and genuine products
         </p>
+      </div>
+
+      {/* Psychiatric Medications Showcase */}
+      <div className="mb-8">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-center mb-4 flex items-center justify-center">
+              <Pill className="h-6 w-6 mr-2" />
+              Psychiatric Medications Collection
+            </CardTitle>
+            <p className="text-center text-muted-foreground">
+              Comprehensive range of psychiatric medications for mental health treatment
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+              {medicines
+                .filter(medicine => medicine.category === "Psychiatric")
+                .map((medicine) => (
+                  <div key={medicine.id} className="relative group">
+                    <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
+                      <CardContent className="p-3">
+                        <div className="aspect-square relative mb-3 overflow-hidden rounded-lg">
+                          <img
+                            src={medicine.image}
+                            alt={medicine.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                          />
+                          {medicine.prescription && (
+                            <Badge 
+                              variant="destructive" 
+                              className="absolute top-1 right-1 text-xs px-1 py-0"
+                            >
+                              Rx
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="text-center">
+                          <h4 className="font-medium text-sm mb-1 line-clamp-2">{medicine.name}</h4>
+                          <p className="text-xs text-muted-foreground mb-2 line-clamp-1">
+                            {medicine.genericName}
+                          </p>
+                          <div className="flex items-center justify-center gap-1 mb-2">
+                            <span className="text-sm font-bold text-primary">
+                              ₹{medicine.discountPrice || medicine.price}
+                            </span>
+                            {medicine.discountPrice && (
+                              <span className="text-xs text-muted-foreground line-through">
+                                ₹{medicine.price}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center justify-center gap-1 mb-2">
+                            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                            <span className="text-xs">{medicine.rating}</span>
+                          </div>
+                          <Button
+                            size="sm"
+                            className="w-full text-xs h-7"
+                            onClick={() => addToCart(medicine.id)}
+                            data-testid={`btn-add-to-cart-${medicine.id}`}
+                          >
+                            <Plus className="h-3 w-3 mr-1" />
+                            Add
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                ))}
+            </div>
+            <div className="mt-6 text-center">
+              <p className="text-sm text-muted-foreground mb-3">
+                <strong>Important:</strong> All psychiatric medications require a valid prescription from a licensed healthcare provider.
+              </p>
+              <div className="grid md:grid-cols-3 gap-4 text-sm">
+                <div className="flex items-center justify-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>Licensed Pharmacists</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>Prescription Verification</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>Secure & Confidential</span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Search and Cart Summary */}
