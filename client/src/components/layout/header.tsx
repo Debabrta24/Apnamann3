@@ -29,15 +29,17 @@ const languages = [
 ];
 
 const themeOptions = [
+  // Light themes
   { value: "light", label: "Light" },
+  { value: "coral", label: "Coral Warmth" },
+  { value: "sky", label: "Sky Fresh" },
+  // Dark themes
   { value: "dark", label: "Dark" },
   { value: "ocean", label: "Ocean Breeze" },
   { value: "sunset", label: "Sunset Warm" },
   { value: "forest", label: "Forest Calm" },
   { value: "lavender", label: "Lavender Dreams" },
   { value: "cosmic", label: "Cosmic Space" },
-  { value: "coral", label: "Coral Warmth" },
-  { value: "sky", label: "Sky Fresh" },
 ];
 
 export default function Header() {
