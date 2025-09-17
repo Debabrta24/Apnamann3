@@ -183,7 +183,7 @@ export default function Login() {
 
               <div 
                 className="p-3 bg-gradient-to-br from-primary/5 to-primary/10 backdrop-blur-sm rounded-lg text-[13px] border border-primary/20 text-center cursor-pointer hover:from-primary/10 hover:to-primary/15 hover:border-primary/30 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-                onClick={() => window.open('/privacy', '_blank')}
+                onClick={() => window.open('/privacy', '_blank', 'noopener,noreferrer')}
                 data-testid="div-privacy-security"
               >
                 <h4 className="font-medium text-foreground mb-1 flex items-center justify-center">
@@ -199,7 +199,7 @@ export default function Login() {
               <div className="p-3 bg-gradient-to-br from-secondary/10 to-secondary/5 backdrop-blur-sm rounded-lg text-[13px] border border-secondary/20">
                 <div className="text-center">
                   <Users className="h-5 w-5 mx-auto text-secondary mb-1" />
-                  <h4 className="font-medium text-foreground mb-1">Parent Portal</h4>
+                  <h4 className="font-medium text-foreground mb-1">Parent Guide</h4>
                   <p className="text-muted-foreground mb-2 leading-tight">
                     <span className="font-bold text-foreground">Register as a student parent</span>
                   </p>

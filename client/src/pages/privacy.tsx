@@ -9,18 +9,18 @@ export default function Privacy() {
   const [, setLocation] = useLocation();
   
   const handleBack = () => {
-    // Check if there's history to go back to
+    // Always try to go back if there's history available
     if (window.history.length > 1) {
       window.history.back();
     } else {
-      // If opened in a new tab with no history, close the window
-      // or redirect to login page as fallback
-      if (window.opener) {
+      // If opened in new tab with no history, try to close then fallback
+      try {
         window.close();
-      } else {
-        // Fallback: redirect to login page
-        window.location.href = '/';
+      } catch (e) {
+        // Ignore if close is blocked
       }
+      // Always navigate back to login page using SPA routing
+      setLocation('/');
     }
   };
 
