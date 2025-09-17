@@ -29,6 +29,7 @@ const languages = [
   { code: "hi", name: "हिंदी" },
   { code: "bn", name: "বাংলা" },
   { code: "ta", name: "தমিழ্" },
+  { code: "gu", name: "ગુજરાતી" },
 ];
 
 const lightThemes = [
