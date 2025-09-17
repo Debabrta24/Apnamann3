@@ -141,37 +141,27 @@ export default function Login() {
                   </div>
                 </div>
 
-                <Button
-                  type="submit"
-                  className="w-full h-8 text-xs"
-                  disabled={isLoading}
-                  data-testid="button-login"
-                >
-                  {isLoading ? "Signing in..." : "Sign In"}
-                </Button>
-              </form>
-
-              <div className="space-y-2">
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t" />
-                  </div>
-                  <div className="relative flex justify-center text-xs">
-                    <span className="bg-background px-2 text-muted-foreground">Or</span>
-                  </div>
+                <div className="grid grid-cols-2 gap-2" data-testid="row-auth-buttons">
+                  <Button
+                    type="submit"
+                    className="h-9 text-xs"
+                    disabled={isLoading}
+                    data-testid="button-login"
+                  >
+                    {isLoading ? "Signing in..." : "Sign In"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="h-9 text-xs"
+                    onClick={handleGoogleLogin}
+                    disabled={isLoading}
+                    data-testid="button-google-login"
+                  >
+                    <FaGoogle className="h-3 w-3 mr-1 text-red-500" />
+                    Google
+                  </Button>
                 </div>
-
-                <Button
-                  variant="outline"
-                  className="w-full h-8 text-xs"
-                  onClick={handleGoogleLogin}
-                  disabled={isLoading}
-                  data-testid="button-google-login"
-                >
-                  <FaGoogle className="h-3 w-3 mr-1 text-red-500" />
-                  Google
-                </Button>
-              </div>
+              </form>
             </div>
 
             {/* Right Column - Additional Info */}
