@@ -124,7 +124,7 @@ export default function ParentPortal() {
                 </h3>
                 <div className="space-y-3 sm:space-y-3">
                   <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                    <strong>Please note:</strong> When discussing "Mental Health" with your child, they might initially hear "Metal" instead of "Health" due to pronunciation. 
+                    <strong>Please note:</strong> When discussing "Mental Health" with your child, they might initially hear "<span className="text-red-600 dark:text-red-400 font-semibold">Metal</span>" instead of "<span className="text-red-600 dark:text-red-400 font-semibold">Health</span>" due to pronunciation. 
                     This is completely normal! Please speak clearly and help them understand that we're talking about <strong>Mental HEALTH</strong> - 
                     taking care of our minds, emotions, and feelings, just like we take care of our physical health.
                   </p>
