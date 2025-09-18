@@ -84,7 +84,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
   };
 
   return (
-    <header className="bg-card border-b border-border sticky top-0 z-60">
+    <header className="bg-card border-b border-border sticky top-0 z-50">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[4.5rem]">
           {/* Left side - Mobile Menu Button + Desktop Search */}
@@ -115,11 +115,9 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
               <NotificationCenter />
             </div>
 
-            {/* Coin Display - Visible on small screens and up */}
+            {/* Coin Display - Always visible */}
             {currentUser && (
-              <div className="hidden sm:block">
-                <CoinDisplay userId={currentUser.id} />
-              </div>
+              <CoinDisplay userId={currentUser.id} />
             )}
 
             {/* Settings Button - Mobile optimized */}

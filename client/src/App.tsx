@@ -189,10 +189,10 @@ function Router() {
   return (
     <>
       <div className="flex h-screen">
-        {/* Mobile Overlay - Above header but below sidebar */}
+        {/* Mobile Overlay - Above background content but below sidebar */}
         {sidebarOpen && (
           <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-[80] md:hidden transition-opacity duration-300 ease-in-out"
+            className="fixed inset-0 bg-black bg-opacity-50 z-[60] md:hidden transition-opacity duration-300 ease-in-out"
             onClick={() => setSidebarOpen(false)}
             data-testid="overlay-mobile-menu"
           />
