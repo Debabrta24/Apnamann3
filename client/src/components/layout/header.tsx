@@ -110,6 +110,7 @@ export default function Header() {
                 src={logoUrl}
                 alt="ApnaMann Logo"
                 className="w-10 h-10 rounded-lg object-cover"
+                data-testid="img-logo-header-hidden"
               />
             </div>
             <div>
@@ -155,6 +156,7 @@ export default function Header() {
                         src={logoUrl}
                         alt="ApnaMann Logo"
                         className="w-10 h-10 rounded-lg object-cover"
+                        data-testid="img-logo-header-mobile"
                       />
                     </div>
                     <div>

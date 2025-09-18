@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Brain, Heart, Users, Shield, X } from "lucide-react";
+import logoUrl from '@/assets/logo.png';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -70,7 +71,10 @@ export default function StartupPopup({ isOpen, onClose }: StartupPopupProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="flex items-center">
+          <div className="flex items-center justify-center mb-4">
+            <img src={logoUrl} alt="ApnaMann Logo" className="w-12 h-12 rounded-lg object-cover" data-testid="img-logo-startup" />
+          </div>
+          <DialogTitle className="flex items-center justify-center">
             <IconComponent className={`h-6 w-6 mr-2 ${currentSlideData.color}`} />
             {currentSlideData.title}
           </DialogTitle>

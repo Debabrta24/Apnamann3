@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { User, GraduationCap, Heart, ArrowRight, ArrowLeft } from "lucide-react";
+import logoUrl from '@/assets/logo.png';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -110,7 +111,10 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
     <Dialog open={isOpen} onOpenChange={() => {}}>
       <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center">
+          <div className="flex items-center justify-center mb-4">
+            <img src={logoUrl} alt="ApnaMann Logo" className="w-10 h-10 rounded-lg object-cover" data-testid="img-logo-onboarding" />
+          </div>
+          <DialogTitle className="flex items-center justify-center">
             <User className="h-5 w-5 mr-2" />
             Welcome! Let's get you started
           </DialogTitle>

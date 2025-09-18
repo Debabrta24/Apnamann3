@@ -84,7 +84,7 @@ export default function Login() {
       <Card className="w-full max-w-sm sm:max-w-md lg:max-w-lg h-[92svh] overflow-hidden flex flex-col bg-card/70 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:bg-card/50 dark:border-white/5">
         <CardHeader className="py-3 text-center flex-shrink-0">
           <div className="mx-auto mb-2 w-10 h-10 rounded-full flex items-center justify-center">
-            <img src={logoUrl} alt="ApnaMann Logo" className="w-10 h-10 rounded-full object-cover" />
+            <img src={logoUrl} alt="ApnaMann Logo" className="w-10 h-10 rounded-full object-cover" data-testid="img-logo-login" />
           </div>
           <CardTitle className="text-lg font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">ApnaMann</CardTitle>
           <p className="text-[13px] text-muted-foreground leading-tight">Mental Health Support • Sign in to access your platform</p>

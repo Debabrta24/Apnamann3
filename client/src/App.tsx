@@ -143,7 +143,7 @@ function Router() {
             {/* Logo and branding */}
             <div className="flex items-center p-4 border-b border-border">
               <div className="w-10 h-10 rounded-lg flex items-center justify-center">
-                <img src={logoUrl} alt="Apnamann Logo" className="w-10 h-10 rounded-lg object-cover" />
+                <img src={logoUrl} alt="ApnaMann Logo" className="w-10 h-10 rounded-lg object-cover" data-testid="img-logo-sidebar" />
               </div>
               <div className="ml-3">
                 <h1 className="text-xl font-bold text-foreground">ApnaMann</h1>
