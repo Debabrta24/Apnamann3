@@ -146,8 +146,20 @@ function Router() {
   return (
     <>
       <div className="flex h-screen">
+        {/* Mobile Overlay */}
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+            data-testid="overlay-mobile-menu"
+          />
+        )}
+        
         {/* Left Sidebar Navigation - Toggleable */}
-        <div className={`${sidebarOpen ? 'lg:flex' : 'lg:hidden'} hidden lg:w-72 lg:flex-col transition-all duration-300`}>
+        <div 
+          id="mobile-sidebar"
+          className={`${sidebarOpen ? 'flex' : 'hidden'} fixed inset-y-0 left-0 z-40 w-72 flex-col transition-all duration-300 md:relative md:inset-y-auto md:left-auto md:z-auto md:flex`}
+        >
           <div className="flex flex-col h-screen bg-card border-r border-border">
             {/* Logo and branding */}
             <div className="flex items-center p-4 border-b border-border">

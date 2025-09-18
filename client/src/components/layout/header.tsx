@@ -3,6 +3,7 @@ import {
   ChevronDown,
   ChevronRight,
   Globe,
+  Menu,
   Moon,
   Sun,
   Stethoscope,
@@ -86,6 +87,19 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
     <header className="bg-card border-b border-border sticky top-0 z-50">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[4.5rem]">
+
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setSidebarOpen?.(!sidebarOpen)}
+            className="md:hidden hover:bg-accent"
+            data-testid="button-mobile-menu"
+            aria-controls="mobile-sidebar"
+            aria-expanded={sidebarOpen}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
 
           {/* Global Search - Desktop */}
           <div className="hidden md:flex flex-1 max-w-md">
