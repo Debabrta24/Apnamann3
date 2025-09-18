@@ -1,5 +1,7 @@
 import type { Express } from "express";
+import express from "express";
 import { createServer, type Server } from "http";
+import path from "path";
 import { WebSocketServer, WebSocket } from "ws";
 import multer from "multer";
 import mammoth from "mammoth";
@@ -8,6 +10,7 @@ import { aiService } from "./services/ai-service";
 import { LocalAIService } from "./services/local-ai";
 import { ScreeningService } from "./services/screening";
 import { CrisisService } from "./services/crisis";
+import { ImageDownloaderService } from "./services/image-downloader";
 import { 
   insertUserSchema, 
   insertScreeningAssessmentSchema,
@@ -24,6 +27,21 @@ import {
 } from "@shared/schema";
 import { db } from "./db";
 import { z } from "zod";
+
+// Zod schemas for image downloading
+const downloadImageSchema = z.object({
+  url: z.string().url("Invalid URL format"),
+  customFileName: z.string().optional()
+});
+
+const downloadMultipleImagesSchema = z.object({
+  urls: z.array(z.string().url()).min(1, "At least one URL is required").max(10, "Maximum 10 URLs allowed"),
+  customFileNames: z.array(z.string()).optional()
+});
+
+const validateUrlSchema = z.object({
+  url: z.string().url("Invalid URL format")
+});
 
 // Configure multer for file uploads
 const upload = multer({ 
@@ -70,6 +88,9 @@ const peerConnections = new Map<string, {ws: WebSocket, userId: string, callId?:
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
+
+  // Serve downloaded images statically (only downloads subfolder for security)
+  app.use('/downloaded', express.static(path.resolve(process.cwd(), 'attached_assets', 'downloads')));
 
   // WebSocket server for real-time chat
   const wss = new WebSocketServer({ 
@@ -579,6 +600,104 @@ This AI has learned from real conversation patterns and will respond authentical
       res.json({ success: true });
     } catch (error: any) {
       res.status(400).json({ message: error.message });
+    }
+  });
+
+  // Image downloading routes
+  app.post("/api/images/download", async (req, res) => {
+    try {
+      const validatedData = downloadImageSchema.parse(req.body);
+      const { url, customFileName } = validatedData;
+
+      const result = await ImageDownloaderService.downloadImage(url, customFileName);
+      
+      if (result.success) {
+        res.json({
+          success: true,
+          fileName: result.fileName,
+          url: `/downloaded/${result.fileName}`, // Public URL for frontend
+          fileSize: result.fileSize,
+          mimeType: result.mimeType
+        });
+      } else {
+        res.status(400).json({ 
+          success: false, 
+          error: result.error 
+        });
+      }
+    } catch (error: any) {
+      if (error.name === 'ZodError') {
+        res.status(400).json({ 
+          success: false, 
+          error: error.errors[0]?.message || "Invalid request data" 
+        });
+      } else {
+        res.status(500).json({ 
+          success: false, 
+          error: error.message || "Unknown error occurred" 
+        });
+      }
+    }
+  });
+
+  app.post("/api/images/download-multiple", async (req, res) => {
+    try {
+      const validatedData = downloadMultipleImagesSchema.parse(req.body);
+      const { urls, customFileNames } = validatedData;
+
+      const results = await ImageDownloaderService.downloadMultipleImages(urls, customFileNames);
+      
+      const response = {
+        results: results.map(result => ({
+          success: result.success,
+          fileName: result.fileName,
+          url: result.success ? `/downloaded/${result.fileName}` : undefined,
+          fileSize: result.fileSize,
+          mimeType: result.mimeType,
+          error: result.error
+        })),
+        summary: {
+          total: results.length,
+          successful: results.filter(r => r.success).length,
+          failed: results.filter(r => !r.success).length
+        }
+      };
+      
+      res.json(response);
+    } catch (error: any) {
+      if (error.name === 'ZodError') {
+        res.status(400).json({ 
+          success: false, 
+          error: error.errors[0]?.message || "Invalid request data" 
+        });
+      } else {
+        res.status(500).json({ 
+          success: false, 
+          error: error.message || "Unknown error occurred" 
+        });
+      }
+    }
+  });
+
+  app.get("/api/images/validate-url", async (req, res) => {
+    try {
+      const validatedData = validateUrlSchema.parse(req.query);
+      const { url } = validatedData;
+
+      const isImageUrl = ImageDownloaderService.isImageUrl(url);
+      
+      res.json({
+        isValid: isImageUrl,
+        url: url,
+        message: isImageUrl 
+          ? "URL appears to be a valid image URL" 
+          : "URL does not appear to be an image URL"
+      });
+    } catch (error: any) {
+      res.status(400).json({ 
+        isValid: false, 
+        error: error.message 
+      });
     }
   });
 
