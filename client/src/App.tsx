@@ -50,6 +50,9 @@ function Router() {
   const [location, setLocation] = useLocation();
   const { trackAction, trackPageDuration } = useUsageAnalytics();
   
+  // Sidebar state for desktop navigation
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  
   // Dropdown states for navigation sections
   const [dropdownStates, setDropdownStates] = useState({
     doctorScreening: false,
@@ -77,6 +80,12 @@ function Router() {
       console.log("Triggering quote overlay"); // Debug log
       triggerQuoteOverlay();
     }
+    
+    // Close sidebar by default on profile page
+    if (location === '/profile' && previousLocation !== location) {
+      setSidebarOpen(false);
+    }
+    
     setPreviousLocation(location);
   }, [location, isAuthenticated, isOnboarding, triggerQuoteOverlay, previousLocation]);
 
@@ -137,8 +146,8 @@ function Router() {
   return (
     <>
       <div className="flex h-screen">
-        {/* Left Sidebar Navigation - Hidden on profile page */}
-        <div className={`hidden lg:flex lg:w-72 lg:flex-col ${location === '/profile' ? 'lg:hidden' : ''}`}>
+        {/* Left Sidebar Navigation - Toggleable */}
+        <div className={`${sidebarOpen ? 'lg:flex' : 'lg:hidden'} hidden lg:w-72 lg:flex-col transition-all duration-300`}>
           <div className="flex flex-col h-screen bg-card border-r border-border">
             {/* Logo and branding */}
             <div className="flex items-center p-4 border-b border-border">
@@ -365,7 +374,7 @@ function Router() {
         
         {/* Main content area */}
         <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
-          <Header />
+          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <main className="flex-1 overflow-auto">
             <Switch>
               <Route path="/" component={Dashboard} />

@@ -65,7 +65,12 @@ const darkThemes = [
   { value: "cosmic", label: "Cosmic Space" },
 ];
 
-export default function Header() {
+interface HeaderProps {
+  sidebarOpen?: boolean;
+  setSidebarOpen?: (open: boolean) => void;
+}
+
+export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}) {
   const { currentUser, theme, setTheme, logout } = useAppContext();
   const [, setLocation] = useLocation();
   const { ts, changeLanguage, currentLanguage, isTranslating } =
@@ -117,6 +122,22 @@ export default function Header() {
               <h1 className="text-xl font-bold text-foreground">ApnaMann</h1>
             </div>
           </div>
+
+          {/* Left Sidebar Toggle Button - Desktop */}
+          {setSidebarOpen && (
+            <div className="hidden lg:flex">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSidebarOpen?.(!sidebarOpen)}
+                data-testid="button-sidebar-toggle"
+                title="Toggle navigation sidebar"
+                aria-label="Toggle navigation sidebar"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            </div>
+          )}
 
           {/* Mobile Navigation */}
           <div className="md:hidden">
