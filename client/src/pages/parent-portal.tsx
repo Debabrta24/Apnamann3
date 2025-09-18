@@ -177,91 +177,91 @@ export default function ParentPortal() {
                   <span>Mental Health Warning Signs in Children</span>
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-6">Watch for these behavioral changes that might indicate your child needs mental health support:</p>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <div className="p-4 bg-white dark:bg-gray-900 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                    <h4 className="font-semibold text-foreground mb-3 flex items-center">
-                      <Brain className="h-4 w-4 mr-2 text-yellow-600" />
-                      Behavioral Changes
+              <CardContent className="p-4 sm:p-6">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6 leading-relaxed">Watch for these behavioral changes that might indicate your child needs mental health support:</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  <div className="p-3 sm:p-4 bg-white dark:bg-gray-900 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                    <h4 className="text-sm sm:text-base font-semibold text-foreground mb-2 sm:mb-3 flex items-center">
+                      <Brain className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-yellow-600 flex-shrink-0" />
+                      <span className="leading-tight">Behavioral Changes</span>
                     </h4>
-                    <ul className="text-sm text-muted-foreground space-y-2">
+                    <ul className="text-xs sm:text-sm text-muted-foreground space-y-2">
                       <li className="flex items-start">
-                        <span className="w-2 h-2 rounded-full bg-yellow-500 mr-3 mt-2 flex-shrink-0"></span>
-                        Sudden mood swings or irritability
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
+                        <span className="leading-relaxed">Sudden mood swings or irritability</span>
                       </li>
                       <li className="flex items-start">
-                        <span className="w-2 h-2 rounded-full bg-yellow-500 mr-3 mt-2 flex-shrink-0"></span>
-                        Withdrawal from family and friends
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
+                        <span className="leading-relaxed">Withdrawal from family and friends</span>
                       </li>
                       <li className="flex items-start">
-                        <span className="w-2 h-2 rounded-full bg-yellow-500 mr-3 mt-2 flex-shrink-0"></span>
-                        Loss of interest in hobbies
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
+                        <span className="leading-relaxed">Loss of interest in hobbies</span>
                       </li>
                       <li className="flex items-start">
-                        <span className="w-2 h-2 rounded-full bg-yellow-500 mr-3 mt-2 flex-shrink-0"></span>
-                        Changes in sleep patterns
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
+                        <span className="leading-relaxed">Changes in sleep patterns</span>
                       </li>
                     </ul>
                   </div>
 
-                  <div className="p-4 bg-white dark:bg-gray-900 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                    <h4 className="font-semibold text-foreground mb-3 flex items-center">
-                      <BookOpen className="h-4 w-4 mr-2 text-yellow-600" />
-                      Academic Issues
+                  <div className="p-3 sm:p-4 bg-white dark:bg-gray-900 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                    <h4 className="text-sm sm:text-base font-semibold text-foreground mb-2 sm:mb-3 flex items-center">
+                      <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-yellow-600 flex-shrink-0" />
+                      <span className="leading-tight">Academic Issues</span>
                     </h4>
-                    <ul className="text-sm text-muted-foreground space-y-2">
+                    <ul className="text-xs sm:text-sm text-muted-foreground space-y-2">
                       <li className="flex items-start">
-                        <span className="w-2 h-2 rounded-full bg-yellow-500 mr-3 mt-2 flex-shrink-0"></span>
-                        Declining grades or performance
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
+                        <span className="leading-relaxed">Declining grades or performance</span>
                       </li>
                       <li className="flex items-start">
-                        <span className="w-2 h-2 rounded-full bg-yellow-500 mr-3 mt-2 flex-shrink-0"></span>
-                        Frequent teacher complaints
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
+                        <span className="leading-relaxed">Frequent teacher complaints</span>
                       </li>
                       <li className="flex items-start">
-                        <span className="w-2 h-2 rounded-full bg-yellow-500 mr-3 mt-2 flex-shrink-0"></span>
-                        School avoidance or refusal
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
+                        <span className="leading-relaxed">School avoidance or refusal</span>
                       </li>
                       <li className="flex items-start">
-                        <span className="w-2 h-2 rounded-full bg-yellow-500 mr-3 mt-2 flex-shrink-0"></span>
-                        Difficulty concentrating
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
+                        <span className="leading-relaxed">Difficulty concentrating</span>
                       </li>
                     </ul>
                   </div>
 
-                  <div className="p-4 bg-white dark:bg-gray-900 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                    <h4 className="font-semibold text-foreground mb-3 flex items-center">
-                      <Users className="h-4 w-4 mr-2 text-yellow-600" />
-                      Social Signs
+                  <div className="p-3 sm:p-4 bg-white dark:bg-gray-900 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                    <h4 className="text-sm sm:text-base font-semibold text-foreground mb-2 sm:mb-3 flex items-center">
+                      <Users className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-yellow-600 flex-shrink-0" />
+                      <span className="leading-tight">Social Signs</span>
                     </h4>
-                    <ul className="text-sm text-muted-foreground space-y-2">
+                    <ul className="text-xs sm:text-sm text-muted-foreground space-y-2">
                       <li className="flex items-start">
-                        <span className="w-2 h-2 rounded-full bg-yellow-500 mr-3 mt-2 flex-shrink-0"></span>
-                        Difficulty making friends
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
+                        <span className="leading-relaxed">Difficulty making friends</span>
                       </li>
                       <li className="flex items-start">
-                        <span className="w-2 h-2 rounded-full bg-yellow-500 mr-3 mt-2 flex-shrink-0"></span>
-                        Social isolation or withdrawal
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
+                        <span className="leading-relaxed">Social isolation or withdrawal</span>
                       </li>
                       <li className="flex items-start">
-                        <span className="w-2 h-2 rounded-full bg-yellow-500 mr-3 mt-2 flex-shrink-0"></span>
-                        Excessive worry about others' opinions
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
+                        <span className="leading-relaxed">Excessive worry about others' opinions</span>
                       </li>
                       <li className="flex items-start">
-                        <span className="w-2 h-2 rounded-full bg-yellow-500 mr-3 mt-2 flex-shrink-0"></span>
-                        Fear of social situations
+                        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
+                        <span className="leading-relaxed">Fear of social situations</span>
                       </li>
                     </ul>
                   </div>
                 </div>
 
-                <div className="mt-6 p-4 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg border border-yellow-300 dark:border-yellow-700">
-                  <div className="flex items-start space-x-3">
-                    <Info className="h-5 w-5 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <h4 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">Remember</h4>
-                      <p className="text-sm text-yellow-700 dark:text-yellow-300">
+                <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg border border-yellow-300 dark:border-yellow-700">
+                  <div className="flex items-start space-x-2 sm:space-x-3">
+                    <Info className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <h4 className="text-sm sm:text-base font-semibold text-yellow-800 dark:text-yellow-200 mb-2">Remember</h4>
+                      <p className="text-xs sm:text-sm text-yellow-700 dark:text-yellow-300 leading-relaxed">
                         Not all behavioral changes indicate mental health issues. However, if you notice several of these signs persisting for more than two weeks, it's worth having a conversation with your child or seeking professional guidance.
                       </p>
                     </div>
