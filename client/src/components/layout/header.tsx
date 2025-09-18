@@ -641,29 +641,28 @@ export default function Header() {
                     </DropdownMenuSubContent>
                   </DropdownMenuSub>
 
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger data-testid="submenu-language-mobile">
-                      <Globe className="h-4 w-4 mr-2" />
+                  <div className="border-t border-border pt-2 mt-2">
+                    <div className="px-2 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      <Globe className="h-3 w-3 inline mr-1" />
                       {ts("Language")}
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
-                      {languages.map((lang) => (
-                        <DropdownMenuItem
-                          key={lang.code}
-                          onClick={() => handleLanguageChange(lang.code)}
-                          data-testid={`option-language-${lang.code}-mobile`}
-                          disabled={isTranslating}
-                        >
-                          {lang.name}
-                          {isTranslating && currentLanguage === lang.code && (
-                            <span className="ml-2 text-xs text-muted-foreground">
-                              {ts("Translating...")}
-                            </span>
-                          )}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuSubContent>
-                  </DropdownMenuSub>
+                    </div>
+                    {languages.map((lang) => (
+                      <DropdownMenuItem
+                        key={lang.code}
+                        onClick={() => handleLanguageChange(lang.code)}
+                        data-testid={`option-language-${lang.code}-mobile`}
+                        disabled={isTranslating}
+                        className="pl-6"
+                      >
+                        {lang.name}
+                        {isTranslating && currentLanguage === lang.code && (
+                          <span className="ml-2 text-xs text-muted-foreground">
+                            {ts("Translating...")}
+                          </span>
+                        )}
+                      </DropdownMenuItem>
+                    ))}
+                  </div>
                 </div>
 
                 <DropdownMenuItem
