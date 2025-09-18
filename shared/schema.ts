@@ -376,6 +376,9 @@ export const insertUserSchema = createInsertSchema(users).omit({
 export const insertScreeningAssessmentSchema = createInsertSchema(screeningAssessments).omit({
   id: true,
   completedAt: true,
+  totalScore: true,
+  riskLevel: true,
+  isHighRisk: true,
 });
 
 export const insertAppointmentSchema = createInsertSchema(appointments).omit({
