@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { useAppContext } from "@/context/AppContext";
+import { useAppContext, userModes } from "@/context/AppContext";
 import AISuggestions from "@/components/ai-suggestions";
 import CrisisAlert from "@/components/dashboard/crisis-alert";
 import MoodTracker from "@/components/dashboard/mood-tracker";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Brain, Heart, Calendar, Users, ArrowRight, Phone, Shield } from "lucide-react";
+import { Brain, Heart, Calendar, Users, ArrowRight, Phone, Shield, BookOpen, Gamepad2, Flower, Moon, Music, Palette } from "lucide-react";
 import { useLocation } from "wouter";
 
 interface DashboardStats {
@@ -25,7 +25,7 @@ interface DashboardStats {
 }
 
 export default function Dashboard() {
-  const { currentUser } = useAppContext();
+  const { currentUser, userMode } = useAppContext();
   const [, setLocation] = useLocation();
 
   const { data: analytics } = useQuery({
@@ -76,7 +76,251 @@ export default function Dashboard() {
     },
   ];
 
-  const quickActions = [
+  // Mode-specific customizations
+  const getModeConfig = () => {
+    const currentMode = userModes.find(mode => mode.id === userMode);
+    if (!currentMode) return null;
+
+    const modeConfigs = {
+      'focus': {
+        welcomeMessage: "Ready to focus and achieve your study goals today?",
+        primaryActions: [
+          {
+            icon: Brain,
+            title: "Focus Chat Assistant",
+            description: "Get study strategies and productivity tips",
+            action: () => setLocation("/chat"),
+            color: "bg-primary/10 text-primary",
+          },
+          {
+            icon: BookOpen,
+            title: "Study Resources",
+            description: "Access learning materials and guides",
+            action: () => setLocation("/resources"),
+            color: "bg-secondary/10 text-secondary",
+          },
+        ],
+        recommendations: [
+          {
+            title: "Pomodoro Study Session",
+            description: "25-minute focused study technique",
+            action: () => setLocation("/routine"),
+            icon: "🍅"
+          },
+          {
+            title: "Study Break Exercises",
+            description: "Mental breaks between study sessions",
+            action: () => setLocation("/yoga"),
+            icon: "📚"
+          }
+        ]
+      },
+      'relax': {
+        welcomeMessage: "Take a moment to breathe and find your inner peace today.",
+        primaryActions: [
+          {
+            icon: Flower,
+            title: "Meditation & Yoga",
+            description: "Guided sessions for inner peace",
+            action: () => setLocation("/yoga"),
+            color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400",
+          },
+          {
+            icon: Music,
+            title: "Calming Sounds",
+            description: "Nature sounds and meditation music",
+            action: () => setLocation("/music"),
+            color: "bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400",
+          },
+        ],
+        recommendations: [
+          {
+            title: "5-Minute Breathing Exercise",
+            description: "Quick relaxation technique",
+            action: () => setLocation("/yoga"),
+            icon: "🧘"
+          },
+          {
+            title: "Sleep Stories",
+            description: "Calming bedtime stories",
+            action: () => setLocation("/sleep"),
+            icon: "💤"
+          }
+        ]
+      },
+      'social': {
+        welcomeMessage: "Ready to connect and share your journey with others?",
+        primaryActions: [
+          {
+            icon: Users,
+            title: "Peer Support",
+            description: "Connect with fellow students anonymously",
+            action: () => setLocation("/peer-calling"),
+            color: "bg-purple-100 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400",
+          },
+          {
+            icon: Heart,
+            title: "Community Resources",
+            description: "Shared experiences and support",
+            action: () => setLocation("/resources"),
+            color: "bg-pink-100 text-pink-700 dark:bg-pink-900/20 dark:text-pink-400",
+          },
+        ],
+        recommendations: [
+          {
+            title: "Join Support Group",
+            description: "Connect with others facing similar challenges",
+            action: () => setLocation("/peer-calling"),
+            icon: "🤝"
+          },
+          {
+            title: "Share Your Story",
+            description: "Help others by sharing your experience",
+            action: () => setLocation("/community"),
+            icon: "💬"
+          }
+        ]
+      },
+      'energy': {
+        welcomeMessage: "Let's channel that energy into positive action today!",
+        primaryActions: [
+          {
+            icon: Gamepad2,
+            title: "Active Games",
+            description: "Fun games to boost your energy",
+            action: () => setLocation("/games"),
+            color: "bg-orange-100 text-orange-700 dark:bg-orange-900/20 dark:text-orange-400",
+          },
+          {
+            icon: Calendar,
+            title: "Active Routine",
+            description: "Build an energizing daily routine",
+            action: () => setLocation("/routine"),
+            color: "bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400",
+          },
+        ],
+        recommendations: [
+          {
+            title: "10-Minute Energy Workout",
+            description: "Quick exercises to boost mood",
+            action: () => setLocation("/routine"),
+            icon: "⚡"
+          },
+          {
+            title: "Motivational Videos",
+            description: "Inspiring content to keep you moving",
+            action: () => setLocation("/videos"),
+            icon: "🎯"
+          }
+        ]
+      },
+      'mindful': {
+        welcomeMessage: "Time for mindful reflection and personal growth today.",
+        primaryActions: [
+          {
+            icon: BookOpen,
+            title: "Personal Diary",
+            description: "Reflect on your thoughts and feelings",
+            action: () => setLocation("/diary"),
+            color: "bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400",
+          },
+          {
+            icon: Brain,
+            title: "Mindful Chat",
+            description: "Reflective conversations with AI guide",
+            action: () => setLocation("/chat"),
+            color: "bg-teal-100 text-teal-700 dark:bg-teal-900/20 dark:text-teal-400",
+          },
+        ],
+        recommendations: [
+          {
+            title: "Daily Reflection Prompt",
+            description: "Guided questions for self-discovery",
+            action: () => setLocation("/diary"),
+            icon: "🌱"
+          },
+          {
+            title: "Mindfulness Exercise",
+            description: "Present-moment awareness practice",
+            action: () => setLocation("/yoga"),
+            icon: "🧠"
+          }
+        ]
+      },
+      'creative': {
+        welcomeMessage: "Let your creativity flow and express yourself today!",
+        primaryActions: [
+          {
+            icon: Palette,
+            title: "Creative Expression",
+            description: "Art therapy and creative activities",
+            action: () => setLocation("/resources"),
+            color: "bg-violet-100 text-violet-700 dark:bg-violet-900/20 dark:text-violet-400",
+          },
+          {
+            icon: Music,
+            title: "Creative Sounds",
+            description: "Inspiring music for creativity",
+            action: () => setLocation("/music"),
+            color: "bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-900/20 dark:text-fuchsia-400",
+          },
+        ],
+        recommendations: [
+          {
+            title: "Art Therapy Session",
+            description: "Express emotions through creativity",
+            action: () => setLocation("/resources"),
+            icon: "🎨"
+          },
+          {
+            title: "Creative Writing Prompt",
+            description: "Explore thoughts through writing",
+            action: () => setLocation("/diary"),
+            icon: "✍️"
+          }
+        ]
+      },
+      'recovery': {
+        welcomeMessage: "Take the time you need to rest and recover today.",
+        primaryActions: [
+          {
+            icon: Moon,
+            title: "Sleep & Rest Guide",
+            description: "Tools for better rest and recovery",
+            action: () => setLocation("/sleep"),
+            color: "bg-slate-100 text-slate-700 dark:bg-slate-900/20 dark:text-slate-400",
+          },
+          {
+            icon: Heart,
+            title: "Gentle Support",
+            description: "Low-energy wellness activities",
+            action: () => setLocation("/chat"),
+            color: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-400",
+          },
+        ],
+        recommendations: [
+          {
+            title: "Gentle Stretching",
+            description: "Restorative movement for recovery",
+            action: () => setLocation("/yoga"),
+            icon: "💤"
+          },
+          {
+            title: "Sleep Hygiene Tips",
+            description: "Improve your sleep quality",
+            action: () => setLocation("/sleep"),
+            icon: "🛌"
+          }
+        ]
+      }
+    };
+
+    return modeConfigs[userMode as keyof typeof modeConfigs] || null;
+  };
+
+  const modeConfig = getModeConfig();
+
+  const quickActions = modeConfig?.primaryActions || [
     {
       icon: Brain,
       title: "AI Support Chat",
@@ -117,7 +361,7 @@ export default function Dashboard() {
           Welcome back, {currentUser?.firstName || "Student"}
         </h2>
         <p className="text-primary-foreground/80 text-lg mb-4">
-          How are you feeling today? Remember, taking care of your mental health is just as important as your physical health.
+          {modeConfig?.welcomeMessage || "How are you feeling today? Remember, taking care of your mental health is just as important as your physical health."}
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
           <Button
@@ -217,44 +461,42 @@ export default function Dashboard() {
           {/* Today's Recommendations */}
           <Card className="mb-6">
             <CardContent className="p-6">
-              <h4 className="text-lg font-medium text-card-foreground mb-4">Recommended for You</h4>
+              <h4 className="text-lg font-medium text-card-foreground mb-4">
+                {modeConfig ? `Recommended for ${userModes.find(m => m.id === userMode)?.name}` : "Recommended for You"}
+              </h4>
               <div className="space-y-4">
-                <div className="p-4 bg-muted/30 rounded-lg border">
-                  <div className="flex items-center space-x-3 mb-2">
-                    <div className="w-6 h-6 bg-secondary/20 rounded-full flex items-center justify-center">
-                      <div className="w-3 h-3 bg-secondary rounded-full" />
+                {(modeConfig?.recommendations || [
+                  {
+                    title: "5-Minute Breathing Exercise",
+                    description: "Perfect for exam stress relief",
+                    action: () => setLocation("/chat"),
+                    icon: "🧘"
+                  },
+                  {
+                    title: "Sleep Hygiene Guide",
+                    description: "Improve your sleep quality",
+                    action: () => setLocation("/resources"),
+                    icon: "💤"
+                  }
+                ]).map((recommendation, index) => (
+                  <div key={index} className="p-4 bg-muted/30 rounded-lg border">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <div className="w-6 h-6 bg-secondary/20 rounded-full flex items-center justify-center">
+                        <span className="text-xs">{recommendation.icon}</span>
+                      </div>
+                      <span className="text-sm font-medium text-card-foreground">{recommendation.title}</span>
                     </div>
-                    <span className="text-sm font-medium text-card-foreground">5-Minute Breathing Exercise</span>
+                    <p className="text-xs text-muted-foreground mb-3">{recommendation.description}</p>
+                    <Button 
+                      size="sm" 
+                      className="w-full" 
+                      onClick={recommendation.action}
+                      data-testid={`button-recommendation-${index}`}
+                    >
+                      Start
+                    </Button>
                   </div>
-                  <p className="text-xs text-muted-foreground mb-3">Perfect for exam stress relief</p>
-                  <Button 
-                    size="sm" 
-                    className="w-full" 
-                    onClick={() => setLocation("/chat")}
-                    data-testid="button-breathing-exercise"
-                  >
-                    Start Exercise
-                  </Button>
-                </div>
-                
-                <div className="p-4 bg-muted/30 rounded-lg border">
-                  <div className="flex items-center space-x-3 mb-2">
-                    <div className="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center">
-                      <div className="w-3 h-3 bg-primary rounded-full" />
-                    </div>
-                    <span className="text-sm font-medium text-card-foreground">Sleep Hygiene Guide</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mb-3">Improve your sleep quality</p>
-                  <Button 
-                    size="sm" 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={() => setLocation("/resources")}
-                    data-testid="button-sleep-guide"
-                  >
-                    Read Guide
-                  </Button>
-                </div>
+                ))}
               </div>
             </CardContent>
           </Card>

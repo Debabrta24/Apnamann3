@@ -83,6 +83,24 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
     changeLanguage(languageCode);
   };
 
+  // Get suggested themes based on user mode
+  const getSuggestedThemes = () => {
+    if (!userMode) return [...lightThemes, ...darkThemes];
+
+    const currentMode = userModes.find(mode => mode.id === userMode);
+    if (!currentMode || !currentMode.suggestedThemes) return [...lightThemes, ...darkThemes];
+
+    // Return suggested themes first, then other themes
+    const suggested = currentMode.suggestedThemes;
+    const allThemes = [...lightThemes, ...darkThemes];
+    const suggestedThemeObjects = allThemes.filter(theme => suggested.includes(theme.value));
+    const otherThemes = allThemes.filter(theme => !suggested.includes(theme.value));
+    
+    return [...suggestedThemeObjects, ...otherThemes];
+  };
+
+  const suggestedThemes = getSuggestedThemes();
+
   return (
     <header className="bg-card border-b border-border sticky top-0 z-50">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -143,50 +161,52 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                       )}
                       {ts("Theme")}
                     </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuSub>
-                        <DropdownMenuSubTrigger data-testid="submenu-light-themes-settings">
-                          <Sun className="h-4 w-4 mr-2" />
-                          {ts("Light")}
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuSubContent>
-                          {lightThemes.map((themeOption) => (
-                            <DropdownMenuItem
-                              key={themeOption.value}
-                              onClick={() => setTheme(themeOption.value as any)}
-                              data-testid={`option-theme-${themeOption.value}-settings`}
-                              className={theme === themeOption.value ? "bg-primary/10 text-primary font-semibold" : ""}
-                            >
-                              {ts(themeOption.label)}
-                              {theme === themeOption.value && (
-                                <span className="ml-auto text-primary">✓</span>
-                              )}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuSubContent>
-                      </DropdownMenuSub>
-
-                      <DropdownMenuSub>
-                        <DropdownMenuSubTrigger data-testid="submenu-dark-themes-settings">
-                          <Moon className="h-4 w-4 mr-2" />
-                          {ts("Dark")}
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuSubContent>
-                          {darkThemes.map((themeOption) => (
-                            <DropdownMenuItem
-                              key={themeOption.value}
-                              onClick={() => setTheme(themeOption.value as any)}
-                              data-testid={`option-theme-${themeOption.value}-settings`}
-                              className={theme === themeOption.value ? "bg-primary/10 text-primary font-semibold" : ""}
-                            >
-                              {ts(themeOption.label)}
-                              {theme === themeOption.value && (
-                                <span className="ml-auto text-primary">✓</span>
-                              )}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuSubContent>
-                      </DropdownMenuSub>
+                    <DropdownMenuSubContent className="max-h-80 overflow-y-auto">
+                      {userMode && userModes.find(m => m.id === userMode)?.suggestedThemes && (
+                        <>
+                          {/* Suggested themes for current mode */}
+                          {userModes.find(m => m.id === userMode)!.suggestedThemes!.map((themeValue) => {
+                            const themeOption = suggestedThemes.find(t => t.value === themeValue);
+                            if (!themeOption) return null;
+                            return (
+                              <DropdownMenuItem
+                                key={themeOption.value}
+                                onClick={() => setTheme(themeOption.value as any)}
+                                data-testid={`option-theme-suggested-${themeOption.value}-settings`}
+                                className={`border-l-2 border-primary/50 ${theme === themeOption.value ? "bg-primary/10 text-primary font-semibold" : ""}`}
+                              >
+                                <span className="mr-2">⭐</span>
+                                {ts(themeOption.label)}
+                                {theme === themeOption.value && (
+                                  <span className="ml-auto text-primary">✓</span>
+                                )}
+                              </DropdownMenuItem>
+                            );
+                          })}
+                          <div className="border-t border-border my-1"></div>
+                        </>
+                      )}
+                      
+                      {/* All other themes */}
+                      {suggestedThemes.filter(themeOption => 
+                        !userMode || 
+                        !userModes.find(m => m.id === userMode)?.suggestedThemes?.includes(themeOption.value)
+                      ).map((themeOption) => (
+                        <DropdownMenuItem
+                          key={themeOption.value}
+                          onClick={() => setTheme(themeOption.value as any)}
+                          data-testid={`option-theme-${themeOption.value}-settings`}
+                          className={theme === themeOption.value ? "bg-primary/10 text-primary font-semibold" : ""}
+                        >
+                          <span className="mr-2">
+                            {lightThemes.some(t => t.value === themeOption.value) ? "☀️" : "🌙"}
+                          </span>
+                          {ts(themeOption.label)}
+                          {theme === themeOption.value && (
+                            <span className="ml-auto text-primary">✓</span>
+                          )}
+                        </DropdownMenuItem>
+                      ))}
                     </DropdownMenuSubContent>
                   </DropdownMenuSub>
 
@@ -236,6 +256,8 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                     <span 
                       className="absolute -top-1 -right-1 text-xs bg-background rounded-full w-5 h-5 flex items-center justify-center border border-border shadow-sm"
                       data-testid="emoji-user-mode-profile"
+                      aria-label={`Current mode: ${userModes.find(m => m.id === userMode)?.name}`}
+                      title={`Current mode: ${userModes.find(m => m.id === userMode)?.name}`}
                     >
                       {userModes.find(m => m.id === userMode)?.emoji}
                     </span>
