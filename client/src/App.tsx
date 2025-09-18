@@ -50,8 +50,8 @@ function Router() {
   const [location, setLocation] = useLocation();
   const { trackAction, trackPageDuration } = useUsageAnalytics();
   
-  // Sidebar state for desktop navigation
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // Sidebar state for desktop navigation - default closed on profile page
+  const [sidebarOpen, setSidebarOpen] = useState(() => location !== '/profile');
   
   // Dropdown states for navigation sections
   const [dropdownStates, setDropdownStates] = useState({
