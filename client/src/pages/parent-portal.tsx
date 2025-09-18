@@ -1,19 +1,35 @@
 import { useState } from "react";
-import { Users, Shield, MessageSquare, Bell, ArrowLeft, Heart, Brain, FileText, Palette, Sun, Moon, Waves, Mountain, TreePine, Flower2, Sparkles, Home, Cloud, Leaf, Coffee, Lightbulb, Phone, ExternalLink, Download, BookOpen, Video, Play, AlertTriangle, CheckCircle, Info } from "lucide-react";
+import { Users, Shield, MessageSquare, Bell, ArrowLeft, Heart, Brain, FileText, Palette, Sun, Moon, Waves, Mountain, TreePine, Flower2, Sparkles, Home, Cloud, Leaf, Coffee, Lightbulb, Phone, ExternalLink, Download, BookOpen, Video, Play, AlertTriangle, CheckCircle, Info, Globe, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
 import { useLocation } from "wouter";
 import { useAppContext } from "@/context/AppContext";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "@/hooks/use-translation";
 import logoUrl from '@/assets/logo.png';
+
+const languages = [
+  { code: "en", name: "English" },
+  { code: "hi", name: "हिंदी" },
+  { code: "bn", name: "বাংলা" },
+  { code: "ta", name: "தমিழ্" },
+  { code: "gu", name: "ગુજરાતী" },
+];
 
 export default function ParentPortal() {
   const [, setLocation] = useLocation();
   const { theme, setTheme } = useAppContext();
   const { toast } = useToast();
+  const { ts, changeLanguage, currentLanguage, isTranslating } = useTranslation();
   const [activeTab, setActiveTab] = useState("signs");
 
   const showComingSoon = (feature: string) => {
@@ -21,6 +37,13 @@ export default function ParentPortal() {
       title: "Coming Soon",
       description: `${feature} feature will be available soon!`,
     });
+  };
+
+  const handleLanguageChange = (languageCode: string) => {
+    if (languageCode === currentLanguage) return;
+    
+    // Use the React hook approach - this will trigger re-renders automatically
+    changeLanguage(languageCode);
   };
 
   // Theme configurations with icons
@@ -77,6 +100,34 @@ export default function ParentPortal() {
               </div>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-4 shrink-0">
+              {/* Language Selector */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" data-testid="button-language">
+                    <Globe className="h-4 w-4 mr-1" />
+                    <span className="hidden xl:inline">
+                      {isTranslating ? ts("Translating...") : (languages.find(l => l.code === currentLanguage)?.name || ts("English"))}
+                    </span>
+                    <ChevronDown className="h-3 w-3 ml-1" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {languages.map((lang) => (
+                    <DropdownMenuItem
+                      key={lang.code}
+                      onClick={() => handleLanguageChange(lang.code)}
+                      data-testid={`option-language-${lang.code}`}
+                      disabled={isTranslating}
+                    >
+                      {lang.name}
+                      {isTranslating && currentLanguage === lang.code && (
+                        <span className="ml-2 text-xs text-muted-foreground">{ts("Translating...")}</span>
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
               {/* Theme Switcher */}
               <Select value={theme} onValueChange={(value: Theme) => setTheme(value)}>
                 <SelectTrigger className="w-8 sm:w-[100px] lg:w-[140px] border-none bg-transparent hover:bg-accent" data-testid="select-theme">
