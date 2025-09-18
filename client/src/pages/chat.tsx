@@ -318,9 +318,6 @@ export default function Chat() {
                 <p className="text-sm text-muted-foreground mb-3">
                   Upload your chat files or paste conversations to create a personalized AI companion
                 </p>
-                <div className="bg-green-50 dark:bg-green-950/20 p-2 rounded text-xs text-green-700 dark:text-green-300">
-                  <strong>✨ Completely Free:</strong> No external API keys required!
-                </div>
               </CardContent>
             </Card>
           </div>
