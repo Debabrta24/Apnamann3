@@ -251,22 +251,22 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">How has your mood been lately?</Label>
                   <RadioGroup value={data.mood} onValueChange={(value) => updateData("mood", value)}>
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid grid-cols-2 gap-3">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="excellent" id="mood-excellent" />
-                        <Label htmlFor="mood-excellent" className="text-sm">Excellent</Label>
+                        <Label htmlFor="mood-excellent" className="text-xs">Excellent</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="good" id="mood-good" />
-                        <Label htmlFor="mood-good" className="text-sm">Good</Label>
+                        <Label htmlFor="mood-good" className="text-xs">Good</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="fair" id="mood-fair" />
-                        <Label htmlFor="mood-fair" className="text-sm">Fair</Label>
+                        <Label htmlFor="mood-fair" className="text-xs">Fair</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="poor" id="mood-poor" />
-                        <Label htmlFor="mood-poor" className="text-sm">Poor</Label>
+                        <Label htmlFor="mood-poor" className="text-xs">Poor</Label>
                       </div>
                     </div>
                   </RadioGroup>
@@ -275,22 +275,22 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">How would you rate your current stress level?</Label>
                   <RadioGroup value={data.stress} onValueChange={(value) => updateData("stress", value)}>
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid grid-cols-2 gap-3">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="low" id="stress-low" />
-                        <Label htmlFor="stress-low" className="text-sm">Low</Label>
+                        <Label htmlFor="stress-low" className="text-xs">Low</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="moderate" id="stress-moderate" />
-                        <Label htmlFor="stress-moderate" className="text-sm">Moderate</Label>
+                        <Label htmlFor="stress-moderate" className="text-xs">Moderate</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="high" id="stress-high" />
-                        <Label htmlFor="stress-high" className="text-sm">High</Label>
+                        <Label htmlFor="stress-high" className="text-xs">High</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="very-high" id="stress-very-high" />
-                        <Label htmlFor="stress-very-high" className="text-sm">Very High</Label>
+                        <Label htmlFor="stress-very-high" className="text-xs">Very High</Label>
                       </div>
                     </div>
                   </RadioGroup>
@@ -299,22 +299,22 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">How has your sleep been?</Label>
                   <RadioGroup value={data.sleep} onValueChange={(value) => updateData("sleep", value)}>
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid grid-cols-2 gap-3">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="excellent" id="sleep-excellent" />
-                        <Label htmlFor="sleep-excellent" className="text-sm">Excellent</Label>
+                        <Label htmlFor="sleep-excellent" className="text-xs">Excellent</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="good" id="sleep-good" />
-                        <Label htmlFor="sleep-good" className="text-sm">Good</Label>
+                        <Label htmlFor="sleep-good" className="text-xs">Good</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="fair" id="sleep-fair" />
-                        <Label htmlFor="sleep-fair" className="text-sm">Fair</Label>
+                        <Label htmlFor="sleep-fair" className="text-xs">Fair</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="poor" id="sleep-poor" />
-                        <Label htmlFor="sleep-poor" className="text-sm">Poor</Label>
+                        <Label htmlFor="sleep-poor" className="text-xs">Poor</Label>
                       </div>
                     </div>
                   </RadioGroup>
@@ -323,18 +323,18 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Have you sought mental health support before?</Label>
                   <RadioGroup value={data.previousHelp} onValueChange={(value) => updateData("previousHelp", value)}>
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-1 gap-2">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="yes" id="help-yes" />
-                        <Label htmlFor="help-yes" className="text-sm">Yes</Label>
+                        <Label htmlFor="help-yes" className="text-xs">Yes</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="no" id="help-no" />
-                        <Label htmlFor="help-no" className="text-sm">No</Label>
+                        <Label htmlFor="help-no" className="text-xs">No</Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="prefer-not-to-say" id="help-prefer-not" />
-                        <Label htmlFor="help-prefer-not" className="text-sm">Prefer not to say</Label>
+                        <Label htmlFor="help-prefer-not" className="text-xs">Prefer not to say</Label>
                       </div>
                     </div>
                   </RadioGroup>
