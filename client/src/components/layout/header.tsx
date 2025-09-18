@@ -28,6 +28,7 @@ import { useLocation } from "wouter";
 import GlobalSearch from "@/components/global-search";
 import NotificationCenter from "@/components/notifications/notification-center";
 import CoinDisplay from "@/components/coins/coin-display";
+import SmartWatchIntegrationPopup from "@/components/smartwatch-integration-popup";
 import { useTranslation } from "@/hooks/use-translation";
 import logoUrl from "@/assets/logo.png";
 
@@ -67,6 +68,7 @@ interface HeaderProps {
 export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}) {
   const { currentUser, theme, setTheme, userMode, logout } = useAppContext();
   const [, setLocation] = useLocation();
+  const [showSmartWatchPopup, setShowSmartWatchPopup] = useState(false);
   const { ts, changeLanguage, currentLanguage, isTranslating } =
     useTranslation();
 
@@ -102,7 +104,8 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
   const suggestedThemes = getSuggestedThemes();
 
   return (
-    <header className="bg-card border-b border-border sticky top-0 z-50">
+    <>
+      <header className="bg-card border-b border-border sticky top-0 z-50">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[4.5rem]">
           {/* Left side - Mobile Menu Button + Desktop Search */}
@@ -313,7 +316,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
-                  onClick={() => {}}
+                  onClick={() => setShowSmartWatchPopup(true)}
                   data-testid="menu-item-smart-integration"
                   className="sm:hidden"
                 >
@@ -337,5 +340,12 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
         </div>
       </div>
     </header>
+    
+    {/* SmartWatch Integration Popup */}
+    <SmartWatchIntegrationPopup 
+      isOpen={showSmartWatchPopup} 
+      onClose={() => setShowSmartWatchPopup(false)} 
+    />
+    </>
   );
 }
