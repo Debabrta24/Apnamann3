@@ -187,51 +187,59 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                         </>
                       )}
                       
-                      {/* Light Themes Section */}
-                      <div className="px-2 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                        ☀️ Light
-                      </div>
-                      {suggestedThemes.filter(themeOption => 
-                        lightThemes.some(t => t.value === themeOption.value) &&
-                        (!userMode || !userModes.find(m => m.id === userMode)?.suggestedThemes?.includes(themeOption.value))
-                      ).map((themeOption) => (
-                        <DropdownMenuItem
-                          key={themeOption.value}
-                          onClick={() => setTheme(themeOption.value as any)}
-                          data-testid={`option-theme-${themeOption.value}-settings`}
-                          className={theme === themeOption.value ? "bg-primary/10 text-primary font-semibold" : ""}
-                        >
-                          <span className="mr-2">☀️</span>
-                          {ts(themeOption.label)}
-                          {theme === themeOption.value && (
-                            <span className="ml-auto text-primary">✓</span>
-                          )}
-                        </DropdownMenuItem>
-                      ))}
+                      {/* Light Themes Submenu */}
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger data-testid="submenu-light-themes">
+                          <Sun className="h-4 w-4 mr-2" />
+                          Light
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                          {suggestedThemes.filter(themeOption => 
+                            lightThemes.some(t => t.value === themeOption.value) &&
+                            (!userMode || !userModes.find(m => m.id === userMode)?.suggestedThemes?.includes(themeOption.value))
+                          ).map((themeOption) => (
+                            <DropdownMenuItem
+                              key={themeOption.value}
+                              onClick={() => setTheme(themeOption.value as any)}
+                              data-testid={`option-theme-light-${themeOption.value}-settings`}
+                              className={theme === themeOption.value ? "bg-primary/10 text-primary font-semibold" : ""}
+                            >
+                              <span className="mr-2">☀️</span>
+                              {ts(themeOption.label)}
+                              {theme === themeOption.value && (
+                                <span className="ml-auto text-primary">✓</span>
+                              )}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
                       
-                      <div className="border-t border-border my-1"></div>
-                      
-                      {/* Dark Themes Section */}
-                      <div className="px-2 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                        🌙 Dark
-                      </div>
-                      {suggestedThemes.filter(themeOption => 
-                        !lightThemes.some(t => t.value === themeOption.value) &&
-                        (!userMode || !userModes.find(m => m.id === userMode)?.suggestedThemes?.includes(themeOption.value))
-                      ).map((themeOption) => (
-                        <DropdownMenuItem
-                          key={themeOption.value}
-                          onClick={() => setTheme(themeOption.value as any)}
-                          data-testid={`option-theme-${themeOption.value}-settings`}
-                          className={theme === themeOption.value ? "bg-primary/10 text-primary font-semibold" : ""}
-                        >
-                          <span className="mr-2">🌙</span>
-                          {ts(themeOption.label)}
-                          {theme === themeOption.value && (
-                            <span className="ml-auto text-primary">✓</span>
-                          )}
-                        </DropdownMenuItem>
-                      ))}
+                      {/* Dark Themes Submenu */}
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger data-testid="submenu-dark-themes">
+                          <Moon className="h-4 w-4 mr-2" />
+                          Dark
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                          {suggestedThemes.filter(themeOption => 
+                            !lightThemes.some(t => t.value === themeOption.value) &&
+                            (!userMode || !userModes.find(m => m.id === userMode)?.suggestedThemes?.includes(themeOption.value))
+                          ).map((themeOption) => (
+                            <DropdownMenuItem
+                              key={themeOption.value}
+                              onClick={() => setTheme(themeOption.value as any)}
+                              data-testid={`option-theme-dark-${themeOption.value}-settings`}
+                              className={theme === themeOption.value ? "bg-primary/10 text-primary font-semibold" : ""}
+                            >
+                              <span className="mr-2">🌙</span>
+                              {ts(themeOption.label)}
+                              {theme === themeOption.value && (
+                                <span className="ml-auto text-primary">✓</span>
+                              )}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
                     </DropdownMenuSubContent>
                   </DropdownMenuSub>
 
