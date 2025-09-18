@@ -108,8 +108,8 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
     <header className="bg-card border-b border-border sticky top-0 z-50">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[4.5rem]">
-          {/* Left Navigation Menu Button - All screen sizes */}
-          <div className="flex">
+          {/* Left Navigation Menu Button - Mobile and tablet only */}
+          <div className="flex xl:hidden">
             <Button
               variant="ghost"
               size="sm"
