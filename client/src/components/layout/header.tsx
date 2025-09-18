@@ -89,17 +89,19 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
         <div className="flex items-center justify-between h-[4.5rem]">
 
           {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setSidebarOpen?.(!sidebarOpen)}
-            className="md:hidden hover:bg-accent"
-            data-testid="button-mobile-menu"
-            aria-controls="mobile-sidebar"
-            aria-expanded={sidebarOpen}
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
+          {!sidebarOpen && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSidebarOpen?.(!sidebarOpen)}
+              className="md:hidden hover:bg-accent"
+              data-testid="button-mobile-menu"
+              aria-controls="mobile-sidebar"
+              aria-expanded={sidebarOpen}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          )}
 
           {/* Global Search - Desktop */}
           <div className="hidden md:flex flex-1 max-w-md">

@@ -7,9 +7,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppProvider, useAppContext } from "@/context/AppContext";
 import { useUsageAnalytics } from "@/lib/usage-analytics";
 import { translationService } from "@/lib/translation-service";
-import { Brain, User, Music, BookOpen, Video, MessageSquare, Gamepad2, Stethoscope, Play, Radio, Flower, Moon, Save, Phone, ChevronDown, ChevronRight, Pill, Heart, AlarmClock } from "lucide-react";
+import { Brain, User, Music, BookOpen, Video, MessageSquare, Gamepad2, Stethoscope, Play, Radio, Flower, Moon, Save, Phone, ChevronDown, ChevronRight, Pill, Heart, AlarmClock, X } from "lucide-react";
 import logoUrl from '@/assets/logo.png';
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import Header from "@/components/layout/header";
 import MotivationalQuote from "@/components/layout/motivational-quote";
 import PageQuoteOverlay from "@/components/layout/page-quote-overlay";
@@ -162,13 +163,26 @@ function Router() {
         >
           <div className="flex flex-col h-full bg-card border-r border-border shadow-lg md:shadow-none">
             {/* Logo and branding */}
-            <div className="flex items-center p-4 border-b border-border">
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center">
-                <img src={logoUrl} alt="ApnaMann Logo" className="w-10 h-10 rounded-lg object-cover" data-testid="img-logo-sidebar" />
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <div className="flex items-center">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center">
+                  <img src={logoUrl} alt="ApnaMann Logo" className="w-10 h-10 rounded-lg object-cover" data-testid="img-logo-sidebar" />
+                </div>
+                <div className="ml-3">
+                  <h1 className="text-xl font-bold text-foreground">ApnaMann</h1>
+                </div>
               </div>
-              <div className="ml-3">
-                <h1 className="text-xl font-bold text-foreground">ApnaMann</h1>
-              </div>
+              
+              {/* Close button for mobile */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSidebarOpen(false)}
+                className="md:hidden hover:bg-accent"
+                data-testid="button-close-sidebar"
+              >
+                <X className="h-5 w-5" />
+              </Button>
             </div>
             
             {/* Navigation */}
