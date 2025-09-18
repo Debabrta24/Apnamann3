@@ -84,7 +84,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
   };
 
   return (
-    <header className="bg-card border-b border-border sticky top-0 z-50">
+    <header className="bg-card border-b border-border sticky top-0 z-60">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[4.5rem]">
 
