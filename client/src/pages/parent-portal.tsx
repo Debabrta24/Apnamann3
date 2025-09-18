@@ -83,18 +83,18 @@ export default function ParentPortal() {
                 className="shrink-0"
               >
                 <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
-                <span className="hidden xs:inline">Back to Student Portal</span>
-                <span className="xs:hidden">Back</span>
+                <span className="hidden xs:inline">{ts("Back to Student Portal")}</span>
+                <span className="xs:hidden">{ts("Back")}</span>
               </Button>
               <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
                 <img src={logoUrl} alt="ApnaMann Logo" className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg object-cover shrink-0" />
                 <div className="min-w-0 flex-1">
                   <h1 className="text-sm sm:text-lg md:text-xl font-bold text-foreground truncate">
-                    <span className="hidden sm:inline">ApnaMann Student Parent Guidance</span>
-                    <span className="sm:hidden">Parent Guidance</span>
+                    <span className="hidden sm:inline">{ts("ApnaMann Student Parent Guidance")}</span>
+                    <span className="sm:hidden">{ts("Parent Guidance")}</span>
                   </h1>
                   <p className="text-xs sm:text-sm text-muted-foreground truncate hidden md:block">
-                    Guidance for students concerned about their child's mental health
+                    {ts("Guidance for students concerned about their child's mental health")}
                   </p>
                 </div>
               </div>
@@ -170,24 +170,22 @@ export default function ParentPortal() {
               </div>
               <div className="flex-1 w-full">
                 <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-2 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-0">
-                  <span className="text-center sm:text-left w-full sm:w-auto">Important Language Clarification</span>
+                  <span className="text-center sm:text-left w-full sm:w-auto">{ts("Important Language Clarification")}</span>
                   <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-red-500 self-center sm:ml-2" />
                 </h3>
                 <div className="space-y-3 sm:space-y-3">
                   <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                    <strong>Please note:</strong> When discussing "<span className="text-red-600 dark:text-red-400 font-semibold">Mental Health</span>" with your child, they might initially hear "<span className="text-red-600 dark:text-red-400 font-semibold">Metal</span>" instead of "<span className="text-red-600 dark:text-red-400 font-semibold">Health</span>" due to pronunciation. 
-                    This is completely normal! Please speak clearly and help them understand that we're talking about <strong>Mental HEALTH</strong> - 
-                    taking care of our minds, emotions, and feelings, just like we take care of our physical health.
+                    <strong>{ts("Please note:")}</strong> {ts('When discussing "Mental Health" with your child, they might initially hear "Metal" instead of "Health" due to pronunciation.')} 
+                    {ts("This is completely normal! Please speak clearly and help them understand that we're talking about Mental HEALTH - taking care of our minds, emotions, and feelings, just like we take care of our physical health.")}
                   </p>
                   <div className="bg-primary/10 rounded-lg p-3 sm:p-4 border border-primary/20">
-                    <p className="text-xs sm:text-sm font-medium text-foreground mb-2">💡 <strong>Motivational Message:</strong></p>
+                    <p className="text-xs sm:text-sm font-medium text-foreground mb-2">💡 <strong>{ts("Motivational Message:")}</strong></p>
                     <p className="text-xs sm:text-sm text-primary italic leading-relaxed">
-                      "Mental health is not a destination, but a process. It's about how you drive, not where you're going. 
-                      Your child's emotional well-being matters, and seeking support shows strength, not weakness."
+                      {ts('"Mental health is not a destination, but a process. It\'s about how you drive, not where you\'re going. Your child\'s emotional well-being matters, and seeking support shows strength, not weakness."')}
                     </p>
                   </div>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Remember: Clear communication about mental health creates a foundation for trust and understanding.
+                    {ts("Remember: Clear communication about mental health creates a foundation for trust and understanding.")}
                   </p>
                 </div>
               </div>
@@ -199,26 +197,26 @@ export default function ParentPortal() {
           <TabsList className="grid w-full grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 h-auto p-1 sm:p-2 gap-1 sm:gap-0">
             <TabsTrigger value="signs" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center justify-center space-x-1 sm:space-x-2 py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm" data-testid="tab-warning-signs">
               <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-              <span className="truncate">Warning Signs</span>
+              <span className="truncate">{ts("Warning Signs")}</span>
             </TabsTrigger>
             <TabsTrigger value="steps" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center justify-center space-x-1 sm:space-x-2 py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm" data-testid="tab-action-steps">
               <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-              <span className="truncate">Action Steps</span>
+              <span className="truncate">{ts("Action Steps")}</span>
             </TabsTrigger>
             <TabsTrigger value="resources" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center justify-center space-x-1 sm:space-x-2 py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm" data-testid="tab-resources">
               <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-              <span className="truncate">Resources</span>
+              <span className="truncate">{ts("Resources")}</span>
             </TabsTrigger>
             <TabsTrigger value="support" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center justify-center space-x-1 sm:space-x-2 py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm" data-testid="tab-support">
               <Heart className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
               <span className="truncate">
-                <span className="sm:hidden">Support</span>
-                <span className="hidden sm:inline">Support Tools</span>
+                <span className="sm:hidden">{ts("Support")}</span>
+                <span className="hidden sm:inline">{ts("Support Tools")}</span>
               </span>
             </TabsTrigger>
             <TabsTrigger value="emergency" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center justify-center space-x-1 sm:space-x-2 py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm" data-testid="tab-emergency">
               <Phone className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-              <span className="truncate">Emergency</span>
+              <span className="truncate">{ts("Emergency")}</span>
             </TabsTrigger>
           </TabsList>
 
@@ -228,33 +226,33 @@ export default function ParentPortal() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-yellow-800 dark:text-yellow-200">
                   <Brain className="h-5 w-5" />
-                  <span>Mental Health Warning Signs in Children</span>
+                  <span>{ts("Mental Health Warning Signs in Children")}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 sm:p-6">
-                <p className="text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6 leading-relaxed">Watch for these behavioral changes that might indicate your child needs mental health support:</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6 leading-relaxed">{ts("Watch for these behavioral changes that might indicate your child needs mental health support:")}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   <div className="p-3 sm:p-4 bg-white dark:bg-gray-900 rounded-lg border border-yellow-200 dark:border-yellow-800">
                     <h4 className="text-sm sm:text-base font-semibold text-foreground mb-2 sm:mb-3 flex items-center">
                       <Brain className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-yellow-600 flex-shrink-0" />
-                      <span className="leading-tight">Behavioral Changes</span>
+                      <span className="leading-tight">{ts("Behavioral Changes")}</span>
                     </h4>
                     <ul className="text-xs sm:text-sm text-muted-foreground space-y-2">
                       <li className="flex items-start">
                         <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
-                        <span className="leading-relaxed">Sudden mood swings or irritability</span>
+                        <span className="leading-relaxed">{ts("Sudden mood swings or irritability")}</span>
                       </li>
                       <li className="flex items-start">
                         <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
-                        <span className="leading-relaxed">Withdrawal from family and friends</span>
+                        <span className="leading-relaxed">{ts("Withdrawal from family and friends")}</span>
                       </li>
                       <li className="flex items-start">
                         <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
-                        <span className="leading-relaxed">Loss of interest in hobbies</span>
+                        <span className="leading-relaxed">{ts("Loss of interest in hobbies")}</span>
                       </li>
                       <li className="flex items-start">
                         <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
-                        <span className="leading-relaxed">Changes in sleep patterns</span>
+                        <span className="leading-relaxed">{ts("Changes in sleep patterns")}</span>
                       </li>
                     </ul>
                   </div>
@@ -262,24 +260,24 @@ export default function ParentPortal() {
                   <div className="p-3 sm:p-4 bg-white dark:bg-gray-900 rounded-lg border border-yellow-200 dark:border-yellow-800">
                     <h4 className="text-sm sm:text-base font-semibold text-foreground mb-2 sm:mb-3 flex items-center">
                       <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-yellow-600 flex-shrink-0" />
-                      <span className="leading-tight">Academic Issues</span>
+                      <span className="leading-tight">{ts("Academic Issues")}</span>
                     </h4>
                     <ul className="text-xs sm:text-sm text-muted-foreground space-y-2">
                       <li className="flex items-start">
                         <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
-                        <span className="leading-relaxed">Declining grades or performance</span>
+                        <span className="leading-relaxed">{ts("Declining grades or performance")}</span>
                       </li>
                       <li className="flex items-start">
                         <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
-                        <span className="leading-relaxed">Frequent teacher complaints</span>
+                        <span className="leading-relaxed">{ts("Frequent teacher complaints")}</span>
                       </li>
                       <li className="flex items-start">
                         <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
-                        <span className="leading-relaxed">School avoidance or refusal</span>
+                        <span className="leading-relaxed">{ts("School avoidance or refusal")}</span>
                       </li>
                       <li className="flex items-start">
                         <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
-                        <span className="leading-relaxed">Difficulty concentrating</span>
+                        <span className="leading-relaxed">{ts("Difficulty concentrating")}</span>
                       </li>
                     </ul>
                   </div>
@@ -287,24 +285,24 @@ export default function ParentPortal() {
                   <div className="p-3 sm:p-4 bg-white dark:bg-gray-900 rounded-lg border border-yellow-200 dark:border-yellow-800">
                     <h4 className="text-sm sm:text-base font-semibold text-foreground mb-2 sm:mb-3 flex items-center">
                       <Users className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-yellow-600 flex-shrink-0" />
-                      <span className="leading-tight">Social Signs</span>
+                      <span className="leading-tight">{ts("Social Signs")}</span>
                     </h4>
                     <ul className="text-xs sm:text-sm text-muted-foreground space-y-2">
                       <li className="flex items-start">
                         <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
-                        <span className="leading-relaxed">Difficulty making friends</span>
+                        <span className="leading-relaxed">{ts("Difficulty making friends")}</span>
                       </li>
                       <li className="flex items-start">
                         <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
-                        <span className="leading-relaxed">Social isolation or withdrawal</span>
+                        <span className="leading-relaxed">{ts("Social isolation or withdrawal")}</span>
                       </li>
                       <li className="flex items-start">
                         <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
-                        <span className="leading-relaxed">Excessive worry about others' opinions</span>
+                        <span className="leading-relaxed">{ts("Excessive worry about others' opinions")}</span>
                       </li>
                       <li className="flex items-start">
                         <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-yellow-500 mr-2 sm:mr-3 mt-1.5 sm:mt-2 flex-shrink-0"></span>
-                        <span className="leading-relaxed">Fear of social situations</span>
+                        <span className="leading-relaxed">{ts("Fear of social situations")}</span>
                       </li>
                     </ul>
                   </div>
@@ -314,9 +312,9 @@ export default function ParentPortal() {
                   <div className="flex items-start space-x-2 sm:space-x-3">
                     <Info className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
                     <div className="min-w-0 flex-1">
-                      <h4 className="text-sm sm:text-base font-semibold text-yellow-800 dark:text-yellow-200 mb-2">Remember</h4>
+                      <h4 className="text-sm sm:text-base font-semibold text-yellow-800 dark:text-yellow-200 mb-2">{ts("Remember")}</h4>
                       <p className="text-xs sm:text-sm text-yellow-700 dark:text-yellow-300 leading-relaxed">
-                        Not all behavioral changes indicate mental health issues. However, if you notice several of these signs persisting for more than two weeks, it's worth having a conversation with your child or seeking professional guidance.
+                        {ts("Not all behavioral changes indicate mental health issues. However, if you notice several of these signs persisting for more than two weeks, it's worth having a conversation with your child or seeking professional guidance.")}
                       </p>
                     </div>
                   </div>
@@ -331,7 +329,7 @@ export default function ParentPortal() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-blue-800 dark:text-blue-200">
                   <CheckCircle className="h-5 w-5" />
-                  <span>What You Can Do Right Now</span>
+                  <span>{ts("What You Can Do Right Now")}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 sm:p-6">
@@ -343,16 +341,16 @@ export default function ParentPortal() {
                           <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 dark:text-blue-400" />
                         </div>
                         <div className="flex-1 w-full">
-                          <h4 className="text-sm sm:text-base font-semibold text-foreground mb-2 text-center sm:text-left">1. Start a Gentle Conversation</h4>
-                          <p className="text-xs sm:text-sm text-muted-foreground mb-3 leading-relaxed text-center sm:text-left">Choose a quiet, comfortable time to talk. Use open-ended questions and listen without judgment.</p>
+                          <h4 className="text-sm sm:text-base font-semibold text-foreground mb-2 text-center sm:text-left">{ts("1. Start a Gentle Conversation")}</h4>
+                          <p className="text-xs sm:text-sm text-muted-foreground mb-3 leading-relaxed text-center sm:text-left">{ts("Choose a quiet, comfortable time to talk. Use open-ended questions and listen without judgment.")}</p>
                           <div className="flex flex-col sm:flex-row flex-wrap gap-2 items-center sm:items-start">
                             <Button size="sm" variant="outline" className="text-xs w-full sm:w-auto" onClick={() => showComingSoon("Conversation Starter Guide")} data-testid="button-conversation-guide">
                               <Play className="h-3 w-3 mr-1" />
-                              <span className="truncate">Conversation Starter Guide</span>
+                              <span className="truncate">{ts("Conversation Starter Guide")}</span>
                             </Button>
                             <Button size="sm" variant="outline" className="text-xs w-full sm:w-auto" onClick={() => showComingSoon("Questions to Ask Guide")} data-testid="button-questions-guide">
                               <Download className="h-3 w-3 mr-1" />
-                              <span className="truncate">Questions to Ask</span>
+                              <span className="truncate">{ts("Questions to Ask")}</span>
                             </Button>
                           </div>
                         </div>
@@ -365,16 +363,16 @@ export default function ParentPortal() {
                           <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 dark:text-green-400" />
                         </div>
                         <div className="flex-1 w-full">
-                          <h4 className="text-sm sm:text-base font-semibold text-foreground mb-2 text-center sm:text-left">2. Encourage Professional Support</h4>
-                          <p className="text-xs sm:text-sm text-muted-foreground mb-3 leading-relaxed text-center sm:text-left">Help normalize seeking mental health support. Explain that it's like going to a doctor for physical health.</p>
+                          <h4 className="text-sm sm:text-base font-semibold text-foreground mb-2 text-center sm:text-left">{ts("2. Encourage Professional Support")}</h4>
+                          <p className="text-xs sm:text-sm text-muted-foreground mb-3 leading-relaxed text-center sm:text-left">{ts("Help normalize seeking mental health support. Explain that it's like going to a doctor for physical health.")}</p>
                           <div className="flex flex-col sm:flex-row flex-wrap gap-2 items-center sm:items-start">
                             <Button size="sm" variant="outline" className="text-xs w-full sm:w-auto" onClick={() => showComingSoon("Local Counselors Directory")} data-testid="button-find-counselors">
                               <ExternalLink className="h-3 w-3 mr-1" />
-                              <span className="truncate">Find Local Counselors</span>
+                              <span className="truncate">{ts("Find Local Counselors")}</span>
                             </Button>
                             <Button size="sm" variant="outline" className="text-xs w-full sm:w-auto" onClick={() => setActiveTab("emergency")} data-testid="button-helpline-numbers">
                               <Phone className="h-3 w-3 mr-1" />
-                              <span className="truncate">Helpline Numbers</span>
+                              <span className="truncate">{ts("Helpline Numbers")}</span>
                             </Button>
                           </div>
                         </div>
@@ -387,16 +385,16 @@ export default function ParentPortal() {
                           <Brain className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600 dark:text-purple-400" />
                         </div>
                         <div className="flex-1 w-full">
-                          <h4 className="text-sm sm:text-base font-semibold text-foreground mb-2 text-center sm:text-left">3. Introduce ApnaMann Platform</h4>
-                          <p className="text-xs sm:text-sm text-muted-foreground mb-3 leading-relaxed text-center sm:text-left">Show your child how to access anonymous mental health resources and AI-powered support.</p>
+                          <h4 className="text-sm sm:text-base font-semibold text-foreground mb-2 text-center sm:text-left">{ts("3. Introduce ApnaMann Platform")}</h4>
+                          <p className="text-xs sm:text-sm text-muted-foreground mb-3 leading-relaxed text-center sm:text-left">{ts("Show your child how to access anonymous mental health resources and AI-powered support.")}</p>
                           <div className="flex flex-col sm:flex-row flex-wrap gap-2 items-center sm:items-start">
                             <Button size="sm" variant="outline" className="text-xs w-full sm:w-auto" onClick={() => setLocation("/")} data-testid="button-explore-student-platform">
                               <ExternalLink className="h-3 w-3 mr-1" />
-                              <span className="truncate">Explore Student Platform</span>
+                              <span className="truncate">{ts("Explore Student Platform")}</span>
                             </Button>
                             <Button size="sm" variant="outline" className="text-xs w-full sm:w-auto" onClick={() => showComingSoon("Platform Tutorial Video")} data-testid="button-platform-tutorial">
                               <Video className="h-3 w-3 mr-1" />
-                              <span className="truncate">Platform Tutorial</span>
+                              <span className="truncate">{ts("Platform Tutorial")}</span>
                             </Button>
                           </div>
                         </div>
@@ -414,7 +412,7 @@ export default function ParentPortal() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-green-800 dark:text-green-200">
                   <BookOpen className="h-5 w-5" />
-                  <span>Comprehensive Resources</span>
+                  <span>{ts("Comprehensive Resources")}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 sm:p-6">
@@ -427,9 +425,9 @@ export default function ParentPortal() {
                   >
                     <Phone className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 dark:text-green-400 flex-shrink-0" />
                     <div className="text-center flex-1 flex flex-col justify-center">
-                      <p className="text-sm sm:text-base font-semibold mb-1">Crisis Support</p>
-                      <p className="text-xs text-muted-foreground leading-relaxed">24/7 emergency helplines</p>
-                      <Badge variant="secondary" className="mt-2 text-xs">Available Now</Badge>
+                      <p className="text-sm sm:text-base font-semibold mb-1">{ts("Crisis Support")}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{ts("24/7 emergency helplines")}</p>
+                      <Badge variant="secondary" className="mt-2 text-xs">{ts("Available Now")}</Badge>
                     </div>
                   </Button>
                   
@@ -441,9 +439,9 @@ export default function ParentPortal() {
                   >
                     <Users className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 dark:text-green-400 flex-shrink-0" />
                     <div className="text-center flex-1 flex flex-col justify-center">
-                      <p className="text-sm sm:text-base font-semibold mb-1">Parent's Guide</p>
-                      <p className="text-xs text-muted-foreground leading-relaxed">Comprehensive support handbook</p>
-                      <Badge variant="secondary" className="mt-2 text-xs">PDF Download</Badge>
+                      <p className="text-sm sm:text-base font-semibold mb-1">{ts("Parent's Guide")}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{ts("Comprehensive support handbook")}</p>
+                      <Badge variant="secondary" className="mt-2 text-xs">{ts("PDF Download")}</Badge>
                     </div>
                   </Button>
                   
@@ -455,9 +453,9 @@ export default function ParentPortal() {
                   >
                     <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 dark:text-green-400 flex-shrink-0" />
                     <div className="text-center flex-1 flex flex-col justify-center">
-                      <p className="text-sm sm:text-base font-semibold mb-1">Find Professional Help</p>
-                      <p className="text-xs text-muted-foreground leading-relaxed">Local therapists & counselors</p>
-                      <Badge variant="secondary" className="mt-2 text-xs">Search Tool</Badge>
+                      <p className="text-sm sm:text-base font-semibold mb-1">{ts("Find Professional Help")}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{ts("Local therapists & counselors")}</p>
+                      <Badge variant="secondary" className="mt-2 text-xs">{ts("Search Tool")}</Badge>
                     </div>
                   </Button>
                   
@@ -469,9 +467,9 @@ export default function ParentPortal() {
                   >
                     <Video className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 dark:text-green-400 flex-shrink-0" />
                     <div className="text-center flex-1 flex flex-col justify-center">
-                      <p className="text-sm sm:text-base font-semibold mb-1">Educational Videos</p>
-                      <p className="text-xs text-muted-foreground leading-relaxed">Expert advice & tips</p>
-                      <Badge variant="secondary" className="mt-2 text-xs">Watch Now</Badge>
+                      <p className="text-sm sm:text-base font-semibold mb-1">{ts("Educational Videos")}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{ts("Expert advice & tips")}</p>
+                      <Badge variant="secondary" className="mt-2 text-xs">{ts("Watch Now")}</Badge>
                     </div>
                   </Button>
                   
@@ -483,9 +481,9 @@ export default function ParentPortal() {
                   >
                     <Heart className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 dark:text-green-400 flex-shrink-0" />
                     <div className="text-center flex-1 flex flex-col justify-center">
-                      <p className="text-sm sm:text-base font-semibold mb-1">Support Groups</p>
-                      <p className="text-xs text-muted-foreground leading-relaxed">Connect with other parents</p>
-                      <Badge variant="secondary" className="mt-2 text-xs">Join Community</Badge>
+                      <p className="text-sm sm:text-base font-semibold mb-1">{ts("Support Groups")}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{ts("Connect with other parents")}</p>
+                      <Badge variant="secondary" className="mt-2 text-xs">{ts("Join Community")}</Badge>
                     </div>
                   </Button>
                   
@@ -497,9 +495,9 @@ export default function ParentPortal() {
                   >
                     <FileText className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 dark:text-green-400 flex-shrink-0" />
                     <div className="text-center flex-1 flex flex-col justify-center">
-                      <p className="text-sm sm:text-base font-semibold mb-1">Mental Health Library</p>
-                      <p className="text-xs text-muted-foreground leading-relaxed">Articles & research</p>
-                      <Badge variant="secondary" className="mt-2 text-xs">Browse Library</Badge>
+                      <p className="text-sm sm:text-base font-semibold mb-1">{ts("Mental Health Library")}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{ts("Articles & research")}</p>
+                      <Badge variant="secondary" className="mt-2 text-xs">{ts("Browse Library")}</Badge>
                     </div>
                   </Button>
                 </div>
