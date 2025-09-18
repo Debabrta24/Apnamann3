@@ -279,6 +279,12 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                   {ts("Admin Dashboard")}
                 </DropdownMenuItem>
 
+                <DropdownMenuItem
+                  onClick={() => {}}
+                  data-testid="menu-item-smart-integration"
+                >
+                  Smart Integration
+                </DropdownMenuItem>
 
                 <DropdownMenuItem
                   onClick={logout}
