@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Pill, ShoppingCart, Search, Star, Clock, MapPin, Plus, Minus, Upload, FileText, CheckCircle, AlertTriangle, Shield } from "lucide-react";
+import { useState, useRef } from "react";
+import { Pill, ShoppingCart, Search, Star, Clock, MapPin, Plus, Minus, Upload, FileText, CheckCircle, AlertTriangle, Shield, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -858,6 +858,9 @@ export default function Medicine() {
   const [prescriptions, setPrescriptions] = useState<{[key: number]: any}>({});
   const [showPrescriptionModal, setShowPrescriptionModal] = useState(false);
   const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const filteredMedicines = medicines.filter(medicine => {
@@ -904,6 +907,79 @@ export default function Medicine() {
 
   const getCartItemCount = () => {
     return Object.values(cart).reduce((total, quantity) => total + quantity, 0);
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+      if (!allowedTypes.includes(file.type)) {
+        toast({
+          title: "Invalid file type",
+          description: "Please upload JPG, PNG, or PDF files only.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Validate file size (10MB = 10 * 1024 * 1024 bytes)
+      const maxSize = 10 * 1024 * 1024;
+      if (file.size > maxSize) {
+        toast({
+          title: "File too large",
+          description: "File size must be less than 10MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setSelectedFile(file);
+      toast({
+        title: "File selected",
+        description: `${file.name} is ready for upload.`,
+      });
+    }
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleFileUpload = async () => {
+    if (!selectedFile) return;
+
+    setIsUploading(true);
+    try {
+      // Simulate upload process - replace with actual upload logic
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast({
+        title: "Upload successful",
+        description: "Your prescription has been uploaded and will be reviewed by our pharmacists.",
+      });
+      
+      // Reset file after successful upload
+      setSelectedFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (error) {
+      toast({
+        title: "Upload failed",
+        description: "There was an error uploading your file. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -1117,11 +1193,82 @@ export default function Medicine() {
                 <p className="text-muted-foreground mb-4">
                   Supported formats: JPG, PNG, PDF (Max size: 10MB)
                 </p>
-                <Button className="mb-2" data-testid="btn-upload-prescription">
-                  <Upload className="h-4 w-4 mr-2" />
-                  Choose File
-                </Button>
-                <p className="text-xs text-muted-foreground">
+                
+                {/* Hidden file input */}
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileSelect}
+                  accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/jpg,image/png,application/pdf"
+                  className="hidden"
+                  data-testid="file-input-prescription"
+                />
+                
+                {!selectedFile ? (
+                  <Button 
+                    onClick={handleUploadClick} 
+                    className="mb-2" 
+                    data-testid="btn-upload-prescription"
+                    disabled={isUploading}
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Choose File
+                  </Button>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-3">
+                      <div className="flex items-center justify-center gap-2 mb-2">
+                        <FileText className="h-4 w-4 text-green-600" />
+                        <span className="text-sm font-medium text-green-800 dark:text-green-300">
+                          {selectedFile.name}
+                        </span>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={handleRemoveFile}
+                          className="h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+                          data-testid="btn-remove-file"
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      <p className="text-xs text-green-600 dark:text-green-400">
+                        File size: {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
+                      </p>
+                    </div>
+                    
+                    <div className="flex gap-2 justify-center">
+                      <Button
+                        onClick={handleFileUpload}
+                        disabled={isUploading}
+                        className="px-6"
+                        data-testid="btn-confirm-upload"
+                      >
+                        {isUploading ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            Uploading...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="h-4 w-4 mr-2" />
+                            Upload File
+                          </>
+                        )}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={handleUploadClick}
+                        disabled={isUploading}
+                        data-testid="btn-choose-different-file"
+                      >
+                        Choose Different File
+                      </Button>
+                    </div>
+                  </div>
+                )}
+                
+                <p className="text-xs text-muted-foreground mt-3">
                   Your prescription will be verified by our licensed pharmacists
                 </p>
               </div>
