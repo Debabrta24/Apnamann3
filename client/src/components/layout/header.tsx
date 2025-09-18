@@ -1,14 +1,26 @@
 import { useState } from "react";
-import { ChevronDown, ChevronRight, Globe, Moon, Sun, Menu, Stethoscope, Flower, Gamepad2, BookOpen, Save } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Globe,
+  Moon,
+  Sun,
+  Menu,
+  Stethoscope,
+  Flower,
+  Gamepad2,
+  BookOpen,
+  Save,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuTrigger 
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
   Sheet,
@@ -23,7 +35,7 @@ import GlobalSearch from "@/components/global-search";
 import NotificationCenter from "@/components/notifications/notification-center";
 import CoinDisplay from "@/components/coins/coin-display";
 import { useTranslation } from "@/hooks/use-translation";
-import logoUrl from '@/assets/logo.png';
+import logoUrl from "@/assets/logo.png";
 
 const languages = [
   { code: "en", name: "English" },
@@ -56,20 +68,21 @@ const darkThemes = [
 export default function Header() {
   const { currentUser, theme, setTheme, logout } = useAppContext();
   const [, setLocation] = useLocation();
-  const { ts, changeLanguage, currentLanguage, isTranslating } = useTranslation();
+  const { ts, changeLanguage, currentLanguage, isTranslating } =
+    useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileDropdowns, setMobileDropdowns] = useState({
     doctorScreening: false,
     wellness: false,
     relaxRefresh: false,
     community: false,
-    mySpace: false
+    mySpace: false,
   });
 
   const toggleMobileDropdown = (section: keyof typeof mobileDropdowns) => {
-    setMobileDropdowns(prev => ({
+    setMobileDropdowns((prev) => ({
       ...prev,
-      [section]: !prev[section]
+      [section]: !prev[section],
     }));
   };
 
@@ -81,7 +94,7 @@ export default function Header() {
 
   const handleLanguageChange = (languageCode: string) => {
     if (languageCode === currentLanguage) return;
-    
+
     // Use the React hook approach - this will trigger re-renders automatically
     changeLanguage(languageCode);
   };
@@ -89,11 +102,15 @@ export default function Header() {
   return (
     <header className="bg-card border-b border-border sticky top-0 z-50">
       <div className="px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-[4.5rem]">
           {/* Mobile Logo and branding - only show on mobile */}
           <div className="flex items-center space-x-3 md:hidden">
             <div className="w-10 h-10 rounded-lg flex items-center justify-center">
-              <img src={logoUrl} alt="ApnaMann Logo" className="w-10 h-10 rounded-lg object-cover" />
+              <img
+                src={logoUrl}
+                alt="ApnaMann Logo"
+                className="w-10 h-10 rounded-lg object-cover"
+              />
             </div>
             <div>
               <h1 className="text-xl font-bold text-foreground">ApnaMann</h1>
@@ -102,27 +119,39 @@ export default function Header() {
 
           {/* Mobile Navigation */}
           <div className="md:hidden">
-            <Sheet open={mobileMenuOpen} onOpenChange={(open) => {
-              setMobileMenuOpen(open);
-              if (!open) {
-                // Reset all dropdowns when menu closes
-                setMobileDropdowns({
-                  doctorScreening: false,
-                  wellness: false,
-                  relaxRefresh: false,
-                  community: false,
-                  mySpace: false
-                });
-              }
-            }}>
+            <Sheet
+              open={mobileMenuOpen}
+              onOpenChange={(open) => {
+                setMobileMenuOpen(open);
+                if (!open) {
+                  // Reset all dropdowns when menu closes
+                  setMobileDropdowns({
+                    doctorScreening: false,
+                    wellness: false,
+                    relaxRefresh: false,
+                    community: false,
+                    mySpace: false,
+                  });
+                }
+              }}
+            >
               <SheetTrigger asChild>
-                <Button variant="ghost" size="sm" data-testid="button-mobile-menu">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  data-testid="button-mobile-menu"
+                >
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[280px] sm:w-[350px] overflow-y-auto">
+              <SheetContent
+                side="left"
+                className="w-[280px] sm:w-[350px] overflow-y-auto"
+              >
                 <SheetHeader>
-                  <SheetTitle className="text-left">{ts("Navigation")}</SheetTitle>
+                  <SheetTitle className="text-left">
+                    {ts("Navigation")}
+                  </SheetTitle>
                 </SheetHeader>
                 <div className="mb-6">
                   <GlobalSearch />
@@ -131,7 +160,11 @@ export default function Header() {
                   {/* Main Navigation Items */}
                   {[
                     { href: "/", label: "Home", testId: "nav-home-mobile" },
-                    { href: "/chat", label: "AI Assistant", testId: "nav-ai-assistant-mobile" },
+                    {
+                      href: "/chat",
+                      label: "AI Assistant",
+                      testId: "nav-ai-assistant-mobile",
+                    },
                   ].map((item) => (
                     <Button
                       key={item.href}
@@ -146,26 +179,42 @@ export default function Header() {
                       {ts(item.label)}
                     </Button>
                   ))}
-                  
+
                   {/* Doctor/Screening Section */}
                   <div className="pt-4 border-t border-border">
                     <Button
                       variant="ghost"
-                      onClick={() => toggleMobileDropdown('doctorScreening')}
+                      onClick={() => toggleMobileDropdown("doctorScreening")}
                       className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
                     >
                       <div className="flex items-center gap-2">
                         <Stethoscope className="h-4 w-4" />
                         <span>{ts("Doctor/Screening")}</span>
                       </div>
-                      {mobileDropdowns.doctorScreening ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                      {mobileDropdowns.doctorScreening ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
                     </Button>
                     {mobileDropdowns.doctorScreening && (
                       <div className="space-y-2 mt-2">
                         {[
-                          { href: "/doctor", label: "Doctor", testId: "nav-doctor-mobile" },
-                          { href: "/screening", label: "Screening", testId: "nav-screening-mobile" },
-                          { href: "/medicine", label: "Medical Store", testId: "nav-medicine-mobile" },
+                          {
+                            href: "/doctor",
+                            label: "Doctor",
+                            testId: "nav-doctor-mobile",
+                          },
+                          {
+                            href: "/screening",
+                            label: "Screening",
+                            testId: "nav-screening-mobile",
+                          },
+                          {
+                            href: "/medicine",
+                            label: "Medical Store",
+                            testId: "nav-medicine-mobile",
+                          },
                         ].map((item) => (
                           <Button
                             key={item.href}
@@ -188,21 +237,37 @@ export default function Header() {
                   <div className="pt-4 border-t border-border">
                     <Button
                       variant="ghost"
-                      onClick={() => toggleMobileDropdown('wellness')}
+                      onClick={() => toggleMobileDropdown("wellness")}
                       className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
                     >
                       <div className="flex items-center gap-2">
                         <Flower className="h-4 w-4" />
                         <span>{ts("Wellness")}</span>
                       </div>
-                      {mobileDropdowns.wellness ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                      {mobileDropdowns.wellness ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
                     </Button>
                     {mobileDropdowns.wellness && (
                       <div className="space-y-2 mt-2">
                         {[
-                          { href: "/yoga", label: "Yoga", testId: "nav-yoga-mobile" },
-                          { href: "/sleep", label: "Sleep Cycle Guide", testId: "nav-sleep-cycle-mobile" },
-                          { href: "/routine", label: "Routine Generator", testId: "nav-routine-generator-mobile" },
+                          {
+                            href: "/yoga",
+                            label: "Yoga",
+                            testId: "nav-yoga-mobile",
+                          },
+                          {
+                            href: "/sleep",
+                            label: "Sleep Cycle Guide",
+                            testId: "nav-sleep-cycle-mobile",
+                          },
+                          {
+                            href: "/routine",
+                            label: "Routine Generator",
+                            testId: "nav-routine-generator-mobile",
+                          },
                         ].map((item) => (
                           <Button
                             key={item.href}
@@ -225,22 +290,42 @@ export default function Header() {
                   <div className="pt-4 border-t border-border">
                     <Button
                       variant="ghost"
-                      onClick={() => toggleMobileDropdown('relaxRefresh')}
+                      onClick={() => toggleMobileDropdown("relaxRefresh")}
                       className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
                     >
                       <div className="flex items-center gap-2">
                         <Gamepad2 className="h-4 w-4" />
                         <span>{ts("Relax & Refresh")}</span>
                       </div>
-                      {mobileDropdowns.relaxRefresh ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                      {mobileDropdowns.relaxRefresh ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
                     </Button>
                     {mobileDropdowns.relaxRefresh && (
                       <div className="space-y-2 mt-2">
                         {[
-                          { href: "/games", label: "Games", testId: "nav-games-mobile" },
-                          { href: "/music", label: "Mind Fresh Music", testId: "nav-music-mobile" },
-                          { href: "/videos", label: "Motivation Videos", testId: "nav-videos-mobile" },
-                          { href: "/live", label: "Live Sessions", testId: "nav-live-sessions-mobile" },
+                          {
+                            href: "/games",
+                            label: "Games",
+                            testId: "nav-games-mobile",
+                          },
+                          {
+                            href: "/music",
+                            label: "Mind Fresh Music",
+                            testId: "nav-music-mobile",
+                          },
+                          {
+                            href: "/videos",
+                            label: "Motivation Videos",
+                            testId: "nav-videos-mobile",
+                          },
+                          {
+                            href: "/live",
+                            label: "Live Sessions",
+                            testId: "nav-live-sessions-mobile",
+                          },
                         ].map((item) => (
                           <Button
                             key={item.href}
@@ -263,20 +348,32 @@ export default function Header() {
                   <div className="pt-4 border-t border-border">
                     <Button
                       variant="ghost"
-                      onClick={() => toggleMobileDropdown('community')}
+                      onClick={() => toggleMobileDropdown("community")}
                       className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
                     >
                       <div className="flex items-center gap-2">
                         <BookOpen className="h-4 w-4" />
                         <span>{ts("Community")}</span>
                       </div>
-                      {mobileDropdowns.community ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                      {mobileDropdowns.community ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
                     </Button>
                     {mobileDropdowns.community && (
                       <div className="space-y-2 mt-2">
                         {[
-                          { href: "/resources", label: "Resources", testId: "nav-resources-mobile" },
-                          { href: "/peer-calling", label: "Peer Call", testId: "nav-peer-call-mobile" },
+                          {
+                            href: "/resources",
+                            label: "Resources",
+                            testId: "nav-resources-mobile",
+                          },
+                          {
+                            href: "/peer-calling",
+                            label: "Peer Call",
+                            testId: "nav-peer-call-mobile",
+                          },
                         ].map((item) => (
                           <Button
                             key={item.href}
@@ -299,20 +396,32 @@ export default function Header() {
                   <div className="pt-4 border-t border-border">
                     <Button
                       variant="ghost"
-                      onClick={() => toggleMobileDropdown('mySpace')}
+                      onClick={() => toggleMobileDropdown("mySpace")}
                       className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
                     >
                       <div className="flex items-center gap-2">
                         <Save className="h-4 w-4" />
                         <span>{ts("My Space")}</span>
                       </div>
-                      {mobileDropdowns.mySpace ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                      {mobileDropdowns.mySpace ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
                     </Button>
                     {mobileDropdowns.mySpace && (
                       <div className="space-y-2 mt-2">
                         {[
-                          { href: "/diary", label: "My Diary", testId: "nav-my-diary-mobile" },
-                          { href: "/saved", label: "Saved Content", testId: "nav-saved-content-mobile" },
+                          {
+                            href: "/diary",
+                            label: "My Diary",
+                            testId: "nav-my-diary-mobile",
+                          },
+                          {
+                            href: "/saved",
+                            label: "Saved Content",
+                            testId: "nav-saved-content-mobile",
+                          },
                         ].map((item) => (
                           <Button
                             key={item.href}
@@ -357,7 +466,11 @@ export default function Header() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" data-testid="button-theme">
-                    {theme === "dark" ? <Moon className="h-4 w-4 mr-1" /> : <Sun className="h-4 w-4 mr-1" />}
+                    {theme === "dark" ? (
+                      <Moon className="h-4 w-4 mr-1" />
+                    ) : (
+                      <Sun className="h-4 w-4 mr-1" />
+                    )}
                     <span className="hidden xl:inline">{ts("Theme")}</span>
                     <ChevronDown className="h-3 w-3 ml-1" />
                   </Button>
@@ -380,7 +493,7 @@ export default function Header() {
                       ))}
                     </DropdownMenuSubContent>
                   </DropdownMenuSub>
-                  
+
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger data-testid="submenu-dark-themes">
                       <Moon className="h-4 w-4 mr-2" />
@@ -403,10 +516,17 @@ export default function Header() {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" data-testid="button-language">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    data-testid="button-language"
+                  >
                     <Globe className="h-4 w-4 mr-1" />
                     <span className="hidden xl:inline">
-                      {isTranslating ? ts("Translating...") : (languages.find(l => l.code === currentLanguage)?.name || ts("English"))}
+                      {isTranslating
+                        ? ts("Translating...")
+                        : languages.find((l) => l.code === currentLanguage)
+                            ?.name || ts("English")}
                     </span>
                     <ChevronDown className="h-3 w-3 ml-1" />
                   </Button>
@@ -421,7 +541,9 @@ export default function Header() {
                     >
                       {lang.name}
                       {isTranslating && currentLanguage === lang.code && (
-                        <span className="ml-2 text-xs text-muted-foreground">{ts("Translating...")}</span>
+                        <span className="ml-2 text-xs text-muted-foreground">
+                          {ts("Translating...")}
+                        </span>
                       )}
                     </DropdownMenuItem>
                   ))}
@@ -432,7 +554,11 @@ export default function Header() {
             {/* User Menu with combined mobile options */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="w-8 h-8 bg-accent rounded-full p-0" data-testid="button-user-menu">
+                <Button
+                  variant="ghost"
+                  className="w-8 h-8 bg-accent rounded-full p-0"
+                  data-testid="button-user-menu"
+                >
                   <span className="text-accent-foreground text-sm font-medium">
                     {getInitials(currentUser?.firstName, currentUser?.lastName)}
                   </span>
@@ -452,12 +578,16 @@ export default function Header() {
                 >
                   {ts("Admin Dashboard")}
                 </DropdownMenuItem>
-                
+
                 {/* Mobile-only options */}
                 <div className="lg:hidden">
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger data-testid="submenu-theme-mobile">
-                      {theme === "dark" ? <Moon className="h-4 w-4 mr-2" /> : <Sun className="h-4 w-4 mr-2" />}
+                      {theme === "dark" ? (
+                        <Moon className="h-4 w-4 mr-2" />
+                      ) : (
+                        <Sun className="h-4 w-4 mr-2" />
+                      )}
                       {ts("Theme")}
                     </DropdownMenuSubTrigger>
                     <DropdownMenuSubContent>
@@ -478,7 +608,7 @@ export default function Header() {
                           ))}
                         </DropdownMenuSubContent>
                       </DropdownMenuSub>
-                      
+
                       <DropdownMenuSub>
                         <DropdownMenuSubTrigger data-testid="submenu-dark-themes-mobile">
                           <Moon className="h-4 w-4 mr-2" />
@@ -514,7 +644,9 @@ export default function Header() {
                         >
                           {lang.name}
                           {isTranslating && currentLanguage === lang.code && (
-                            <span className="ml-2 text-xs text-muted-foreground">{ts("Translating...")}</span>
+                            <span className="ml-2 text-xs text-muted-foreground">
+                              {ts("Translating...")}
+                            </span>
                           )}
                         </DropdownMenuItem>
                       ))}
