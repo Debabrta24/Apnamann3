@@ -479,105 +479,100 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
               </div>
             )}
 
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setLocation("/profile")}
-              data-testid="button-settings"
-              className="hover:bg-accent"
-            >
-              <Settings className="h-4 w-4" />
-            </Button>
-
-            {/* Theme and Language - Desktop */}
-            <div className="hidden lg:flex items-center space-x-3">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" data-testid="button-theme">
-                    {theme === "dark" ? (
-                      <Moon className="h-4 w-4 mr-1" />
-                    ) : (
-                      <Sun className="h-4 w-4 mr-1" />
-                    )}
-                    <span className="hidden xl:inline">{ts("Theme")}</span>
-                    <ChevronDown className="h-3 w-3 ml-1" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  data-testid="button-settings"
+                  className="hover:bg-accent"
+                >
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem
+                  onClick={() => setLocation("/profile")}
+                  data-testid="menu-item-profile-settings"
+                >
+                  {ts("Profile & Settings")}
+                </DropdownMenuItem>
+                
+                <div className="border-t border-border pt-2 mt-2">
                   <DropdownMenuSub>
-                    <DropdownMenuSubTrigger data-testid="submenu-light-themes">
-                      <Sun className="h-4 w-4 mr-2" />
-                      {ts("Light")}
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
-                      {lightThemes.map((theme) => (
-                        <DropdownMenuItem
-                          key={theme.value}
-                          onClick={() => setTheme(theme.value as any)}
-                          data-testid={`option-theme-${theme.value}`}
-                        >
-                          {ts(theme.label)}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuSubContent>
-                  </DropdownMenuSub>
-
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger data-testid="submenu-dark-themes">
-                      <Moon className="h-4 w-4 mr-2" />
-                      {ts("Dark")}
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
-                      {darkThemes.map((theme) => (
-                        <DropdownMenuItem
-                          key={theme.value}
-                          onClick={() => setTheme(theme.value as any)}
-                          data-testid={`option-theme-${theme.value}`}
-                        >
-                          {ts(theme.label)}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuSubContent>
-                  </DropdownMenuSub>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    data-testid="button-language"
-                  >
-                    <Globe className="h-4 w-4 mr-1" />
-                    <span className="hidden xl:inline">
-                      {isTranslating
-                        ? ts("Translating...")
-                        : languages.find((l) => l.code === currentLanguage)
-                            ?.name || ts("English")}
-                    </span>
-                    <ChevronDown className="h-3 w-3 ml-1" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  {languages.map((lang) => (
-                    <DropdownMenuItem
-                      key={lang.code}
-                      onClick={() => handleLanguageChange(lang.code)}
-                      data-testid={`option-language-${lang.code}`}
-                      disabled={isTranslating}
-                    >
-                      {lang.name}
-                      {isTranslating && currentLanguage === lang.code && (
-                        <span className="ml-2 text-xs text-muted-foreground">
-                          {ts("Translating...")}
-                        </span>
+                    <DropdownMenuSubTrigger data-testid="submenu-theme-settings">
+                      {theme === "dark" ? (
+                        <Moon className="h-4 w-4 mr-2" />
+                      ) : (
+                        <Sun className="h-4 w-4 mr-2" />
                       )}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+                      {ts("Theme")}
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger data-testid="submenu-light-themes-settings">
+                          <Sun className="h-4 w-4 mr-2" />
+                          {ts("Light")}
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                          {lightThemes.map((theme) => (
+                            <DropdownMenuItem
+                              key={theme.value}
+                              onClick={() => setTheme(theme.value as any)}
+                              data-testid={`option-theme-${theme.value}-settings`}
+                            >
+                              {ts(theme.label)}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
+
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger data-testid="submenu-dark-themes-settings">
+                          <Moon className="h-4 w-4 mr-2" />
+                          {ts("Dark")}
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                          {darkThemes.map((theme) => (
+                            <DropdownMenuItem
+                              key={theme.value}
+                              onClick={() => setTheme(theme.value as any)}
+                              data-testid={`option-theme-${theme.value}-settings`}
+                            >
+                              {ts(theme.label)}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger data-testid="submenu-language-settings">
+                      <Globe className="h-4 w-4 mr-2" />
+                      {ts("Language")}
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent>
+                      {languages.map((lang) => (
+                        <DropdownMenuItem
+                          key={lang.code}
+                          onClick={() => handleLanguageChange(lang.code)}
+                          data-testid={`option-language-${lang.code}-settings`}
+                          disabled={isTranslating}
+                        >
+                          {lang.name}
+                          {isTranslating && currentLanguage === lang.code && (
+                            <span className="ml-2 text-xs text-muted-foreground">
+                              {ts("Translating...")}
+                            </span>
+                          )}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             {/* User Menu with combined mobile options */}
             <DropdownMenu>
