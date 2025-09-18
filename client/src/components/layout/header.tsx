@@ -564,15 +564,6 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                     </DropdownMenuSubContent>
                   </DropdownMenuSub>
                 </div>
-                
-                <div className="border-t border-border pt-2 mt-2">
-                  <DropdownMenuItem
-                    onClick={logout}
-                    data-testid="menu-item-sign-out"
-                  >
-                    {ts("Sign Out")}
-                  </DropdownMenuItem>
-                </div>
               </DropdownMenuContent>
             </DropdownMenu>
 
