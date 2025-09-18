@@ -81,17 +81,17 @@ export default function Login() {
 
   return (
     <div className="h-[100svh] bg-gradient-to-br from-primary/20 via-background to-secondary/20 flex items-center justify-center p-3">
-      <Card className="w-full max-w-sm sm:max-w-md lg:max-w-lg h-[92svh] overflow-hidden flex flex-col bg-card/70 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:bg-card/50 dark:border-white/5">
-        <CardHeader className="py-3 text-center flex-shrink-0">
-          <div className="mx-auto mb-2 w-10 h-10 rounded-full flex items-center justify-center">
-            <img src={logoUrl} alt="ApnaMann Logo" className="w-10 h-10 rounded-full object-cover" data-testid="img-logo-login" />
+      <Card className="w-full max-w-sm sm:max-w-md lg:max-w-lg max-h-[92svh] overflow-hidden flex flex-col bg-card/70 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:bg-card/50 dark:border-white/5">
+        <CardHeader className="py-2 sm:py-3 text-center flex-shrink-0">
+          <div className="mx-auto mb-1 sm:mb-2 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
+            <img src={logoUrl} alt="ApnaMann Logo" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover" data-testid="img-logo-login" />
           </div>
-          <CardTitle className="text-lg font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">ApnaMann</CardTitle>
-          <p className="text-[13px] text-muted-foreground leading-tight">Mental Health Support • Sign in to access your platform</p>
+          <CardTitle className="text-base sm:text-lg font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">ApnaMann</CardTitle>
+          <p className="text-xs sm:text-[13px] text-muted-foreground leading-tight">Mental Health Support • Sign in to access your platform</p>
         </CardHeader>
         
-        <CardContent className="p-4 flex-1 overflow-y-auto">
-          <div className="space-y-4">
+        <CardContent className="p-3 sm:p-4 flex-1 overflow-y-auto">
+          <div className="space-y-3 sm:space-y-4">
             {/* Main Login Form */}
             <div className="space-y-2">
               <form onSubmit={handleLogin} className="space-y-2">
@@ -175,38 +175,38 @@ export default function Login() {
             </div>
 
             {/* Additional Info Sections */}
-            <div className="space-y-2">
-              <div className="text-center text-[13px] text-muted-foreground p-3 bg-gradient-to-br from-muted/40 to-muted/20 backdrop-blur-sm rounded-lg border border-white/10">
-                <p className="font-medium mb-1 text-foreground">New User?</p>
+            <div className="space-y-1.5 sm:space-y-2">
+              <div className="text-center text-xs sm:text-[13px] text-muted-foreground p-2 sm:p-3 bg-gradient-to-br from-muted/40 to-muted/20 backdrop-blur-sm rounded-lg border border-white/10">
+                <p className="font-medium mb-0.5 sm:mb-1 text-foreground">New User?</p>
                 <p className="leading-tight">Contact student services for account setup</p>
               </div>
 
               <div 
-                className="p-3 bg-gradient-to-br from-primary/5 to-primary/10 backdrop-blur-sm rounded-lg text-[13px] border border-primary/20 text-center cursor-pointer hover:from-primary/10 hover:to-primary/15 hover:border-primary/30 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                className="p-2 sm:p-3 bg-gradient-to-br from-primary/5 to-primary/10 backdrop-blur-sm rounded-lg text-xs sm:text-[13px] border border-primary/20 text-center cursor-pointer hover:from-primary/10 hover:to-primary/15 hover:border-primary/30 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                 onClick={() => window.open('/privacy', '_blank', 'noopener,noreferrer')}
                 data-testid="div-privacy-security"
               >
-                <h4 className="font-medium text-foreground mb-1 flex items-center justify-center">
+                <h4 className="font-medium text-foreground mb-0.5 sm:mb-1 flex items-center justify-center">
                   <Lock className="h-3 w-3 mr-1 text-primary" />
                   Privacy & Security
                 </h4>
                 <p className="text-muted-foreground leading-tight">
                   <span className="font-bold text-foreground">Nobody knows details - your parents, institute, or no one.</span>
                 </p>
-                <p className="text-xs text-primary/70 mt-1 font-medium">Click for full details →</p>
+                <p className="text-[10px] sm:text-xs text-primary/70 mt-0.5 sm:mt-1 font-medium">Click for full details →</p>
               </div>
 
-              <div className="p-3 bg-gradient-to-br from-secondary/10 to-secondary/5 backdrop-blur-sm rounded-lg text-[13px] border border-secondary/20">
+              <div className="p-2 sm:p-3 bg-gradient-to-br from-secondary/10 to-secondary/5 backdrop-blur-sm rounded-lg text-xs sm:text-[13px] border border-secondary/20">
                 <div className="text-center">
-                  <Users className="h-5 w-5 mx-auto text-secondary mb-1" />
-                  <h4 className="font-medium text-foreground mb-1">Parent Guide</h4>
-                  <p className="text-muted-foreground mb-2 leading-tight">
+                  <Users className="h-4 w-4 sm:h-5 sm:w-5 mx-auto text-secondary mb-0.5 sm:mb-1" />
+                  <h4 className="font-medium text-foreground mb-0.5 sm:mb-1">Parent Guide</h4>
+                  <p className="text-muted-foreground mb-1.5 sm:mb-2 leading-tight">
                     <span className="font-bold text-foreground">Register as a student parent</span>
                   </p>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-8 text-xs bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900 hover:scale-105 active:scale-95 text-purple-700 dark:text-purple-300 font-medium shadow-md hover:shadow-purple-500/30 hover:shadow-lg transition-all duration-200"
+                    className="w-full h-7 sm:h-8 text-[10px] sm:text-xs bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900 hover:scale-105 active:scale-95 text-purple-700 dark:text-purple-300 font-medium shadow-md hover:shadow-purple-500/30 hover:shadow-lg transition-all duration-200"
                     onClick={() => setLocation("/parent-portal")}
                     data-testid="button-parent-portal"
                   >
