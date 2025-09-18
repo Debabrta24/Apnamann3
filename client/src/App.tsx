@@ -149,7 +149,7 @@ function Router() {
         {/* Mobile Overlay */}
         {sidebarOpen && (
           <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden transition-opacity duration-300 ease-in-out"
             onClick={() => setSidebarOpen(false)}
             data-testid="overlay-mobile-menu"
           />
@@ -158,9 +158,9 @@ function Router() {
         {/* Left Sidebar Navigation - Toggleable */}
         <div 
           id="mobile-sidebar"
-          className={`${sidebarOpen ? 'flex' : 'hidden'} fixed inset-y-0 left-0 z-40 w-72 flex-col transition-all duration-300 md:relative md:inset-y-auto md:left-auto md:z-auto md:flex`}
+          className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-72 flex flex-col transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:inset-y-auto md:left-auto md:z-auto md:transform-none`}
         >
-          <div className="flex flex-col h-screen bg-card border-r border-border">
+          <div className="flex flex-col h-full bg-card border-r border-border shadow-lg md:shadow-none">
             {/* Logo and branding */}
             <div className="flex items-center p-4 border-b border-border">
               <div className="w-10 h-10 rounded-lg flex items-center justify-center">
