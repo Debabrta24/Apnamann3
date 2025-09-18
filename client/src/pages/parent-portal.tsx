@@ -511,7 +511,7 @@ export default function ParentPortal() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-purple-800 dark:text-purple-200">
                   <Heart className="h-5 w-5" />
-                  <span>Interactive Support Tools</span>
+                  <span>{ts("Interactive Support Tools")}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 sm:p-6">
@@ -519,70 +519,70 @@ export default function ParentPortal() {
                   <div className="p-4 sm:p-6 bg-white dark:bg-gray-900 rounded-lg border border-purple-200 dark:border-purple-800">
                     <h4 className="text-sm sm:text-base font-semibold text-foreground mb-3 sm:mb-4 flex items-center">
                       <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-purple-600 flex-shrink-0" />
-                      <span className="leading-tight">Communication Tips</span>
+                      <span className="leading-tight">{ts("Communication Tips")}</span>
                     </h4>
                     <ul className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
                       <li className="flex items-start space-x-2">
                         <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="leading-relaxed">Use "I" statements to express concern</span>
+                        <span className="leading-relaxed">{ts('Use "I" statements to express concern')}</span>
                       </li>
                       <li className="flex items-start space-x-2">
                         <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="leading-relaxed">Listen actively without offering immediate solutions</span>
+                        <span className="leading-relaxed">{ts("Listen actively without offering immediate solutions")}</span>
                       </li>
                       <li className="flex items-start space-x-2">
                         <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="leading-relaxed">Validate their feelings and experiences</span>
+                        <span className="leading-relaxed">{ts("Validate their feelings and experiences")}</span>
                       </li>
                       <li className="flex items-start space-x-2">
                         <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="leading-relaxed">Avoid judgment or criticism</span>
+                        <span className="leading-relaxed">{ts("Avoid judgment or criticism")}</span>
                       </li>
                     </ul>
                     <Button className="mt-3 sm:mt-4 w-full" size="sm" variant="outline" onClick={() => showComingSoon("Communication Guide Download")} data-testid="button-download-communication-guide">
                       <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                      <span className="text-xs sm:text-sm truncate">Download Communication Guide</span>
+                      <span className="text-xs sm:text-sm truncate">{ts("Download Communication Guide")}</span>
                     </Button>
                   </div>
 
                   <div className="p-4 sm:p-6 bg-white dark:bg-gray-900 rounded-lg border border-purple-200 dark:border-purple-800">
                     <h4 className="text-sm sm:text-base font-semibold text-foreground mb-3 sm:mb-4 flex items-center">
                       <Brain className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-purple-600 flex-shrink-0" />
-                      <span className="leading-tight">Self-Care for Parents</span>
+                      <span className="leading-tight">{ts("Self-Care for Parents")}</span>
                     </h4>
                     <ul className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
                       <li className="flex items-start space-x-2">
                         <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                        <span className="leading-relaxed">Practice stress management techniques</span>
+                        <span className="leading-relaxed">{ts("Practice stress management techniques")}</span>
                       </li>
                       <li className="flex items-start space-x-2">
                         <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                        <span className="leading-relaxed">Seek support for yourself too</span>
+                        <span className="leading-relaxed">{ts("Seek support for yourself too")}</span>
                       </li>
                       <li className="flex items-start space-x-2">
                         <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                        <span className="leading-relaxed">Maintain healthy boundaries</span>
+                        <span className="leading-relaxed">{ts("Maintain healthy boundaries")}</span>
                       </li>
                       <li className="flex items-start space-x-2">
                         <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                        <span className="leading-relaxed">Stay patient and persistent</span>
+                        <span className="leading-relaxed">{ts("Stay patient and persistent")}</span>
                       </li>
                     </ul>
                     <Button className="mt-3 sm:mt-4 w-full" size="sm" variant="outline" onClick={() => showComingSoon("Self-Care Checklist")} data-testid="button-self-care-checklist">
                       <Heart className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                      <span className="text-xs sm:text-sm truncate">Self-Care Checklist</span>
+                      <span className="text-xs sm:text-sm truncate">{ts("Self-Care Checklist")}</span>
                     </Button>
                   </div>
                 </div>
 
                 <div className="mt-4 sm:mt-6 p-4 sm:p-6 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-lg border border-purple-200 dark:border-purple-800">
-                  <h4 className="text-sm sm:text-base font-semibold text-foreground mb-3 sm:mb-4 text-center">Quick Assessment Tool</h4>
+                  <h4 className="text-sm sm:text-base font-semibold text-foreground mb-3 sm:mb-4 text-center">{ts("Quick Assessment Tool")}</h4>
                   <p className="text-xs sm:text-sm text-muted-foreground text-center mb-3 sm:mb-4 leading-relaxed">
-                    Answer a few questions to get personalized guidance for your situation
+                    {ts("Answer a few questions to get personalized guidance for your situation")}
                   </p>
                   <Button className="w-full" onClick={() => showComingSoon("Assessment Tool")} data-testid="button-assessment-tool">
                     <Play className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                    <span className="text-xs sm:text-sm">Start Assessment (5 minutes)</span>
+                    <span className="text-xs sm:text-sm">{ts("Start Assessment (5 minutes)")}</span>
                   </Button>
                 </div>
               </CardContent>
@@ -595,7 +595,7 @@ export default function ParentPortal() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-red-800 dark:text-red-200">
                   <Phone className="h-5 w-5" />
-                  <span>Emergency Support & Crisis Intervention</span>
+                  <span>{ts("Emergency Support & Crisis Intervention")}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 sm:p-6">
@@ -604,18 +604,18 @@ export default function ParentPortal() {
                     <div className="flex flex-col sm:flex-row items-start space-y-3 sm:space-y-0 sm:space-x-3">
                       <AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6 text-red-600 dark:text-red-400 mt-0.5 sm:mt-1 flex-shrink-0 self-center sm:self-start" />
                       <div className="flex-1 w-full">
-                        <h4 className="text-sm sm:text-base font-semibold text-red-800 dark:text-red-200 mb-2 text-center sm:text-left">Immediate Action Required</h4>
+                        <h4 className="text-sm sm:text-base font-semibold text-red-800 dark:text-red-200 mb-2 text-center sm:text-left">{ts("Immediate Action Required")}</h4>
                         <p className="text-xs sm:text-sm text-red-700 dark:text-red-300 mb-3 sm:mb-4 leading-relaxed text-center sm:text-left">
-                          If your child mentions self-harm, suicide, or you believe they're in immediate danger, contact emergency services immediately.
+                          {ts("If your child mentions self-harm, suicide, or you believe they're in immediate danger, contact emergency services immediately.")}
                         </p>
                         <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 items-center sm:items-start">
                           <Button className="bg-red-600 hover:bg-red-700 text-white w-full sm:w-auto" onClick={() => window.open('tel:108')} data-testid="button-emergency-108">
                             <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                            <span className="text-xs sm:text-sm">Call 108 - Emergency</span>
+                            <span className="text-xs sm:text-sm">{ts("Call 108 - Emergency")}</span>
                           </Button>
                           <Button variant="outline" className="border-red-300 text-red-700 hover:bg-red-50 dark:hover:bg-red-950 w-full sm:w-auto" onClick={() => window.open('tel:100')} data-testid="button-police-100">
                             <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                            <span className="text-xs sm:text-sm">Call 100 - Police</span>
+                            <span className="text-xs sm:text-sm">{ts("Call 100 - Police")}</span>
                           </Button>
                         </div>
                       </div>
