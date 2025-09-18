@@ -491,14 +491,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem
-                  onClick={() => setLocation("/profile")}
-                  data-testid="menu-item-profile-settings"
-                >
-                  {ts("Profile & Settings")}
-                </DropdownMenuItem>
-                
-                <div className="border-t border-border pt-2 mt-2">
+                <div>
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger data-testid="submenu-theme-settings">
                       {theme === "dark" ? (
