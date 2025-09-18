@@ -931,56 +931,100 @@ export default function Medicine() {
             </p>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {medicines
                 .filter(medicine => medicine.category === "Psychiatric")
                 .map((medicine) => (
                   <div key={medicine.id} className="relative group">
-                    <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
-                      <CardContent className="p-3">
-                        <div className="aspect-square relative mb-3 overflow-hidden rounded-lg">
+                    <Card className="h-full hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-primary/30">
+                      <CardContent className="p-6">
+                        <div className="aspect-[4/3] relative mb-4 overflow-hidden rounded-xl bg-gray-50 dark:bg-gray-800">
                           <img
                             src={medicine.image}
                             alt={medicine.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                           />
                           {medicine.prescription && (
                             <Badge 
                               variant="destructive" 
-                              className="absolute top-1 right-1 text-xs px-1 py-0"
+                              className="absolute top-3 right-3 text-sm px-2 py-1"
                             >
-                              Rx
+                              Rx Required
                             </Badge>
                           )}
                         </div>
-                        <div className="text-center">
-                          <h4 className="font-medium text-sm mb-1 line-clamp-2">{medicine.name}</h4>
-                          <p className="text-xs text-muted-foreground mb-2 line-clamp-1">
-                            {medicine.genericName}
-                          </p>
-                          <div className="flex items-center justify-center gap-1 mb-2">
-                            <span className="text-sm font-bold text-primary">
-                              ₹{medicine.discountPrice || medicine.price}
-                            </span>
-                            {medicine.discountPrice && (
-                              <span className="text-xs text-muted-foreground line-through">
-                                ₹{medicine.price}
-                              </span>
-                            )}
+                        <div className="space-y-4">
+                          <div className="text-center">
+                            <h4 className="font-semibold text-lg mb-2 line-clamp-2">{medicine.name}</h4>
+                            <p className="text-base text-muted-foreground mb-1 line-clamp-1">
+                              {medicine.genericName}
+                            </p>
+                            <p className="text-sm text-muted-foreground">{medicine.manufacturer}</p>
                           </div>
-                          <div className="flex items-center justify-center gap-1 mb-2">
-                            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                            <span className="text-xs">{medicine.rating}</span>
+
+                          {/* Enhanced Dosage Information */}
+                          <div className="bg-blue-50 dark:bg-blue-950/30 p-3 rounded-lg border-l-3 border-blue-500">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Pill className="h-4 w-4 text-blue-600" />
+                              <span className="font-medium text-blue-800 dark:text-blue-300 text-sm">Dosage</span>
+                            </div>
+                            <p className="text-sm text-blue-700 dark:text-blue-200 font-medium">{medicine.dosage}</p>
                           </div>
-                          <Button
-                            size="sm"
-                            className="w-full text-xs h-7"
-                            onClick={() => addToCart(medicine.id)}
-                            data-testid={`btn-add-to-cart-${medicine.id}`}
-                          >
-                            <Plus className="h-3 w-3 mr-1" />
-                            Add
-                          </Button>
+
+                          {/* Medicine Information Grid */}
+                          <div className="grid grid-cols-2 gap-3 bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg text-xs">
+                            <div className="text-center">
+                              <p className="text-muted-foreground">Form</p>
+                              <p className="font-medium">Tablet</p>
+                            </div>
+                            <div className="text-center">
+                              <p className="text-muted-foreground">Pack</p>
+                              <p className="font-medium">10s</p>
+                            </div>
+                          </div>
+
+                          {/* Uses Section */}
+                          <div className="bg-green-50 dark:bg-green-950/30 p-3 rounded-lg">
+                            <p className="font-medium text-green-800 dark:text-green-300 text-sm mb-1">Medical Uses:</p>
+                            <p className="text-xs text-green-700 dark:text-green-200 line-clamp-2">{medicine.uses.slice(0, 2).join(", ")}</p>
+                          </div>
+
+                          <div className="flex items-center justify-center gap-2 mb-3">
+                            <div className="flex items-center">
+                              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                              <span className="text-sm ml-1">{medicine.rating}</span>
+                            </div>
+                            <span className="text-xs text-muted-foreground">({medicine.reviewCount} reviews)</span>
+                          </div>
+
+                          <div className="text-center mb-4">
+                            <div className="flex items-center justify-center gap-2 mb-3">
+                              {medicine.discountPrice ? (
+                                <>
+                                  <span className="text-xl font-bold text-primary">
+                                    ₹{medicine.discountPrice}
+                                  </span>
+                                  <span className="text-sm text-muted-foreground line-through">
+                                    ₹{medicine.price}
+                                  </span>
+                                </>
+                              ) : (
+                                <span className="text-xl font-bold text-primary">
+                                  ₹{medicine.price}
+                                </span>
+                              )}
+                            </div>
+                            
+                            <Button
+                              size="lg"
+                              className="w-full text-sm h-10"
+                              onClick={() => addToCart(medicine.id)}
+                              data-testid={`btn-add-to-cart-${medicine.id}`}
+                            >
+                              <Plus className="h-4 w-4 mr-2" />
+                              Add to Cart
+                            </Button>
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
