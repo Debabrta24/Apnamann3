@@ -1019,11 +1019,11 @@ export default function Medicine() {
       </div>
 
       <Tabs defaultValue="normal-medicine" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="normal-medicine" data-testid="tab-normal-medicine">Normal Medicine</TabsTrigger>
-          <TabsTrigger value="doctor-prescribed" data-testid="tab-doctor-prescribed">Doctor Prescribed</TabsTrigger>
-          <TabsTrigger value="prescription-upload" data-testid="tab-prescription-upload">Prescription Upload</TabsTrigger>
-          <TabsTrigger value="cart" data-testid="tab-cart">
+        <TabsList className="w-full h-auto flex flex-col sm:flex-row sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-1 p-1">
+          <TabsTrigger value="normal-medicine" data-testid="tab-normal-medicine" className="flex-1 text-center py-2 px-3 text-sm sm:text-base">Normal Medicine</TabsTrigger>
+          <TabsTrigger value="doctor-prescribed" data-testid="tab-doctor-prescribed" className="flex-1 text-center py-2 px-3 text-sm sm:text-base">Doctor Prescribed</TabsTrigger>
+          <TabsTrigger value="prescription-upload" data-testid="tab-prescription-upload" className="flex-1 text-center py-2 px-3 text-sm sm:text-base">Prescription Upload</TabsTrigger>
+          <TabsTrigger value="cart" data-testid="tab-cart" className="flex-1 text-center py-2 px-3 text-sm sm:text-base">
             Cart ({getCartItemCount()})
           </TabsTrigger>
         </TabsList>
