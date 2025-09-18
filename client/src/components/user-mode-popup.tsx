@@ -40,7 +40,7 @@ export default function UserModePopup() {
 
   return (
     <Dialog open={showUserModePopup} onOpenChange={setShowUserModePopup}>
-      <DialogContent className="max-w-5xl h-fit">
+      <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto">
         <DialogHeader className="text-center pb-3">
           <DialogTitle className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
             How are you feeling today?
@@ -50,7 +50,7 @@ export default function UserModePopup() {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-4 mb-4">
           {userModes.map((mode) => (
             <Card
               key={mode.id}
@@ -93,11 +93,11 @@ export default function UserModePopup() {
           ))}
         </div>
 
-        <div className="flex justify-between items-center mt-4 pt-3 border-t">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mt-4 pt-3 border-t sticky bottom-0 bg-background">
           <Button
             variant="ghost"
             onClick={handleSkip}
-            className="text-muted-foreground hover:text-foreground text-sm"
+            className="text-muted-foreground hover:text-foreground text-sm w-full sm:w-auto"
             data-testid="button-skip-mode"
           >
             Skip for now
@@ -105,7 +105,7 @@ export default function UserModePopup() {
           <Button
             onClick={handleConfirm}
             disabled={!selectedMode}
-            className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white px-6 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+            className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white px-6 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm w-full sm:w-auto"
             data-testid="button-confirm-mode"
           >
             {selectedMode ? `Let's go ${userModes.find(m => m.id === selectedMode)?.emoji}` : "Select a mode"}
