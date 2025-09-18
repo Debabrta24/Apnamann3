@@ -214,13 +214,12 @@ export default function Chat() {
                   <CardHeader>
                     <div className="flex items-center space-x-3">
                       <div className="relative">
-                        <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden shadow-lg border-3 border-white/50 relative">
+                        <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden shadow-lg border-3 border-white/50">
                           <img 
                             src={personality.photo}
                             alt={`${personality.name} profile`}
                             className="w-full h-full object-cover"
                           />
-                          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-white/80 backdrop-blur-sm border-2 border-white shadow-md"></div>
                         </div>
                         <div className={`absolute -bottom-1 -right-1 p-1 rounded-full ${personality.color} shadow-md`}>
                           <IconComponent className="h-3 w-3" />
@@ -236,6 +235,14 @@ export default function Chat() {
                     <p className="text-sm text-muted-foreground mb-3">
                       {personality.description}
                     </p>
+                    
+                    {/* Centered responsive circle div */}
+                    <div className="flex justify-center mb-4">
+                      <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 border-2 border-primary/30 shadow-lg flex items-center justify-center">
+                        <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-white/90 shadow-md"></div>
+                      </div>
+                    </div>
+                    
                     <div className="bg-muted p-2 rounded text-xs text-muted-foreground">
                       <strong>Style:</strong> {personality.personality}
                     </div>
@@ -257,13 +264,12 @@ export default function Chat() {
                     <div className="relative">
                       {personality.photo ? (
                         <>
-                          <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden shadow-lg border-3 border-white/50 relative">
+                          <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden shadow-lg border-3 border-white/50">
                             <img 
                               src={personality.photo}
                               alt={`${personality.name} profile`}
                               className="w-full h-full object-cover"
                             />
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-white/80 backdrop-blur-sm border-2 border-white shadow-md"></div>
                           </div>
                           <div className="absolute -bottom-1 -right-1 p-1 rounded-full bg-gradient-to-br from-primary to-primary/60 text-primary-foreground shadow-md">
                             <Sparkles className="h-3 w-3" />
@@ -292,6 +298,14 @@ export default function Chat() {
                   <p className="text-sm text-muted-foreground mb-3">
                     This AI learned from your {personality.sourceType === 'file' ? 'uploaded file' : 'chat data'}: {personality.originalFileName || 'text input'}
                   </p>
+                  
+                  {/* Centered responsive circle div */}
+                  <div className="flex justify-center mb-4">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 border-2 border-primary/30 shadow-lg flex items-center justify-center">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-white/90 shadow-md"></div>
+                    </div>
+                  </div>
+                  
                   <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-2 rounded text-xs">
                     <strong>🎉 Free Local AI:</strong> No API keys needed!
                   </div>
