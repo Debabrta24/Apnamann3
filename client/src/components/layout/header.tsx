@@ -103,8 +103,8 @@ export default function Header() {
     <header className="bg-card border-b border-border sticky top-0 z-50">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[4.5rem]">
-          {/* Mobile Logo and branding - only show on mobile */}
-          <div className="flex items-center space-x-3 md:hidden">
+          {/* Mobile Logo and branding - hidden, shows in mobile menu */}
+          <div className="hidden">
             <div className="w-10 h-10 rounded-lg flex items-center justify-center">
               <img
                 src={logoUrl}
@@ -149,6 +149,18 @@ export default function Header() {
                 className="w-[280px] sm:w-[350px] overflow-y-auto"
               >
                 <SheetHeader>
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center">
+                      <img
+                        src={logoUrl}
+                        alt="ApnaMann Logo"
+                        className="w-10 h-10 rounded-lg object-cover"
+                      />
+                    </div>
+                    <div>
+                      <h1 className="text-xl font-bold text-foreground">ApnaMann</h1>
+                    </div>
+                  </div>
                   <SheetTitle className="text-left">
                     {ts("Navigation")}
                   </SheetTitle>
