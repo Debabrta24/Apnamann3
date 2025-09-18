@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Wind, PenTool, Waves, AlertTriangle, Bot, Heart, Brain, Lightbulb, Target, Plus, Upload, FileText, File, X, Sparkles } from "lucide-react";
+import { Wind, PenTool, Waves, AlertTriangle, Bot, Heart, Brain, Lightbulb, Target, Plus, Upload, FileText, File, X, Sparkles, Users, MessageCircle, User } from "lucide-react";
 import drSarahPhoto from '@assets/generated_images/Dr_Sarah_therapist_photo_c6bcfbb6.png';
 import alexPhoto from '@assets/generated_images/Alex_life_coach_photo_9e882e79.png';
 import zenPhoto from '@assets/generated_images/Zen_mindfulness_guide_photo_17ae2476.png';
@@ -72,6 +72,60 @@ const aiPersonalities = [
   }
 ];
 
+// Mock available users for live chat
+const availableUsers = [
+  {
+    id: "user1",
+    name: "Emma Johnson",
+    age: 24,
+    status: "Looking for supportive chat",
+    interests: ["anxiety support", "study stress", "mindfulness"],
+    lastSeen: "2 minutes ago",
+    isOnline: true,
+    connectionType: "peer-support"
+  },
+  {
+    id: "user2", 
+    name: "Marcus Chen",
+    age: 29,
+    status: "Open to casual conversation",
+    interests: ["career guidance", "fitness motivation", "positive thinking"],
+    lastSeen: "5 minutes ago",
+    isOnline: true,
+    connectionType: "peer-support"
+  },
+  {
+    id: "user3",
+    name: "Sarah Williams",
+    age: 22,
+    status: "Need someone to talk to",
+    interests: ["creative expression", "emotional support", "self-care"],
+    lastSeen: "1 hour ago",
+    isOnline: false,
+    connectionType: "peer-support"
+  },
+  {
+    id: "user4",
+    name: "David Martinez",
+    age: 31,
+    status: "Experienced in peer counseling",
+    interests: ["addiction recovery", "life transitions", "goal setting"],
+    lastSeen: "10 minutes ago",
+    isOnline: true,
+    connectionType: "trained-peer"
+  },
+  {
+    id: "user5",
+    name: "Riley Parker",
+    age: 26,
+    status: "Good listener, here to help",
+    interests: ["LGBTQ+ support", "relationship advice", "daily check-ins"],
+    lastSeen: "3 hours ago",
+    isOnline: false,
+    connectionType: "peer-support"
+  }
+];
+
 const quickActions = [
   {
     icon: Wind,
@@ -109,6 +163,8 @@ export default function Chat() {
   const [showPersonalities, setShowPersonalities] = useState(true);
   const [showCustomDialog, setShowCustomDialog] = useState(false);
   const [customPersonalities, setCustomPersonalities] = useState<any[]>([]);
+  const [chatType, setChatType] = useState<"assistance" | "live">("assistance");
+  const [selectedUser, setSelectedUser] = useState<any>(null);
   const { currentUser } = useAppContext();
   const { toast } = useToast();
 
@@ -189,16 +245,55 @@ export default function Chat() {
     });
   };
 
+  const handleUserSelect = (user: any) => {
+    setSelectedUser(user);
+    setShowPersonalities(false);
+    toast({
+      title: "Connection Request Sent",
+      description: `Requesting to connect with ${user.name}...`,
+    });
+  };
+
+  const handleChatTypeChange = (type: "assistance" | "live") => {
+    setChatType(type);
+    setShowPersonalities(true);
+    // Clear state when switching chat types
+    if (type === "assistance") {
+      setSelectedUser(null);
+    } else {
+      setSelectedPersonality(aiPersonalities[0]); // Reset to default
+    }
+  };
+
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <BackButton />
       {showPersonalities ? (
-        /* AI Personality Selection */
+        /* Chat Type Selection */
         <div className="space-y-6">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-foreground mb-2">Choose Your Companion</h1>
-            <p className="text-muted-foreground">Select the personality that best matches your current needs</p>
+            <h1 className="text-3xl font-bold text-foreground mb-2">Choose Your Chat Type</h1>
+            <p className="text-muted-foreground">Select between AI assistance or live user connection</p>
           </div>
+          
+          <Tabs defaultValue="assistance" value={chatType} onValueChange={(value) => handleChatTypeChange(value as "assistance" | "live")} className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="assistance" className="flex items-center gap-2" data-testid="tab-assistance-chat">
+                <Bot className="h-4 w-4" />
+                Assistance Chat
+              </TabsTrigger>
+              <TabsTrigger value="live" className="flex items-center gap-2" data-testid="tab-live-chat">
+                <Users className="h-4 w-4" />
+                Live Chat
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="assistance" className="mt-6">
+              <div className="space-y-6">
+                <div className="text-center">
+                  <h2 className="text-2xl font-bold text-foreground mb-2">Choose Your AI Companion</h2>
+                  <p className="text-muted-foreground">Select the personality that best matches your current needs</p>
+                </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Default AI Personalities */}
@@ -332,15 +427,110 @@ export default function Chat() {
             onPersonalityCreated={handleCustomPersonalityCreated}
           />
           
-          <div className="text-center">
-            <Button 
-              variant="outline" 
-              onClick={() => setShowPersonalities(false)}
-              data-testid="button-skip-selection"
-            >
-              Continue with Dr. Sarah (Default)
-            </Button>
-          </div>
+                <div className="text-center">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowPersonalities(false)}
+                    data-testid="button-skip-selection"
+                  >
+                    Continue with Dr. Sarah (Default)
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="live" className="mt-6">
+              <div className="space-y-6">
+                <div className="text-center">
+                  <h2 className="text-2xl font-bold text-foreground mb-2">Connect with Live Users</h2>
+                  <p className="text-muted-foreground">Find available users for peer support and conversation</p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {availableUsers.map((user) => (
+                    <Card 
+                      key={user.id} 
+                      className={`hover:shadow-lg transition-shadow cursor-pointer border-2 ${
+                        user.isOnline ? 'border-green-200 bg-green-50/50' : 'border-gray-200 bg-gray-50/50'
+                      }`}
+                      onClick={() => handleUserSelect(user)}
+                      data-testid={`user-card-${user.id}`}
+                    >
+                      <CardHeader>
+                        <div className="flex items-center space-x-3">
+                          <div className="relative">
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center shadow-lg">
+                              <User className="h-8 w-8 text-blue-600" />
+                            </div>
+                            <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${
+                              user.isOnline ? 'bg-green-400' : 'bg-gray-400'
+                            }`} />
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <CardTitle className="text-lg">{user.name}</CardTitle>
+                              <div className={`px-2 py-1 text-xs rounded-full font-medium ${
+                                user.connectionType === 'trained-peer' 
+                                  ? 'bg-blue-100 text-blue-800' 
+                                  : 'bg-green-100 text-green-800'
+                              }`}>
+                                {user.connectionType === 'trained-peer' ? 'Trained' : 'Peer'}
+                              </div>
+                            </div>
+                            <CardDescription className="text-sm">
+                              Age {user.age} • {user.lastSeen}
+                            </CardDescription>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          {user.status}
+                        </p>
+                        
+                        <div className="flex flex-wrap gap-1 mb-3">
+                          {user.interests.slice(0, 2).map((interest, index) => (
+                            <span 
+                              key={index} 
+                              className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full"
+                            >
+                              {interest}
+                            </span>
+                          ))}
+                          {user.interests.length > 2 && (
+                            <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full">
+                              +{user.interests.length - 2} more
+                            </span>
+                          )}
+                        </div>
+                        
+                        <div className={`p-2 rounded text-xs ${
+                          user.isOnline 
+                            ? 'bg-green-50 text-green-700 border border-green-200' 
+                            : 'bg-gray-50 text-gray-600 border border-gray-200'
+                        }`}>
+                          <div className="flex items-center gap-2">
+                            <MessageCircle className="h-3 w-3" />
+                            {user.isOnline ? 'Available for chat' : 'Currently offline'}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+                
+                <div className="text-center">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowPersonalities(false)}
+                    data-testid="button-skip-live-selection"
+                  >
+                    Browse Later
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       ) : (
         /* Main Chat Interface */
@@ -351,7 +541,16 @@ export default function Chat() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="relative">
-                    {selectedPersonality.photo ? (
+                    {chatType === "live" && selectedUser ? (
+                      <>
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center shadow-lg border-2 border-white/50">
+                          <User className="h-6 w-6 text-blue-600" />
+                        </div>
+                        <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${
+                          selectedUser.isOnline ? 'bg-green-400' : 'bg-gray-400'
+                        }`} />
+                      </>
+                    ) : selectedPersonality.photo ? (
                       <>
                         <div className="w-12 h-12 rounded-full overflow-hidden shadow-lg border-2 border-white/50">
                           <img 
@@ -371,21 +570,33 @@ export default function Chat() {
                     )}
                   </div>
                   <div>
-                    <h2 className="font-semibold">{selectedPersonality.name}</h2>
-                    <p className="text-sm text-muted-foreground">{selectedPersonality.role}</p>
+                    <h2 className="font-semibold">
+                      {chatType === "live" && selectedUser ? selectedUser.name : selectedPersonality.name}
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      {chatType === "live" && selectedUser 
+                        ? `Age ${selectedUser.age} • ${selectedUser.connectionType === 'trained-peer' ? 'Trained Peer' : 'Peer Support'}`
+                        : selectedPersonality.role
+                      }
+                    </p>
                   </div>
                 </div>
                 <Button 
                   variant="outline" 
                   size="sm" 
                   onClick={() => setShowPersonalities(true)}
-                  data-testid="button-change-personality"
+                  data-testid={chatType === "live" ? "button-change-user" : "button-change-personality"}
                 >
-                  Change AI
+                  {chatType === "live" ? "Change User" : "Change AI"}
                 </Button>
               </div>
             </div>
-            <ChatInterface selectedAction={selectedAction} selectedPersonality={selectedPersonality} />
+            <ChatInterface 
+              selectedAction={selectedAction} 
+              selectedPersonality={selectedPersonality}
+              chatType={chatType}
+              selectedUser={selectedUser}
+            />
           </div>
 
           {/* Chat Options Sidebar */}
@@ -415,15 +626,26 @@ export default function Chat() {
               ))}
             </div>
 
-            {/* Current AI Info */}
+            {/* Current Chat Info */}
             <Card className="mt-6">
               <CardHeader>
-                <CardTitle className="text-sm">Current AI Companion</CardTitle>
+                <CardTitle className="text-sm">
+                  {chatType === "live" ? "Current Chat Partner" : "Current AI Companion"}
+                </CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
                 <div className="flex items-center space-x-3 mb-2">
                   <div className="relative">
-                    {selectedPersonality.photo ? (
+                    {chatType === "live" && selectedUser ? (
+                      <>
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center shadow-md border-2 border-white/50">
+                          <User className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${
+                          selectedUser.isOnline ? 'bg-green-400' : 'bg-gray-400'
+                        }`} />
+                      </>
+                    ) : selectedPersonality.photo ? (
                       <>
                         <div className="w-10 h-10 rounded-full overflow-hidden shadow-md border-2 border-white/50">
                           <img 
@@ -443,13 +665,40 @@ export default function Chat() {
                     )}
                   </div>
                   <div>
-                    <p className="font-medium text-sm">{selectedPersonality.name}</p>
-                    <p className="text-xs text-muted-foreground">{selectedPersonality.role}</p>
+                    <p className="font-medium text-sm">
+                      {chatType === "live" && selectedUser ? selectedUser.name : selectedPersonality.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {chatType === "live" && selectedUser 
+                        ? `${selectedUser.connectionType === 'trained-peer' ? 'Trained Peer' : 'Peer Support'} • ${selectedUser.isOnline ? 'Online' : 'Offline'}`
+                        : selectedPersonality.role
+                      }
+                    </p>
                   </div>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {selectedPersonality.description}
+                  {chatType === "live" && selectedUser 
+                    ? selectedUser.status
+                    : selectedPersonality.description
+                  }
                 </p>
+                {chatType === "live" && selectedUser && (
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {selectedUser.interests.slice(0, 3).map((interest, index) => (
+                      <span 
+                        key={index} 
+                        className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full"
+                      >
+                        {interest}
+                      </span>
+                    ))}
+                    {selectedUser.interests.length > 3 && (
+                      <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full">
+                        +{selectedUser.interests.length - 3}
+                      </span>
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -458,7 +707,10 @@ export default function Chat() {
               <CardContent className="p-4">
                 <p className="text-xs text-muted-foreground leading-relaxed">
                   <span className="inline-block w-2 h-2 bg-primary rounded-full mr-2" />
-                  This AI assistant provides supportive guidance and is not a substitute for professional mental health care. All conversations are confidential.
+                  {chatType === "live" 
+                    ? "Peer support provides valuable connection but is not a substitute for professional mental health care. Please be respectful and supportive in your conversations."
+                    : "This AI assistant provides supportive guidance and is not a substitute for professional mental health care. All conversations are confidential."
+                  }
                 </p>
               </CardContent>
             </Card>
