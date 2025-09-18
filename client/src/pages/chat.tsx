@@ -214,12 +214,13 @@ export default function Chat() {
                   <CardHeader>
                     <div className="flex items-center space-x-3">
                       <div className="relative">
-                        <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden shadow-lg border-3 border-white/50">
+                        <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden shadow-lg border-3 border-white/50 relative">
                           <img 
                             src={personality.photo}
                             alt={`${personality.name} profile`}
                             className="w-full h-full object-cover"
                           />
+                          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-white/80 backdrop-blur-sm border-2 border-white shadow-md"></div>
                         </div>
                         <div className={`absolute -bottom-1 -right-1 p-1 rounded-full ${personality.color} shadow-md`}>
                           <IconComponent className="h-3 w-3" />
@@ -256,12 +257,13 @@ export default function Chat() {
                     <div className="relative">
                       {personality.photo ? (
                         <>
-                          <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden shadow-lg border-3 border-white/50">
+                          <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden shadow-lg border-3 border-white/50 relative">
                             <img 
                               src={personality.photo}
                               alt={`${personality.name} profile`}
                               className="w-full h-full object-cover"
                             />
+                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-white/80 backdrop-blur-sm border-2 border-white shadow-md"></div>
                           </div>
                           <div className="absolute -bottom-1 -right-1 p-1 rounded-full bg-gradient-to-br from-primary to-primary/60 text-primary-foreground shadow-md">
                             <Sparkles className="h-3 w-3" />
