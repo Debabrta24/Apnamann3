@@ -109,42 +109,42 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
-      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <div className="flex items-center justify-center mb-4">
-            <img src={logoUrl} alt="ApnaMann Logo" className="w-10 h-10 rounded-lg object-cover" data-testid="img-logo-onboarding" />
+      <DialogContent className="sm:max-w-lg h-fit">
+        <DialogHeader className="pb-2">
+          <div className="flex items-center justify-center mb-2">
+            <img src={logoUrl} alt="ApnaMann Logo" className="w-8 h-8 rounded-lg object-cover" data-testid="img-logo-onboarding" />
           </div>
-          <DialogTitle className="flex items-center justify-center">
-            <User className="h-5 w-5 mr-2" />
+          <DialogTitle className="flex items-center justify-center text-lg">
+            <User className="h-4 w-4 mr-2" />
             Welcome! Let's get you started
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-sm">
             We need some information to personalize your experience
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
+        <div className="space-y-3">
+          <div className="space-y-1">
+            <div className="flex items-center justify-between text-xs">
               <span>Step {step} of {totalSteps}</span>
               <span>{Math.round(progress)}% complete</span>
             </div>
-            <Progress value={progress} className="h-2" />
+            <Progress value={progress} className="h-1.5" />
           </div>
 
           {/* Step 1: Personal Information */}
           {step === 1 && (
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base flex items-center">
                   <User className="h-4 w-4 mr-2" />
                   Personal Information
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name</Label>
+              <CardContent className="space-y-3 pt-2">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <Label htmlFor="firstName" className="text-sm">First Name</Label>
                     <Input
                       id="firstName"
                       placeholder="Enter your first name"
@@ -153,8 +153,8 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                       data-testid="input-first-name"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name</Label>
+                  <div className="space-y-1">
+                    <Label htmlFor="lastName" className="text-sm">Last Name</Label>
                     <Input
                       id="lastName"
                       placeholder="Enter your last name"
@@ -165,8 +165,8 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label>Preferred Language</Label>
+                <div className="space-y-1">
+                  <Label className="text-sm">Preferred Language</Label>
                   <Select value={data.language} onValueChange={(value) => updateData("language", value)}>
                     <SelectTrigger data-testid="select-language">
                       <SelectValue />
@@ -186,15 +186,15 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
           {/* Step 2: Academic Information */}
           {step === 2 && (
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base flex items-center">
                   <GraduationCap className="h-4 w-4 mr-2" />
                   Academic Information
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="institution">Institution</Label>
+              <CardContent className="space-y-3 pt-2">
+                <div className="space-y-1">
+                  <Label htmlFor="institution" className="text-sm">Institution</Label>
                   <Input
                     id="institution"
                     placeholder="e.g., IIT Delhi, Delhi University"
@@ -204,8 +204,8 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="course">Course/Major</Label>
+                <div className="space-y-1">
+                  <Label htmlFor="course" className="text-sm">Course/Major</Label>
                   <Input
                     id="course"
                     placeholder="e.g., Computer Science, Psychology"
@@ -215,8 +215,8 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label>Year of Study</Label>
+                <div className="space-y-1">
+                  <Label className="text-sm">Year of Study</Label>
                   <Select value={data.year.toString()} onValueChange={(value) => updateData("year", parseInt(value))}>
                     <SelectTrigger data-testid="select-year">
                       <SelectValue />
@@ -238,20 +238,20 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
           {/* Step 3: Initial Screening Questions */}
           {step === 3 && (
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base flex items-center">
                   <Heart className="h-4 w-4 mr-2" />
                   Quick Wellness Check
                 </CardTitle>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
                   These questions help us understand how to best support you
                 </p>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
+              <CardContent className="space-y-3 pt-2">
+                <div className="space-y-2">
                   <Label className="text-sm font-medium">How has your mood been lately?</Label>
                   <RadioGroup value={data.mood} onValueChange={(value) => updateData("mood", value)}>
-                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-1 sm:gap-3">
+                    <div className="grid grid-cols-4 gap-2">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="excellent" id="mood-excellent" />
                         <Label htmlFor="mood-excellent" className="text-sm">Excellent</Label>
@@ -272,10 +272,10 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   </RadioGroup>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <Label className="text-sm font-medium">How would you rate your current stress level?</Label>
                   <RadioGroup value={data.stress} onValueChange={(value) => updateData("stress", value)}>
-                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-1 sm:gap-3">
+                    <div className="grid grid-cols-4 gap-2">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="low" id="stress-low" />
                         <Label htmlFor="stress-low" className="text-sm">Low</Label>
@@ -296,10 +296,10 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   </RadioGroup>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <Label className="text-sm font-medium">How has your sleep been?</Label>
                   <RadioGroup value={data.sleep} onValueChange={(value) => updateData("sleep", value)}>
-                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-1 sm:gap-3">
+                    <div className="grid grid-cols-4 gap-2">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="excellent" id="sleep-excellent" />
                         <Label htmlFor="sleep-excellent" className="text-sm">Excellent</Label>
@@ -320,10 +320,10 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   </RadioGroup>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <Label className="text-sm font-medium">Have you sought mental health support before?</Label>
                   <RadioGroup value={data.previousHelp} onValueChange={(value) => updateData("previousHelp", value)}>
-                    <div className="grid grid-cols-1 gap-2 sm:gap-3">
+                    <div className="grid grid-cols-3 gap-2">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="yes" id="help-yes" />
                         <Label htmlFor="help-yes" className="text-sm">Yes</Label>
@@ -344,7 +344,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
           )}
 
           {/* Navigation Buttons */}
-          <div className="flex items-center justify-between pt-4">
+          <div className="flex items-center justify-between pt-3">
             <Button
               variant="outline"
               onClick={handlePrevious}
