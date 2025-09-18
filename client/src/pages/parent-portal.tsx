@@ -109,33 +109,33 @@ export default function ParentPortal() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-8">
         {/* Mental Health Pronunciation Notice */}
-        <Card className="mb-8 border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-secondary/5">
-          <CardContent className="p-6">
-            <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                <Lightbulb className="h-6 w-6 text-primary" />
+        <Card className="mb-4 sm:mb-8 border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-secondary/5">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 self-center sm:self-start">
+                <Lightbulb className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
               </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold text-foreground mb-2 flex items-center">
-                  <span>Important Language Clarification</span>
-                  <Heart className="h-5 w-5 text-red-500 ml-2" />
+              <div className="flex-1 w-full">
+                <h3 className="text-base sm:text-lg font-semibold text-foreground mb-3 sm:mb-2 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-0">
+                  <span className="text-center sm:text-left w-full sm:w-auto">Important Language Clarification</span>
+                  <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-red-500 self-center sm:ml-2" />
                 </h3>
-                <div className="space-y-3">
-                  <p className="text-sm text-muted-foreground">
+                <div className="space-y-3 sm:space-y-3">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     <strong>Please note:</strong> When discussing "Mental Health" with your child, they might initially hear "Metal" instead of "Health" due to pronunciation. 
                     This is completely normal! Please speak clearly and help them understand that we're talking about <strong>Mental HEALTH</strong> - 
                     taking care of our minds, emotions, and feelings, just like we take care of our physical health.
                   </p>
-                  <div className="bg-primary/10 rounded-lg p-4 border border-primary/20">
-                    <p className="text-sm font-medium text-foreground mb-2">💡 <strong>Motivational Message:</strong></p>
-                    <p className="text-sm text-primary italic">
+                  <div className="bg-primary/10 rounded-lg p-3 sm:p-4 border border-primary/20">
+                    <p className="text-xs sm:text-sm font-medium text-foreground mb-2">💡 <strong>Motivational Message:</strong></p>
+                    <p className="text-xs sm:text-sm text-primary italic leading-relaxed">
                       "Mental health is not a destination, but a process. It's about how you drive, not where you're going. 
                       Your child's emotional well-being matters, and seeking support shows strength, not weakness."
                     </p>
                   </div>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground leading-relaxed">
                     Remember: Clear communication about mental health creates a foundation for trust and understanding.
                   </p>
                 </div>
