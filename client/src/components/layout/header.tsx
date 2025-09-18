@@ -169,24 +169,10 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                 {/* Coin Display - Mobile */}
                 {currentUser && (
                   <div className="mb-6 p-4 bg-muted/50 rounded-lg border">
-                    <div className="flex items-center justify-between gap-2">
-                      <CoinDisplay 
-                        userId={currentUser.id} 
-                        className="flex-1 justify-start h-12 text-left bg-background hover:bg-accent/50 border border-border rounded-md px-4" 
-                      />
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-12 w-12 p-0 bg-background hover:bg-accent/50 border border-border rounded-md"
-                        onClick={() => {
-                          setLocation("/profile");
-                          setMobileMenuOpen(false);
-                        }}
-                        data-testid="button-settings-mobile"
-                      >
-                        <Settings className="h-4 w-4" />
-                      </Button>
-                    </div>
+                    <CoinDisplay 
+                      userId={currentUser.id} 
+                      className="w-full justify-start h-12 text-left bg-background hover:bg-accent/50 border border-border rounded-md px-4" 
+                    />
                   </div>
                 )}
                 <nav className="flex flex-col space-y-4">
@@ -492,6 +478,16 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                 <CoinDisplay userId={currentUser.id} />
               </div>
             )}
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setLocation("/profile")}
+              data-testid="button-settings"
+              className="hover:bg-accent"
+            >
+              <Settings className="h-4 w-4" />
+            </Button>
 
             {/* Theme and Language - Desktop */}
             <div className="hidden lg:flex items-center space-x-3">
