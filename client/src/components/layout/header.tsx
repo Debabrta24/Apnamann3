@@ -123,24 +123,8 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
             </div>
           </div>
 
-          {/* Left Sidebar Toggle Button - All screens except very large */}
-          {setSidebarOpen && (
-            <div className="flex xl:hidden">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSidebarOpen?.(!sidebarOpen)}
-                data-testid="button-sidebar-toggle"
-                title="Toggle navigation sidebar"
-                aria-label="Toggle navigation sidebar"
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
-            </div>
-          )}
-
-          {/* Mobile Navigation */}
-          <div className="md:hidden">
+          {/* Mobile Navigation - Moved to left side */}
+          <div className="flex md:hidden">
             <Sheet
               open={mobileMenuOpen}
               onOpenChange={(open) => {
