@@ -108,9 +108,10 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
     <header className="bg-card border-b border-border sticky top-0 z-50">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[4.5rem]">
-          {/* Left Navigation Menu Button - Small screens when sidebar not open */}
-          <div className={`flex xl:hidden ${sidebarOpen ? 'xl:hidden' : ''}`}>
-            {!sidebarOpen && (
+          {/* Left Navigation Menu Button - Always show on small screens, conditionally on medium+ */}
+          <div className="flex xl:hidden">
+            {/* Show on phones/tablets always, on medium+ screens only when sidebar not open */}
+            <div className="md:hidden">
               <Button
                 variant="ghost"
                 size="sm"
@@ -121,7 +122,22 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
               >
                 <Menu className="h-5 w-5" />
               </Button>
-            )}
+            </div>
+            {/* Show on medium/large screens only when sidebar not open */}
+            <div className="hidden md:flex xl:hidden">
+              {!sidebarOpen && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setMobileMenuOpen(true)}
+                  data-testid="button-left-nav-menu-md"
+                  title="Open navigation menu"
+                  aria-label="Open navigation menu"
+                >
+                  <Menu className="h-5 w-5" />
+                </Button>
+              )}
+            </div>
           </div>
 
           {/* Navigation Sheet */}
