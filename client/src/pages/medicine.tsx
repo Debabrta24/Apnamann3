@@ -1029,18 +1029,73 @@ export default function Medicine() {
 
         <TabsContent value="normal-medicine" className="space-y-6">
           {/* Category Filter */}
-          <div className="flex flex-wrap gap-2">
-            {categories.map(category => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedCategory(category)}
-                data-testid={`filter-${category.toLowerCase().replace(' ', '-')}`}
-              >
-                {category}
-              </Button>
-            ))}
+          <div className="w-full">
+            <h3 className="text-lg font-semibold mb-4 text-foreground">Filter by Category</h3>
+            
+            {/* Mobile: Horizontal scroll */}
+            <div className="block sm:hidden mb-4">
+              <div className="flex gap-3 pb-2 overflow-x-auto scrollbar-hide">
+                {categories.map(category => (
+                  <Button
+                    key={category}
+                    variant={selectedCategory === category ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSelectedCategory(category)}
+                    data-testid={`filter-${category.toLowerCase().replace(' ', '-')}`}
+                    className="flex-shrink-0 min-w-fit px-4 py-2 text-sm font-medium whitespace-nowrap"
+                  >
+                    {category}
+                  </Button>
+                ))}
+              </div>
+              <div className="text-xs text-muted-foreground text-center mt-2">
+                ← Swipe to see more categories →
+              </div>
+            </div>
+            
+            {/* Tablet and Desktop: Flex wrap */}
+            <div className="hidden sm:flex flex-wrap gap-3 lg:gap-4">
+              {categories.map(category => (
+                <Button
+                  key={category}
+                  variant={selectedCategory === category ? "default" : "outline"}
+                  size={`${categories.length > 6 ? "sm" : "default"}`}
+                  onClick={() => setSelectedCategory(category)}
+                  data-testid={`filter-${category.toLowerCase().replace(' ', '-')}`}
+                  className={`
+                    px-4 py-2 font-medium transition-all duration-200 hover:scale-105
+                    ${selectedCategory === category ? 
+                      'shadow-md ring-2 ring-primary/20' : 
+                      'hover:border-primary/50 hover:bg-primary/5'
+                    }
+                    sm:text-sm sm:px-3 sm:py-1.5
+                    md:text-base md:px-4 md:py-2
+                    lg:text-base lg:px-6 lg:py-2.5
+                  `}
+                >
+                  {category}
+                </Button>
+              ))}
+            </div>
+            
+            {/* Selected category indicator */}
+            {selectedCategory !== "All" && (
+              <div className="mt-4 p-3 bg-primary/10 border border-primary/20 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-primary font-medium">
+                    Showing: {selectedCategory} medicines
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedCategory("All")}
+                    className="h-6 px-2 text-xs text-primary hover:bg-primary/20"
+                  >
+                    Clear filter
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Medicine Grid */}
