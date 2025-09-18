@@ -10,12 +10,78 @@ interface ChatMessage {
 
 export type ThemeType = "light" | "dark" | "ocean" | "sunset" | "forest" | "lavender" | "cosmic" | "coral" | "sky" | "mint" | "cream" | "rose" | "peach" | "lavender-light";
 
+export type UserMode = "focus" | "relax" | "social" | "energy" | "mindful" | "creative" | "recovery";
+
+export interface UserModeOption {
+  id: UserMode;
+  name: string;
+  emoji: string;
+  description: string;
+  suggestedThemes: ThemeType[];
+}
+
+export const userModes: UserModeOption[] = [
+  {
+    id: "focus",
+    name: "Focus & Study",
+    emoji: "📚",
+    description: "Concentrate on learning and productivity",
+    suggestedThemes: ["ocean", "forest", "dark"]
+  },
+  {
+    id: "relax",
+    name: "Calm & Relax",
+    emoji: "🧘",
+    description: "Unwind and reduce stress",
+    suggestedThemes: ["lavender", "mint", "cream"]
+  },
+  {
+    id: "social",
+    name: "Connect & Share",
+    emoji: "🤝",
+    description: "Engage with community and peers",
+    suggestedThemes: ["coral", "peach", "light"]
+  },
+  {
+    id: "energy",
+    name: "Energize & Active",
+    emoji: "⚡",
+    description: "Boost motivation and activity",
+    suggestedThemes: ["sunset", "cosmic", "sky"]
+  },
+  {
+    id: "mindful",
+    name: "Reflect & Mindful",
+    emoji: "🌱",
+    description: "Practice mindfulness and self-reflection",
+    suggestedThemes: ["forest", "lavender-light", "mint"]
+  },
+  {
+    id: "creative",
+    name: "Create & Explore",
+    emoji: "🎨",
+    description: "Express creativity and explore ideas",
+    suggestedThemes: ["coral", "cosmic", "rose"]
+  },
+  {
+    id: "recovery",
+    name: "Rest & Recover",
+    emoji: "💤",
+    description: "Take a break and recharge",
+    suggestedThemes: ["dark", "lavender", "cream"]
+  }
+];
+
 interface AppContextType {
   currentUser: User | null;
   setCurrentUser: (user: User | null) => void;
   theme: ThemeType;
   setTheme: (theme: ThemeType) => void;
   toggleTheme: () => void;
+  userMode: UserMode | null;
+  setUserMode: (mode: UserMode) => void;
+  showUserModePopup: boolean;
+  setShowUserModePopup: (show: boolean) => void;
   isAuthenticated: boolean;
   isOnboarding: boolean;
   showStartupPopup: boolean;
@@ -65,6 +131,16 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [isOnboarding, setIsOnboarding] = useState(false);
   const [showStartupPopup, setShowStartupPopup] = useState(true);
   const [tempEmail, setTempEmail] = useState<string | null>(null);
+  
+  // User mode state
+  const [userMode, setUserModeState] = useState<UserMode | null>(() => {
+    if (typeof window !== "undefined") {
+      const savedMode = localStorage.getItem("userMode");
+      return (savedMode as UserMode) || null;
+    }
+    return null;
+  });
+  const [showUserModePopup, setShowUserModePopup] = useState(false);
 
   // Chat state management - initialize with default message
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([{
@@ -114,6 +190,11 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
   const toggleTheme = () => {
     setTheme(prev => prev === "light" ? "dark" : "light");
+  };
+
+  const setUserMode = (mode: UserMode) => {
+    setUserModeState(mode);
+    localStorage.setItem("userMode", mode);
   };
 
   const login = (email: string) => {
@@ -225,6 +306,10 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       theme,
       setTheme, 
       toggleTheme,
+      userMode,
+      setUserMode,
+      showUserModePopup,
+      setShowUserModePopup,
       isAuthenticated,
       isOnboarding,
       showStartupPopup,
