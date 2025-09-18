@@ -123,9 +123,9 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
             </div>
           </div>
 
-          {/* Left Sidebar Toggle Button - Desktop */}
+          {/* Left Sidebar Toggle Button - All screens except very large */}
           {setSidebarOpen && (
-            <div className="hidden lg:flex">
+            <div className="flex xl:hidden">
               <Button
                 variant="ghost"
                 size="sm"
