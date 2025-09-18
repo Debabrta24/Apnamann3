@@ -108,48 +108,37 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
     <header className="bg-card border-b border-border sticky top-0 z-50">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[4.5rem]">
-          {/* Mobile Logo and branding - hidden, shows in mobile menu */}
-          <div className="hidden">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center">
-              <img
-                src={logoUrl}
-                alt="ApnaMann Logo"
-                className="w-10 h-10 rounded-lg object-cover"
-                data-testid="img-logo-header-hidden"
-              />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-foreground">ApnaMann</h1>
-            </div>
+          {/* Left Navigation Menu Button - All screen sizes */}
+          <div className="flex">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setMobileMenuOpen(true)}
+              data-testid="button-left-nav-menu"
+              title="Open navigation menu"
+              aria-label="Open navigation menu"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
           </div>
 
-          {/* Mobile Navigation - Moved to left side */}
-          <div className="flex md:hidden">
-            <Sheet
-              open={mobileMenuOpen}
-              onOpenChange={(open) => {
-                setMobileMenuOpen(open);
-                if (!open) {
-                  // Reset all dropdowns when menu closes
-                  setMobileDropdowns({
-                    doctorScreening: false,
-                    wellness: false,
-                    relaxRefresh: false,
-                    community: false,
-                    mySpace: false,
-                  });
-                }
-              }}
-            >
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  data-testid="button-mobile-menu"
-                >
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
+          {/* Navigation Sheet */}
+          <Sheet
+            open={mobileMenuOpen}
+            onOpenChange={(open) => {
+              setMobileMenuOpen(open);
+              if (!open) {
+                // Reset all dropdowns when menu closes
+                setMobileDropdowns({
+                  doctorScreening: false,
+                  wellness: false,
+                  relaxRefresh: false,
+                  community: false,
+                  mySpace: false,
+                });
+              }
+            }}
+          >
               <SheetContent
                 side="left"
                 className="w-[280px] sm:w-[350px] overflow-y-auto"
@@ -460,8 +449,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                   </div>
                 </nav>
               </SheetContent>
-            </Sheet>
-          </div>
+          </Sheet>
 
           {/* Global Search - Desktop */}
           <div className="hidden md:flex flex-1 max-w-md">
