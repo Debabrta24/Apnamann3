@@ -11,6 +11,7 @@ import {
   Gamepad2,
   BookOpen,
   Save,
+  Settings,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -168,10 +169,24 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                 {/* Coin Display - Mobile */}
                 {currentUser && (
                   <div className="mb-6 p-4 bg-muted/50 rounded-lg border">
-                    <CoinDisplay 
-                      userId={currentUser.id} 
-                      className="w-full justify-start h-12 text-left bg-background hover:bg-accent/50 border border-border rounded-md px-4" 
-                    />
+                    <div className="flex items-center justify-between gap-2">
+                      <CoinDisplay 
+                        userId={currentUser.id} 
+                        className="flex-1 justify-start h-12 text-left bg-background hover:bg-accent/50 border border-border rounded-md px-4" 
+                      />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-12 w-12 p-0 bg-background hover:bg-accent/50 border border-border rounded-md"
+                        onClick={() => {
+                          setLocation("/profile");
+                          setMobileMenuOpen(false);
+                        }}
+                        data-testid="button-settings-mobile"
+                      >
+                        <Settings className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 )}
                 <nav className="flex flex-col space-y-4">
