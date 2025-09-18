@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User, GraduationCap, Heart, ArrowRight, ArrowLeft } from "lucide-react";
 import logoUrl from '@/assets/logo.png';
 import { Button } from "@/components/ui/button";
@@ -106,6 +106,20 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
   const updateData = (field: keyof OnboardingData, value: string | number) => {
     setData(prev => ({ ...prev, [field]: value }));
   };
+
+  // Auto-advance to next step when current step is complete
+  useEffect(() => {
+    if (step === 1 && data.firstName && data.lastName) {
+      // Auto-advance from step 1 to step 2
+      setTimeout(() => setStep(2), 500);
+    } else if (step === 2 && data.institution && data.course) {
+      // Auto-advance from step 2 to step 3
+      setTimeout(() => setStep(3), 500);
+    } else if (step === 3 && data.mood && data.stress && data.sleep && data.previousHelp) {
+      // Auto-complete when all fields are filled
+      setTimeout(() => onComplete(data), 500);
+    }
+  }, [data, step, onComplete]);
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
@@ -343,29 +357,6 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
             </Card>
           )}
 
-          {/* Navigation Buttons */}
-          <div className="flex items-center justify-between pt-3">
-            <Button
-              variant="outline"
-              onClick={handlePrevious}
-              disabled={step === 1}
-              data-testid="button-previous"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Previous
-            </Button>
-
-            {step < totalSteps ? (
-              <Button onClick={handleNext} data-testid="button-next">
-                Next
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
-            ) : (
-              <Button onClick={handleComplete} data-testid="button-complete">
-                Complete Setup
-              </Button>
-            )}
-          </div>
         </div>
       </DialogContent>
     </Dialog>
