@@ -23,7 +23,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAppContext } from "@/context/AppContext";
+import { useAppContext, userModes } from "@/context/AppContext";
 import { useLocation } from "wouter";
 import GlobalSearch from "@/components/global-search";
 import NotificationCenter from "@/components/notifications/notification-center";
@@ -65,7 +65,7 @@ interface HeaderProps {
 }
 
 export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}) {
-  const { currentUser, theme, setTheme, logout } = useAppContext();
+  const { currentUser, theme, setTheme, userMode, logout } = useAppContext();
   const [, setLocation] = useLocation();
   const { ts, changeLanguage, currentLanguage, isTranslating } =
     useTranslation();
@@ -226,12 +226,20 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="w-8 h-8 sm:w-9 sm:h-9 bg-accent rounded-full p-0 touch-manipulation"
+                  className="w-8 h-8 sm:w-9 sm:h-9 bg-accent rounded-full p-0 touch-manipulation relative"
                   data-testid="button-user-menu"
                 >
                   <span className="text-accent-foreground text-xs sm:text-sm font-medium">
                     {getInitials(currentUser?.firstName, currentUser?.lastName)}
                   </span>
+                  {userMode && (
+                    <span 
+                      className="absolute -top-1 -right-1 text-xs bg-background rounded-full w-5 h-5 flex items-center justify-center border border-border shadow-sm"
+                      data-testid="emoji-user-mode-profile"
+                    >
+                      {userModes.find(m => m.id === userMode)?.emoji}
+                    </span>
+                  )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
