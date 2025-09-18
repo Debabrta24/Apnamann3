@@ -202,8 +202,12 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                           onClick={() => handleLanguageChange(lang.code)}
                           data-testid={`option-language-${lang.code}-settings`}
                           disabled={isTranslating}
+                          className={currentLanguage === lang.code ? "bg-primary/10 text-primary font-semibold" : ""}
                         >
                           {lang.name}
+                          {currentLanguage === lang.code && (
+                            <span className="ml-auto text-primary">✓</span>
+                          )}
                           {isTranslating && currentLanguage === lang.code && (
                             <span className="ml-2 text-xs text-muted-foreground">
                               {ts("Translating...")}
