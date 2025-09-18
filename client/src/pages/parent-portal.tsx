@@ -144,27 +144,30 @@ export default function ParentPortal() {
           </CardContent>
         </Card>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 h-auto p-2">
-            <TabsTrigger value="signs" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center space-x-2 py-3" data-testid="tab-warning-signs">
-              <AlertTriangle className="h-4 w-4" />
-              <span>Warning Signs</span>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
+          <TabsList className="grid w-full grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 h-auto p-1 sm:p-2 gap-1 sm:gap-0">
+            <TabsTrigger value="signs" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center justify-center space-x-1 sm:space-x-2 py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm" data-testid="tab-warning-signs">
+              <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="truncate">Warning Signs</span>
             </TabsTrigger>
-            <TabsTrigger value="steps" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center space-x-2 py-3" data-testid="tab-action-steps">
-              <CheckCircle className="h-4 w-4" />
-              <span>Action Steps</span>
+            <TabsTrigger value="steps" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center justify-center space-x-1 sm:space-x-2 py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm" data-testid="tab-action-steps">
+              <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="truncate">Action Steps</span>
             </TabsTrigger>
-            <TabsTrigger value="resources" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center space-x-2 py-3" data-testid="tab-resources">
-              <BookOpen className="h-4 w-4" />
-              <span>Resources</span>
+            <TabsTrigger value="resources" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center justify-center space-x-1 sm:space-x-2 py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm" data-testid="tab-resources">
+              <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="truncate">Resources</span>
             </TabsTrigger>
-            <TabsTrigger value="support" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center space-x-2 py-3" data-testid="tab-support">
-              <Heart className="h-4 w-4" />
-              <span>Support Tools</span>
+            <TabsTrigger value="support" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center justify-center space-x-1 sm:space-x-2 py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm" data-testid="tab-support">
+              <Heart className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="truncate">
+                <span className="sm:hidden">Support</span>
+                <span className="hidden sm:inline">Support Tools</span>
+              </span>
             </TabsTrigger>
-            <TabsTrigger value="emergency" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center space-x-2 py-3" data-testid="tab-emergency">
-              <Phone className="h-4 w-4" />
-              <span>Emergency</span>
+            <TabsTrigger value="emergency" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground flex items-center justify-center space-x-1 sm:space-x-2 py-2 sm:py-3 px-2 sm:px-3 text-xs sm:text-sm" data-testid="tab-emergency">
+              <Phone className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+              <span className="truncate">Emergency</span>
             </TabsTrigger>
           </TabsList>
 
