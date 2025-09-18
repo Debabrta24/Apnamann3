@@ -1058,61 +1058,91 @@ export default function Medicine() {
           </div>
 
           {/* Medicine Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-8">
             {filteredMedicines.map((medicine) => (
-              <Card key={medicine.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader className="pb-3">
-                  <div className="aspect-video mb-3 overflow-hidden rounded-lg">
+              <Card key={medicine.id} className="hover:shadow-lg transition-shadow h-full">
+                <CardHeader className="pb-4">
+                  <div className="aspect-[4/3] mb-4 overflow-hidden rounded-lg bg-gray-50 dark:bg-gray-800">
                     <img
                       src={medicine.image}
                       alt={medicine.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
-                      <CardTitle className="text-lg leading-tight">{medicine.name}</CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">{medicine.genericName}</p>
-                      <p className="text-xs text-muted-foreground">{medicine.manufacturer}</p>
+                      <CardTitle className="text-xl leading-tight mb-2">{medicine.name}</CardTitle>
+                      <p className="text-base text-muted-foreground mb-1">{medicine.genericName}</p>
+                      <p className="text-sm text-muted-foreground">{medicine.manufacturer}</p>
                     </div>
                     <div className="flex flex-col items-end">
-                      <Badge variant="secondary" className="mb-1">{medicine.category}</Badge>
+                      <Badge variant="secondary" className="mb-2 text-sm px-3 py-1">{medicine.category}</Badge>
                       {medicine.prescription && (
-                        <Badge variant="destructive" className="text-xs">Rx Required</Badge>
+                        <Badge variant="destructive" className="text-sm px-3 py-1">Rx Required</Badge>
                       )}
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center gap-2">
+                <CardContent className="space-y-5">
+                  <div className="flex items-center gap-3">
                     <div className="flex items-center">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm font-medium ml-1">{medicine.rating}</span>
+                      <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                      <span className="text-base font-medium ml-1">{medicine.rating}</span>
                     </div>
-                    <span className="text-xs text-muted-foreground">({medicine.reviewCount} reviews)</span>
+                    <span className="text-sm text-muted-foreground">({medicine.reviewCount} reviews)</span>
                   </div>
 
-                  <p className="text-sm text-muted-foreground line-clamp-2">{medicine.description}</p>
+                  <p className="text-base text-muted-foreground line-clamp-3">{medicine.description}</p>
 
+                  {/* Enhanced Dosage Information */}
+                  <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg border-l-4 border-blue-500">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Pill className="h-5 w-5 text-blue-600" />
+                      <span className="font-semibold text-blue-800 dark:text-blue-300">Dosage Information</span>
+                    </div>
+                    <p className="text-base text-blue-700 dark:text-blue-200 font-medium">{medicine.dosage}</p>
+                    <p className="text-sm text-blue-600 dark:text-blue-300 mt-1">
+                      Always follow your doctor's prescription and dosage instructions
+                    </p>
+                  </div>
+
+                  {/* Uses Section */}
                   <div className="space-y-2">
-                    <div className="text-sm">
-                      <strong>Uses:</strong> {medicine.uses.slice(0, 3).join(", ")}
-                      {medicine.uses.length > 3 && "..."}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      <strong>Dosage:</strong> {medicine.dosage}
+                    <div className="text-base">
+                      <span className="font-semibold text-green-700 dark:text-green-400">Medical Uses:</span>
+                      <p className="text-muted-foreground mt-1">{medicine.uses.join(", ")}</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between">
+                  {/* Additional Medicine Information */}
+                  <div className="grid grid-cols-2 gap-4 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg">
+                    <div className="text-center">
+                      <p className="text-sm text-muted-foreground">Pack Size</p>
+                      <p className="font-medium">10 tablets</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm text-muted-foreground">Form</p>
+                      <p className="font-medium">Tablet</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm text-muted-foreground">Storage</p>
+                      <p className="font-medium text-xs">Store in cool, dry place</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm text-muted-foreground">Expiry</p>
+                      <p className="font-medium text-xs">2+ years from mfg</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2">
                     <div className="flex items-center gap-2">
                       {medicine.discountPrice ? (
                         <>
-                          <span className="text-lg font-bold text-primary">₹{medicine.discountPrice}</span>
-                          <span className="text-sm text-muted-foreground line-through">₹{medicine.price}</span>
+                          <span className="text-2xl font-bold text-primary">₹{medicine.discountPrice}</span>
+                          <span className="text-lg text-muted-foreground line-through">₹{medicine.price}</span>
                         </>
                       ) : (
-                        <span className="text-lg font-bold text-primary">₹{medicine.price}</span>
+                        <span className="text-2xl font-bold text-primary">₹{medicine.price}</span>
                       )}
                     </div>
                     {medicine.inStock ? (
@@ -1125,31 +1155,32 @@ export default function Medicine() {
                               onClick={() => removeFromCart(medicine.id)}
                               data-testid={`btn-decrease-${medicine.id}`}
                             >
-                              <Minus className="h-3 w-3" />
+                              <Minus className="h-4 w-4" />
                             </Button>
-                            <span className="min-w-[20px] text-center">{cart[medicine.id]}</span>
+                            <span className="min-w-[30px] text-center font-medium">{cart[medicine.id]}</span>
                             <Button
                               size="sm"
                               variant="outline"
                               onClick={() => addToCart(medicine.id)}
                               data-testid={`btn-increase-${medicine.id}`}
                             >
-                              <Plus className="h-3 w-3" />
+                              <Plus className="h-4 w-4" />
                             </Button>
                           </div>
                         ) : (
                           <Button
-                            size="sm"
+                            size="lg"
                             onClick={() => addToCart(medicine.id)}
                             data-testid={`btn-add-${medicine.id}`}
+                            className="px-6"
                           >
-                            <ShoppingCart className="h-4 w-4 mr-2" />
-                            Add
+                            <ShoppingCart className="h-5 w-5 mr-2" />
+                            Add to Cart
                           </Button>
                         )}
                       </div>
                     ) : (
-                      <Badge variant="secondary">Out of Stock</Badge>
+                      <Badge variant="secondary" className="text-base px-4 py-2">Out of Stock</Badge>
                     )}
                   </div>
                 </CardContent>
