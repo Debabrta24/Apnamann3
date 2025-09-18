@@ -51,8 +51,15 @@ function Router() {
   const [location, setLocation] = useLocation();
   const { trackAction, trackPageDuration } = useUsageAnalytics();
   
-  // Sidebar state for desktop navigation - default closed on profile page
-  const [sidebarOpen, setSidebarOpen] = useState(() => location !== '/profile');
+  // Sidebar state for desktop navigation - default closed on mobile and profile page
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    // Always start closed on mobile
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      return false;
+    }
+    // On desktop, close by default only on profile page
+    return location !== '/profile';
+  });
   
   // Dropdown states for navigation sections
   const [dropdownStates, setDropdownStates] = useState({
@@ -115,6 +122,41 @@ function Router() {
     }
   }, [location, isAuthenticated, isOnboarding]);
 
+  // Handle window resize for responsive sidebar behavior
+  useEffect(() => {
+    const handleResize = () => {
+      // Close sidebar on mobile when resizing to mobile view
+      if (window.innerWidth < 768 && sidebarOpen) {
+        setSidebarOpen(false);
+      }
+      // Open sidebar on desktop when resizing to desktop view (except on profile page)
+      else if (window.innerWidth >= 768 && !sidebarOpen && location !== '/profile') {
+        setSidebarOpen(true);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [sidebarOpen, location]);
+
+  // Lock body scroll when mobile sidebar is open
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (sidebarOpen && window.innerWidth < 768) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Cleanup on unmount
+    return () => {
+      if (typeof window !== 'undefined') {
+        document.body.style.overflow = '';
+      }
+    };
+  }, [sidebarOpen]);
+
   // Show startup popup first (if not seen before)
   if (showStartupPopup && !isAuthenticated) {
     return (
@@ -147,10 +189,10 @@ function Router() {
   return (
     <>
       <div className="flex h-screen">
-        {/* Mobile Overlay */}
+        {/* Mobile Overlay - Above header but below sidebar */}
         {sidebarOpen && (
           <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden transition-opacity duration-300 ease-in-out"
+            className="fixed inset-0 bg-black bg-opacity-50 z-[80] md:hidden transition-opacity duration-300 ease-in-out"
             onClick={() => setSidebarOpen(false)}
             data-testid="overlay-mobile-menu"
           />
@@ -198,10 +240,8 @@ function Router() {
                     key={item.href}
                     onClick={() => {
                       setLocation(item.href);
-                      // Close mobile menu when navigation item is clicked
-                      if (window.innerWidth < 768) {
-                        setSidebarOpen(false);
-                      }
+                      // Close mobile menu when navigation item is clicked on mobile
+                      setSidebarOpen(false);
                     }}
                     className={cn(
                       "w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3",
@@ -239,9 +279,7 @@ function Router() {
                           onClick={() => {
                             setLocation(item.href);
                             // Close mobile menu when navigation item is clicked
-                            if (window.innerWidth < 768) {
-                              setSidebarOpen(false);
-                            }
+                            setSidebarOpen(false);
                           }}
                           className={cn(
                             "w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ml-2",
@@ -281,9 +319,7 @@ function Router() {
                           onClick={() => {
                             setLocation(item.href);
                             // Close mobile menu when navigation item is clicked
-                            if (window.innerWidth < 768) {
-                              setSidebarOpen(false);
-                            }
+                            setSidebarOpen(false);
                           }}
                           className={cn(
                             "w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ml-2",
@@ -324,9 +360,7 @@ function Router() {
                           onClick={() => {
                             setLocation(item.href);
                             // Close mobile menu when navigation item is clicked
-                            if (window.innerWidth < 768) {
-                              setSidebarOpen(false);
-                            }
+                            setSidebarOpen(false);
                           }}
                           className={cn(
                             "w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ml-2",
@@ -366,9 +400,7 @@ function Router() {
                           onClick={() => {
                             setLocation(item.href);
                             // Close mobile menu when navigation item is clicked
-                            if (window.innerWidth < 768) {
-                              setSidebarOpen(false);
-                            }
+                            setSidebarOpen(false);
                           }}
                           className={cn(
                             "w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ml-2",
@@ -407,9 +439,7 @@ function Router() {
                           onClick={() => {
                             setLocation(item.href);
                             // Close mobile menu when navigation item is clicked
-                            if (window.innerWidth < 768) {
-                              setSidebarOpen(false);
-                            }
+                            setSidebarOpen(false);
                           }}
                           className={cn(
                             "w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ml-2",

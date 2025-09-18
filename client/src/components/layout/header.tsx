@@ -87,44 +87,49 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
     <header className="bg-card border-b border-border sticky top-0 z-60">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[4.5rem]">
-
-          {/* Mobile Menu Button */}
-          {!sidebarOpen && (
+          {/* Left side - Mobile Menu Button + Desktop Search */}
+          <div className="flex items-center flex-1">
+            {/* Mobile Menu Button - Always visible on mobile */}
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setSidebarOpen?.(!sidebarOpen)}
-              className="md:hidden hover:bg-accent"
+              className="md:hidden hover:bg-accent mr-2"
               data-testid="button-mobile-menu"
               aria-controls="mobile-sidebar"
               aria-expanded={sidebarOpen}
             >
               <Menu className="h-5 w-5" />
             </Button>
-          )}
 
-          {/* Global Search - Desktop */}
-          <div className="hidden md:flex flex-1 max-w-md">
-            <GlobalSearch />
+            {/* Global Search - Desktop only */}
+            <div className="hidden md:flex flex-1 max-w-md">
+              <GlobalSearch />
+            </div>
           </div>
 
-          {/* User menu */}
-          <div className="flex items-center space-x-2 sm:space-x-3 lg:space-x-4">
+          {/* Right side - User menu items */}
+          <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-3">
+            {/* Notifications - Hidden on small mobile, visible on larger screens */}
             <div className="hidden sm:block">
               <NotificationCenter />
             </div>
 
+            {/* Coin Display - Visible on small screens and up */}
             {currentUser && (
-              <CoinDisplay userId={currentUser.id} />
+              <div className="hidden sm:block">
+                <CoinDisplay userId={currentUser.id} />
+              </div>
             )}
 
+            {/* Settings Button - Mobile optimized */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
                   size="sm"
                   data-testid="button-settings"
-                  className="hover:bg-accent"
+                  className="hover:bg-accent h-8 w-8 p-0 sm:h-9 sm:w-9 sm:p-2"
                 >
                   <Settings className="h-4 w-4" />
                 </Button>
@@ -206,15 +211,15 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* User Menu with combined mobile options */}
+            {/* User Menu - Mobile optimized */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="w-8 h-8 bg-accent rounded-full p-0"
+                  className="w-8 h-8 sm:w-9 sm:h-9 bg-accent rounded-full p-0 touch-manipulation"
                   data-testid="button-user-menu"
                 >
-                  <span className="text-accent-foreground text-sm font-medium">
+                  <span className="text-accent-foreground text-xs sm:text-sm font-medium">
                     {getInitials(currentUser?.firstName, currentUser?.lastName)}
                   </span>
                 </Button>
