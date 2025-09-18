@@ -755,7 +755,10 @@ class MockStorage implements IStorage {
       firstName: 'Test',
       lastName: 'User',
       email: 'test@example.com',
+      anonymousName: 'GentleButterfly42',
       institution: 'Test University',
+      course: 'Computer Science',
+      year: 3,
       language: 'en',
       isAdmin: false,
       coins: 50, // Start with 50 coins for testing
@@ -907,8 +910,8 @@ class MockStorage implements IStorage {
     const mockAlarm: MedicineAlarm = {
       id: `alarm_${Date.now()}`,
       ...alarm,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     if (!this.mockMedicineAlarms.has(alarm.userId)) {
@@ -924,10 +927,10 @@ class MockStorage implements IStorage {
   }
 
   async updateMedicineAlarm(id: string, updates: Partial<MedicineAlarm>): Promise<MedicineAlarm> {
-    for (const alarms of this.mockMedicineAlarms.values()) {
+    for (const alarms of Array.from(this.mockMedicineAlarms.values())) {
       const alarm = alarms.find(a => a.id === id);
       if (alarm) {
-        Object.assign(alarm, updates, { updatedAt: new Date().toISOString() });
+        Object.assign(alarm, updates, { updatedAt: new Date() });
         return alarm;
       }
     }
@@ -935,7 +938,7 @@ class MockStorage implements IStorage {
   }
 
   async deleteMedicineAlarm(id: string): Promise<void> {
-    for (const [userId, alarms] of this.mockMedicineAlarms.entries()) {
+    for (const [userId, alarms] of Array.from(this.mockMedicineAlarms.entries())) {
       const index = alarms.findIndex(a => a.id === id);
       if (index !== -1) {
         alarms.splice(index, 1);
@@ -956,8 +959,8 @@ class MockStorage implements IStorage {
       ...skill,
       endorsements: 0,
       isVerified: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     if (!this.mockUserSkills.has(skill.userId)) {
@@ -973,10 +976,10 @@ class MockStorage implements IStorage {
   }
 
   async updateUserSkill(id: string, updates: Partial<UserSkill>): Promise<UserSkill> {
-    for (const skills of this.mockUserSkills.values()) {
+    for (const skills of Array.from(this.mockUserSkills.values())) {
       const skill = skills.find(s => s.id === id);
       if (skill) {
-        Object.assign(skill, updates, { updatedAt: new Date().toISOString() });
+        Object.assign(skill, updates, { updatedAt: new Date() });
         return skill;
       }
     }
@@ -984,7 +987,7 @@ class MockStorage implements IStorage {
   }
 
   async deleteUserSkill(id: string): Promise<void> {
-    for (const [userId, skills] of this.mockUserSkills.entries()) {
+    for (const [userId, skills] of Array.from(this.mockUserSkills.entries())) {
       const index = skills.findIndex(s => s.id === id);
       if (index !== -1) {
         skills.splice(index, 1);
@@ -1001,8 +1004,8 @@ class MockStorage implements IStorage {
       likes: 0,
       views: 0,
       isFeatured: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     if (!this.mockSkillShowcases.has(showcase.userId)) {
@@ -1019,17 +1022,17 @@ class MockStorage implements IStorage {
 
   async getAllSkillShowcases(): Promise<SkillShowcase[]> {
     const allShowcases = [];
-    for (const showcases of this.mockSkillShowcases.values()) {
+    for (const showcases of Array.from(this.mockSkillShowcases.values())) {
       allShowcases.push(...showcases);
     }
-    return allShowcases.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return allShowcases.sort((a, b) => (b.createdAt ? new Date(b.createdAt).getTime() : 0) - (a.createdAt ? new Date(a.createdAt).getTime() : 0));
   }
 
   async updateSkillShowcase(id: string, updates: Partial<SkillShowcase>): Promise<SkillShowcase> {
-    for (const showcases of this.mockSkillShowcases.values()) {
+    for (const showcases of Array.from(this.mockSkillShowcases.values())) {
       const showcase = showcases.find(s => s.id === id);
       if (showcase) {
-        Object.assign(showcase, updates, { updatedAt: new Date().toISOString() });
+        Object.assign(showcase, updates, { updatedAt: new Date() });
         return showcase;
       }
     }
@@ -1037,7 +1040,7 @@ class MockStorage implements IStorage {
   }
 
   async deleteSkillShowcase(id: string): Promise<void> {
-    for (const [userId, showcases] of this.mockSkillShowcases.entries()) {
+    for (const [userId, showcases] of Array.from(this.mockSkillShowcases.entries())) {
       const index = showcases.findIndex(s => s.id === id);
       if (index !== -1) {
         showcases.splice(index, 1);
@@ -1048,11 +1051,11 @@ class MockStorage implements IStorage {
   }
 
   async likeSkillShowcase(id: string): Promise<void> {
-    for (const showcases of this.mockSkillShowcases.values()) {
+    for (const showcases of Array.from(this.mockSkillShowcases.values())) {
       const showcase = showcases.find(s => s.id === id);
       if (showcase) {
         showcase.likes = (showcase.likes || 0) + 1;
-        showcase.updatedAt = new Date().toISOString();
+        showcase.updatedAt = new Date();
         return;
       }
     }
@@ -1063,7 +1066,7 @@ class MockStorage implements IStorage {
     const mockEndorsement: SkillEndorsement = {
       id: `endorsement_${Date.now()}`,
       ...endorsement,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date(),
     };
 
     if (!this.mockSkillEndorsements.has(endorsement.skillId)) {
@@ -1073,11 +1076,11 @@ class MockStorage implements IStorage {
     this.mockSkillEndorsements.get(endorsement.skillId)!.push(mockEndorsement);
 
     // Update the skill's endorsement count
-    for (const skills of this.mockUserSkills.values()) {
+    for (const skills of Array.from(this.mockUserSkills.values())) {
       const skill = skills.find(s => s.id === endorsement.skillId);
       if (skill) {
         skill.endorsements = (skill.endorsements || 0) + 1;
-        skill.updatedAt = new Date().toISOString();
+        skill.updatedAt = new Date();
         break;
       }
     }
@@ -1110,14 +1113,14 @@ class MockStorage implements IStorage {
 
   async getAllLiveSessions(): Promise<LiveSession[]> {
     const allSessions = [];
-    for (const sessions of this.mockLiveSessions.values()) {
+    for (const sessions of Array.from(this.mockLiveSessions.values())) {
       allSessions.push(...sessions);
     }
-    return allSessions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return allSessions.sort((a, b) => (b.createdAt ? new Date(b.createdAt).getTime() : 0) - (a.createdAt ? new Date(a.createdAt).getTime() : 0));
   }
 
   async getLiveSessionById(id: string): Promise<LiveSession | undefined> {
-    for (const sessions of this.mockLiveSessions.values()) {
+    for (const sessions of Array.from(this.mockLiveSessions.values())) {
       const session = sessions.find(s => s.id === id);
       if (session) return session;
     }
@@ -1125,7 +1128,7 @@ class MockStorage implements IStorage {
   }
 
   async updateLiveSession(id: string, updates: Partial<LiveSession>): Promise<LiveSession> {
-    for (const sessions of this.mockLiveSessions.values()) {
+    for (const sessions of Array.from(this.mockLiveSessions.values())) {
       const session = sessions.find(s => s.id === id);
       if (session) {
         Object.assign(session, updates, { updatedAt: new Date() });
@@ -1136,7 +1139,7 @@ class MockStorage implements IStorage {
   }
 
   async deleteLiveSession(id: string): Promise<void> {
-    for (const [userId, sessions] of this.mockLiveSessions.entries()) {
+    for (const [userId, sessions] of Array.from(this.mockLiveSessions.entries())) {
       const index = sessions.findIndex(s => s.id === id);
       if (index !== -1) {
         sessions.splice(index, 1);
@@ -1147,7 +1150,7 @@ class MockStorage implements IStorage {
   }
 
   async startLiveSession(id: string): Promise<LiveSession> {
-    for (const sessions of this.mockLiveSessions.values()) {
+    for (const sessions of Array.from(this.mockLiveSessions.values())) {
       const session = sessions.find(s => s.id === id);
       if (session) {
         session.status = 'live';
@@ -1160,7 +1163,7 @@ class MockStorage implements IStorage {
   }
 
   async endLiveSession(id: string): Promise<LiveSession> {
-    for (const sessions of this.mockLiveSessions.values()) {
+    for (const sessions of Array.from(this.mockLiveSessions.values())) {
       const session = sessions.find(s => s.id === id);
       if (session) {
         session.status = 'ended';
@@ -1173,7 +1176,7 @@ class MockStorage implements IStorage {
   }
 
   async incrementSessionViewers(id: string): Promise<void> {
-    for (const sessions of this.mockLiveSessions.values()) {
+    for (const sessions of Array.from(this.mockLiveSessions.values())) {
       const session = sessions.find(s => s.id === id);
       if (session) {
         session.currentViewers = (session.currentViewers || 0) + 1;
@@ -1186,33 +1189,20 @@ class MockStorage implements IStorage {
   }
 }
 
-// Try to use DatabaseStorage, fall back to MockStorage if database is not available
+// Initialize storage - prioritize database when available
 let storage: IStorage;
 
-async function initializeStorage(): Promise<IStorage> {
-  if (process.env.DATABASE_URL) {
-    try {
-      const dbStorage = new DatabaseStorage();
-      // Test database connection by calling a simple method
-      await dbStorage.getAnalytics();
-      console.log('Connected to database successfully');
-      return dbStorage;
-    } catch (error) {
-      console.log('Database connection failed, using mock storage for development:', error);
-      return new MockStorage();
-    }
-  } else {
-    console.log('DATABASE_URL not found, using mock storage for development');
-    return new MockStorage();
+if (process.env.DATABASE_URL) {
+  try {
+    storage = new DatabaseStorage();
+    console.log('Using DatabaseStorage with DATABASE_URL');
+  } catch (error) {
+    console.log('DatabaseStorage initialization failed, falling back to MockStorage:', error);
+    storage = new MockStorage();
   }
+} else {
+  console.log('DATABASE_URL not found, using MockStorage for development');
+  storage = new MockStorage();
 }
-
-// Initialize storage synchronously for immediate use, but also attempt async initialization
-storage = new MockStorage();
-initializeStorage().then((initializedStorage) => {
-  storage = initializedStorage;
-}).catch(() => {
-  console.log('Failed to initialize storage, continuing with mock storage');
-});
 
 export { storage };
