@@ -593,53 +593,46 @@ export default function Header() {
 
                 {/* Mobile-only options */}
                 <div className="lg:hidden">
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger data-testid="submenu-theme-mobile">
+                  <div className="border-t border-border pt-2 mt-2">
+                    <div className="px-2 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                       {theme === "dark" ? (
-                        <Moon className="h-4 w-4 mr-2" />
+                        <Moon className="h-3 w-3 inline mr-1" />
                       ) : (
-                        <Sun className="h-4 w-4 mr-2" />
+                        <Sun className="h-3 w-3 inline mr-1" />
                       )}
                       {ts("Theme")}
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuSub>
-                        <DropdownMenuSubTrigger data-testid="submenu-light-themes-mobile">
-                          <Sun className="h-4 w-4 mr-2" />
-                          {ts("Light")}
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuSubContent>
-                          {lightThemes.map((theme) => (
-                            <DropdownMenuItem
-                              key={theme.value}
-                              onClick={() => setTheme(theme.value as any)}
-                              data-testid={`option-theme-${theme.value}-mobile`}
-                            >
-                              {ts(theme.label)}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuSubContent>
-                      </DropdownMenuSub>
-
-                      <DropdownMenuSub>
-                        <DropdownMenuSubTrigger data-testid="submenu-dark-themes-mobile">
-                          <Moon className="h-4 w-4 mr-2" />
-                          {ts("Dark")}
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuSubContent>
-                          {darkThemes.map((theme) => (
-                            <DropdownMenuItem
-                              key={theme.value}
-                              onClick={() => setTheme(theme.value as any)}
-                              data-testid={`option-theme-${theme.value}-mobile`}
-                            >
-                              {ts(theme.label)}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuSubContent>
-                      </DropdownMenuSub>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuSub>
+                    </div>
+                    
+                    <div className="px-2 py-1 text-xs font-medium text-muted-foreground">
+                      <Sun className="h-3 w-3 inline mr-1" />
+                      {ts("Light")}
+                    </div>
+                    {lightThemes.map((theme) => (
+                      <DropdownMenuItem
+                        key={theme.value}
+                        onClick={() => setTheme(theme.value as any)}
+                        data-testid={`option-theme-${theme.value}-mobile`}
+                        className="pl-8"
+                      >
+                        {ts(theme.label)}
+                      </DropdownMenuItem>
+                    ))}
+                    
+                    <div className="px-2 py-1 text-xs font-medium text-muted-foreground mt-2">
+                      <Moon className="h-3 w-3 inline mr-1" />
+                      {ts("Dark")}
+                    </div>
+                    {darkThemes.map((theme) => (
+                      <DropdownMenuItem
+                        key={theme.value}
+                        onClick={() => setTheme(theme.value as any)}
+                        data-testid={`option-theme-${theme.value}-mobile`}
+                        className="pl-8"
+                      >
+                        {ts(theme.label)}
+                      </DropdownMenuItem>
+                    ))}
+                  </div>
 
                   <div className="border-t border-border pt-2 mt-2">
                     <div className="px-2 py-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
