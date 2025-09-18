@@ -246,6 +246,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     setCurrentUser(newUser);
     setIsOnboarding(false);
     localStorage.setItem("user", JSON.stringify(newUser));
+    
+    // Show user mode popup after onboarding is complete
+    setShowUserModePopup(true);
   };
 
   const closeStartupPopup = () => {

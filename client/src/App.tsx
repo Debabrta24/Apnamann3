@@ -19,6 +19,7 @@ import SleepCycleTool from "@/components/wellness/sleep-cycle-tool";
 import QuickActionsFAB from "@/components/quick-actions-fab";
 import OnboardingPopup from "@/components/onboarding/onboarding-popup";
 import StartupPopup from "@/components/startup-popup";
+import UserModePopup from "@/components/user-mode-popup";
 import Login from "@/pages/login";
 import Dashboard from "@/pages/dashboard";
 import Chat from "@/pages/chat";
@@ -504,6 +505,7 @@ function Router() {
         isOpen={isOnboarding} 
         onComplete={completeOnboarding}
       />
+      <UserModePopup />
       <PageQuoteOverlay
         isVisible={showQuoteOverlay}
         onComplete={() => setShowQuoteOverlay(false)}
