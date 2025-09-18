@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Pill, ShoppingCart, Search, Star, Clock, MapPin, Plus, Minus, Upload, FileText, CheckCircle, AlertTriangle, Shield, X, Stethoscope } from "lucide-react";
+import { Pill, ShoppingCart, Search, Star, Clock, MapPin, Plus, Minus, Upload, FileText, CheckCircle, AlertTriangle, Shield, X, Stethoscope, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { BackButton } from "@/components/ui/back-button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -1028,69 +1029,70 @@ export default function Medicine() {
         </TabsList>
 
         <TabsContent value="normal-medicine" className="space-y-6">
-          {/* Category Filter */}
-          <div className="w-full">
-            <h3 className="text-lg font-semibold mb-4 text-foreground">Filter by Category</h3>
-            
-            {/* Mobile: Horizontal scroll */}
-            <div className="block sm:hidden mb-4">
-              <div className="flex gap-3 pb-2 overflow-x-auto scrollbar-hide">
-                {categories.map(category => (
-                  <Button
-                    key={category}
-                    variant={selectedCategory === category ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSelectedCategory(category)}
-                    data-testid={`filter-${category.toLowerCase().replace(' ', '-')}`}
-                    className="flex-shrink-0 min-w-fit px-4 py-2 text-sm font-medium whitespace-nowrap"
+          {/* Category Filter Dropdown */}
+          <div className="w-full space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <h3 className="text-lg font-semibold text-foreground">Filter by Category</h3>
+              
+              <div className="w-full sm:w-64">
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger 
+                    className="w-full h-11 bg-background border-2 border-border hover:border-primary/50 focus:border-primary transition-colors"
+                    data-testid="category-filter-dropdown"
                   >
-                    {category}
-                  </Button>
-                ))}
+                    <div className="flex items-center gap-2">
+                      <Pill className="h-4 w-4 text-primary" />
+                      <SelectValue placeholder="Select category" />
+                    </div>
+                    <ChevronDown className="h-4 w-4 opacity-50" />
+                  </SelectTrigger>
+                  <SelectContent 
+                    className="max-h-60 bg-background border-2 border-border shadow-lg"
+                    position="popper"
+                  >
+                    {categories.map(category => (
+                      <SelectItem 
+                        key={category} 
+                        value={category}
+                        className="cursor-pointer hover:bg-primary/5 focus:bg-primary/10 py-3 px-4"
+                        data-testid={`filter-option-${category.toLowerCase().replace(' ', '-')}`}
+                      >
+                        <div className="flex items-center gap-3">
+                          {category === "All" && <div className="w-2 h-2 rounded-full bg-gray-500" />}
+                          {category === "Pain Relief" && <div className="w-2 h-2 rounded-full bg-red-500" />}
+                          {category === "Vitamins" && <div className="w-2 h-2 rounded-full bg-orange-500" />}
+                          {category === "Digestive" && <div className="w-2 h-2 rounded-full bg-green-500" />}
+                          {category === "Allergy" && <div className="w-2 h-2 rounded-full bg-yellow-500" />}
+                          {category === "Sleep Aid" && <div className="w-2 h-2 rounded-full bg-purple-500" />}
+                          {category === "Stress Relief" && <div className="w-2 h-2 rounded-full bg-blue-500" />}
+                          {category === "Psychiatric" && <div className="w-2 h-2 rounded-full bg-pink-500" />}
+                          <span className="font-medium">{category}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="text-xs text-muted-foreground text-center mt-2">
-                ← Swipe to see more categories →
-              </div>
-            </div>
-            
-            {/* Tablet and Desktop: Flex wrap */}
-            <div className="hidden sm:flex flex-wrap gap-3 lg:gap-4">
-              {categories.map(category => (
-                <Button
-                  key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
-                  size={`${categories.length > 6 ? "sm" : "default"}`}
-                  onClick={() => setSelectedCategory(category)}
-                  data-testid={`filter-${category.toLowerCase().replace(' ', '-')}`}
-                  className={`
-                    px-4 py-2 font-medium transition-all duration-200 hover:scale-105
-                    ${selectedCategory === category ? 
-                      'shadow-md ring-2 ring-primary/20' : 
-                      'hover:border-primary/50 hover:bg-primary/5'
-                    }
-                    sm:text-sm sm:px-3 sm:py-1.5
-                    md:text-base md:px-4 md:py-2
-                    lg:text-base lg:px-6 lg:py-2.5
-                  `}
-                >
-                  {category}
-                </Button>
-              ))}
             </div>
             
             {/* Selected category indicator */}
             {selectedCategory !== "All" && (
-              <div className="mt-4 p-3 bg-primary/10 border border-primary/20 rounded-lg">
+              <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-primary font-medium">
-                    Showing: {selectedCategory} medicines
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-primary" />
+                    <span className="text-sm text-primary font-medium">
+                      Showing: {selectedCategory} medicines ({filteredMedicines.length} found)
+                    </span>
+                  </div>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setSelectedCategory("All")}
-                    className="h-6 px-2 text-xs text-primary hover:bg-primary/20"
+                    className="h-8 px-3 text-xs text-primary hover:bg-primary/20 hover:text-primary font-medium"
+                    data-testid="clear-category-filter"
                   >
+                    <X className="h-3 w-3 mr-1" />
                     Clear filter
                   </Button>
                 </div>
