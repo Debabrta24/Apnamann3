@@ -89,7 +89,7 @@ export default function Header() {
   return (
     <header className="bg-card border-b border-border sticky top-0 z-50">
       <div className="px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-18">
           {/* Mobile Logo and branding - only show on mobile */}
           <div className="flex items-center space-x-3 md:hidden">
             <div className="w-10 h-10 rounded-lg flex items-center justify-center">
