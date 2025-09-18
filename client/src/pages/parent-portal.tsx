@@ -49,33 +49,40 @@ export default function ParentPortal() {
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
       {/* Header */}
       <div className="bg-card border-b border-border shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+          <div className="flex items-center justify-between h-16 min-h-[4rem]">
+            <div className="flex items-center space-x-2 sm:space-x-4 flex-1 min-w-0">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setLocation("/")}
                 data-testid="button-back-to-student-portal"
+                className="shrink-0"
               >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Student Portal
+                <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
+                <span className="hidden xs:inline">Back to Student Portal</span>
+                <span className="xs:hidden">Back</span>
               </Button>
-              <div className="flex items-center space-x-3">
-                <img src={logoUrl} alt="ApnaMann Logo" className="w-8 h-8 rounded-lg object-cover" />
-                <div>
-                  <h1 className="text-xl font-bold text-foreground">ApnaMann Student Parent Guidance</h1>
-                  <p className="text-sm text-muted-foreground">Guidance for students concerned about their child's mental health</p>
+              <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+                <img src={logoUrl} alt="ApnaMann Logo" className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg object-cover shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <h1 className="text-sm sm:text-lg md:text-xl font-bold text-foreground truncate">
+                    <span className="hidden sm:inline">ApnaMann Student Parent Guidance</span>
+                    <span className="sm:hidden">Parent Guidance</span>
+                  </h1>
+                  <p className="text-xs sm:text-sm text-muted-foreground truncate hidden md:block">
+                    Guidance for students concerned about their child's mental health
+                  </p>
                 </div>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4 shrink-0">
               {/* Theme Switcher */}
               <Select value={theme} onValueChange={(value: Theme) => setTheme(value)}>
-                <SelectTrigger className="w-[140px] border-none bg-transparent hover:bg-accent" data-testid="select-theme">
-                  <div className="flex items-center space-x-2">
+                <SelectTrigger className="w-8 sm:w-[100px] lg:w-[140px] border-none bg-transparent hover:bg-accent" data-testid="select-theme">
+                  <div className="flex items-center space-x-1 sm:space-x-2">
                     <currentTheme.icon className="h-4 w-4" />
-                    <span className="hidden sm:inline">{currentTheme.label}</span>
+                    <span className="hidden sm:inline lg:inline">{currentTheme.label}</span>
                   </div>
                 </SelectTrigger>
                 <SelectContent>
@@ -93,9 +100,9 @@ export default function ParentPortal() {
                 </SelectContent>
               </Select>
               
-              <Bell className="h-5 w-5 text-muted-foreground" />
-              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                <Users className="h-4 w-4 text-primary-foreground" />
+              <Bell className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground hidden sm:block" />
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded-full flex items-center justify-center">
+                <Users className="h-3 w-3 sm:h-4 sm:w-4 text-primary-foreground" />
               </div>
             </div>
           </div>
