@@ -236,13 +236,6 @@ export default function Chat() {
                       {personality.description}
                     </p>
                     
-                    {/* Centered responsive circle div */}
-                    <div className="flex justify-center mb-4">
-                      <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 border-2 border-primary/30 shadow-lg flex items-center justify-center">
-                        <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-white/90 shadow-md"></div>
-                      </div>
-                    </div>
-                    
                     <div className="bg-muted p-2 rounded text-xs text-muted-foreground">
                       <strong>Style:</strong> {personality.personality}
                     </div>
@@ -298,13 +291,6 @@ export default function Chat() {
                   <p className="text-sm text-muted-foreground mb-3">
                     This AI learned from your {personality.sourceType === 'file' ? 'uploaded file' : 'chat data'}: {personality.originalFileName || 'text input'}
                   </p>
-                  
-                  {/* Centered responsive circle div */}
-                  <div className="flex justify-center mb-4">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 border-2 border-primary/30 shadow-lg flex items-center justify-center">
-                      <div className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-white/90 shadow-md"></div>
-                    </div>
-                  </div>
                   
                   <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-2 rounded text-xs">
                     <strong>🎉 Free Local AI:</strong> No API keys needed!
