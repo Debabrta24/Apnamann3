@@ -95,7 +95,7 @@ export default function Dashboard() {
       icon: Calendar,
       title: "Book Counseling",
       description: "Schedule confidential sessions",
-      action: () => setLocation("/chat"), // Would open booking modal
+      action: () => setLocation("/doctor"),
       color: "bg-accent/10 text-accent",
     },
     {
@@ -172,12 +172,23 @@ export default function Dashboard() {
             <CardContent className="p-6">
               <h4 className="text-lg font-medium text-card-foreground mb-4">Recent Activities</h4>
               <div className="space-y-4">
-                {recentActivities.map((activity) => (
-                  <div
-                    key={activity.id}
-                    className="flex items-center space-x-4 p-3 bg-muted/30 rounded-lg"
-                    data-testid={`activity-${activity.id}`}
-                  >
+                {recentActivities.map((activity) => {
+                  const getActivityPath = (type: string) => {
+                    switch (type) {
+                      case "screening": return "/screening";
+                      case "chat": return "/chat";
+                      case "appointment": return "/doctor";
+                      default: return "/";
+                    }
+                  };
+
+                  return (
+                    <div
+                      key={activity.id}
+                      className="flex items-center space-x-4 p-3 bg-muted/30 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+                      onClick={() => setLocation(getActivityPath(activity.type))}
+                      data-testid={`activity-${activity.id}`}
+                    >
                     <div className="w-10 h-10 bg-secondary/10 rounded-full flex items-center justify-center">
                       {activity.type === "screening" && <Heart className="h-5 w-5 text-secondary" />}
                       {activity.type === "chat" && <Brain className="h-5 w-5 text-primary" />}
@@ -191,7 +202,8 @@ export default function Dashboard() {
                       {activity.result || activity.duration}
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
