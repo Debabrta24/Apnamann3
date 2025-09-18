@@ -275,7 +275,7 @@ export default function Navigation() {
                 className="flex items-center space-x-2 cursor-pointer"
                 data-testid={item.testId}
               >
-                <Icon className="h-5 w-4" />
+                <Icon className="h-4 w-4" />
                 <span>{item.label}</span>
               </DropdownMenuItem>
             );
