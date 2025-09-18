@@ -282,6 +282,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                 <DropdownMenuItem
                   onClick={() => {}}
                   data-testid="menu-item-smart-integration"
+                  className="sm:hidden"
                 >
                   Smart Integration
                 </DropdownMenuItem>
