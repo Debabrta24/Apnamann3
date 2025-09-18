@@ -150,13 +150,17 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                           {ts("Light")}
                         </DropdownMenuSubTrigger>
                         <DropdownMenuSubContent>
-                          {lightThemes.map((theme) => (
+                          {lightThemes.map((themeOption) => (
                             <DropdownMenuItem
-                              key={theme.value}
-                              onClick={() => setTheme(theme.value as any)}
-                              data-testid={`option-theme-${theme.value}-settings`}
+                              key={themeOption.value}
+                              onClick={() => setTheme(themeOption.value as any)}
+                              data-testid={`option-theme-${themeOption.value}-settings`}
+                              className={theme === themeOption.value ? "bg-primary/10 text-primary font-semibold" : ""}
                             >
-                              {ts(theme.label)}
+                              {ts(themeOption.label)}
+                              {theme === themeOption.value && (
+                                <span className="ml-auto text-primary">✓</span>
+                              )}
                             </DropdownMenuItem>
                           ))}
                         </DropdownMenuSubContent>
@@ -168,13 +172,17 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                           {ts("Dark")}
                         </DropdownMenuSubTrigger>
                         <DropdownMenuSubContent>
-                          {darkThemes.map((theme) => (
+                          {darkThemes.map((themeOption) => (
                             <DropdownMenuItem
-                              key={theme.value}
-                              onClick={() => setTheme(theme.value as any)}
-                              data-testid={`option-theme-${theme.value}-settings`}
+                              key={themeOption.value}
+                              onClick={() => setTheme(themeOption.value as any)}
+                              data-testid={`option-theme-${themeOption.value}-settings`}
+                              className={theme === themeOption.value ? "bg-primary/10 text-primary font-semibold" : ""}
                             >
-                              {ts(theme.label)}
+                              {ts(themeOption.label)}
+                              {theme === themeOption.value && (
+                                <span className="ml-auto text-primary">✓</span>
+                              )}
                             </DropdownMenuItem>
                           ))}
                         </DropdownMenuSubContent>
