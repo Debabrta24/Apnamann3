@@ -11,7 +11,11 @@ export function useWebSocket(userId: string, onMessage: (message: any) => void) 
   const onMessageCallback = useCallback(onMessage, []);
 
   const connectWebSocket = useCallback(() => {
-    if (!userId) return;
+    // Only connect if we have a valid UUID (not empty string or whitespace)
+    if (!userId || userId.trim() === "") {
+      console.log("WebSocket: No valid userId provided, skipping connection");
+      return;
+    }
 
     // Prevent multiple connections
     if (ws.current && ws.current.readyState === WebSocket.CONNECTING) {
@@ -24,10 +28,17 @@ export function useWebSocket(userId: string, onMessage: (message: any) => void) 
     }
 
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/ws?userId=${userId}`;
+    const wsUrl = `${protocol}//${window.location.host}/ws?userId=${encodeURIComponent(userId)}`;
     
-    console.log("Attempting WebSocket connection...");
-    ws.current = new WebSocket(wsUrl);
+    console.log(`Attempting WebSocket connection to: ${wsUrl}`);
+    
+    try {
+      ws.current = new WebSocket(wsUrl);
+    } catch (error) {
+      console.error("Failed to create WebSocket:", error);
+      setIsConnected(false);
+      return;
+    }
 
     ws.current.onopen = () => {
       setIsConnected(true);
