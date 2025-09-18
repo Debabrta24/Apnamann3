@@ -155,10 +155,10 @@ function Router() {
           />
         )}
         
-        {/* Left Sidebar Navigation - Toggleable */}
+        {/* Left Sidebar Navigation - Always rendered, mobile slides in from left */}
         <div 
           id="mobile-sidebar"
-          className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-72 flex flex-col transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:inset-y-auto md:left-auto md:z-auto md:transform-none`}
+          className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} fixed inset-y-0 left-0 z-50 w-72 flex flex-col transform transition-transform duration-300 ease-in-out md:relative md:inset-y-auto md:left-auto md:z-auto`}
         >
           <div className="flex flex-col h-full bg-card border-r border-border shadow-lg md:shadow-none">
             {/* Logo and branding */}
@@ -182,7 +182,13 @@ function Router() {
                 return (
                   <button
                     key={item.href}
-                    onClick={() => setLocation(item.href)}
+                    onClick={() => {
+                      setLocation(item.href);
+                      // Close mobile menu when navigation item is clicked
+                      if (window.innerWidth < 768) {
+                        setSidebarOpen(false);
+                      }
+                    }}
                     className={cn(
                       "w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3",
                       location === item.href && "bg-accent text-accent-foreground font-medium"
@@ -216,7 +222,13 @@ function Router() {
                       return (
                         <button
                           key={item.href}
-                          onClick={() => setLocation(item.href)}
+                          onClick={() => {
+                            setLocation(item.href);
+                            // Close mobile menu when navigation item is clicked
+                            if (window.innerWidth < 768) {
+                              setSidebarOpen(false);
+                            }
+                          }}
                           className={cn(
                             "w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ml-2",
                             location === item.href && "bg-accent text-accent-foreground font-medium"
@@ -252,7 +264,13 @@ function Router() {
                       return (
                         <button
                           key={item.href}
-                          onClick={() => setLocation(item.href)}
+                          onClick={() => {
+                            setLocation(item.href);
+                            // Close mobile menu when navigation item is clicked
+                            if (window.innerWidth < 768) {
+                              setSidebarOpen(false);
+                            }
+                          }}
                           className={cn(
                             "w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ml-2",
                             location === item.href && "bg-accent text-accent-foreground font-medium"
@@ -289,7 +307,13 @@ function Router() {
                       return (
                         <button
                           key={item.href}
-                          onClick={() => setLocation(item.href)}
+                          onClick={() => {
+                            setLocation(item.href);
+                            // Close mobile menu when navigation item is clicked
+                            if (window.innerWidth < 768) {
+                              setSidebarOpen(false);
+                            }
+                          }}
                           className={cn(
                             "w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ml-2",
                             location === item.href && "bg-accent text-accent-foreground font-medium"
@@ -325,7 +349,13 @@ function Router() {
                       return (
                         <button
                           key={item.href}
-                          onClick={() => setLocation(item.href)}
+                          onClick={() => {
+                            setLocation(item.href);
+                            // Close mobile menu when navigation item is clicked
+                            if (window.innerWidth < 768) {
+                              setSidebarOpen(false);
+                            }
+                          }}
                           className={cn(
                             "w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ml-2",
                             location === item.href && "bg-accent text-accent-foreground font-medium"
@@ -360,7 +390,13 @@ function Router() {
                       return (
                         <button
                           key={item.href}
-                          onClick={() => setLocation(item.href)}
+                          onClick={() => {
+                            setLocation(item.href);
+                            // Close mobile menu when navigation item is clicked
+                            if (window.innerWidth < 768) {
+                              setSidebarOpen(false);
+                            }
+                          }}
                           className={cn(
                             "w-full text-left px-3 py-2 rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground transition-colors flex items-center gap-3 ml-2",
                             location === item.href && "bg-accent text-accent-foreground font-medium"
