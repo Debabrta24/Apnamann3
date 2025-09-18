@@ -497,80 +497,12 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                 >
                   {ts("Profile & Settings")}
                 </DropdownMenuItem>
-                
-                <div className="border-t border-border pt-2 mt-2">
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger data-testid="submenu-theme-settings">
-                      {theme === "dark" ? (
-                        <Moon className="h-4 w-4 mr-2" />
-                      ) : (
-                        <Sun className="h-4 w-4 mr-2" />
-                      )}
-                      {ts("Theme")}
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuSub>
-                        <DropdownMenuSubTrigger data-testid="submenu-light-themes-settings">
-                          <Sun className="h-4 w-4 mr-2" />
-                          {ts("Light")}
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuSubContent>
-                          {lightThemes.map((theme) => (
-                            <DropdownMenuItem
-                              key={theme.value}
-                              onClick={() => setTheme(theme.value as any)}
-                              data-testid={`option-theme-${theme.value}-settings`}
-                            >
-                              {ts(theme.label)}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuSubContent>
-                      </DropdownMenuSub>
-
-                      <DropdownMenuSub>
-                        <DropdownMenuSubTrigger data-testid="submenu-dark-themes-settings">
-                          <Moon className="h-4 w-4 mr-2" />
-                          {ts("Dark")}
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuSubContent>
-                          {darkThemes.map((theme) => (
-                            <DropdownMenuItem
-                              key={theme.value}
-                              onClick={() => setTheme(theme.value as any)}
-                              data-testid={`option-theme-${theme.value}-settings`}
-                            >
-                              {ts(theme.label)}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuSubContent>
-                      </DropdownMenuSub>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuSub>
-
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger data-testid="submenu-language-settings">
-                      <Globe className="h-4 w-4 mr-2" />
-                      {ts("Language")}
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent>
-                      {languages.map((lang) => (
-                        <DropdownMenuItem
-                          key={lang.code}
-                          onClick={() => handleLanguageChange(lang.code)}
-                          data-testid={`option-language-${lang.code}-settings`}
-                          disabled={isTranslating}
-                        >
-                          {lang.name}
-                          {isTranslating && currentLanguage === lang.code && (
-                            <span className="ml-2 text-xs text-muted-foreground">
-                              {ts("Translating...")}
-                            </span>
-                          )}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuSubContent>
-                  </DropdownMenuSub>
-                </div>
+                <DropdownMenuItem
+                  onClick={logout}
+                  data-testid="menu-item-sign-out"
+                >
+                  {ts("Sign Out")}
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
