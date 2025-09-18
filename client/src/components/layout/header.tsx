@@ -167,8 +167,11 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                 
                 {/* Coin Display - Mobile */}
                 {currentUser && (
-                  <div className="mb-6">
-                    <CoinDisplay userId={currentUser.id} />
+                  <div className="mb-6 p-4 bg-muted/50 rounded-lg border">
+                    <CoinDisplay 
+                      userId={currentUser.id} 
+                      className="w-full justify-start h-12 text-left bg-background hover:bg-accent/50 border border-border rounded-md px-4" 
+                    />
                   </div>
                 )}
                 <nav className="flex flex-col space-y-4">
