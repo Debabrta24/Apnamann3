@@ -164,6 +164,13 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                 <div className="mb-6">
                   <GlobalSearch />
                 </div>
+                
+                {/* Coin Display - Mobile */}
+                {currentUser && (
+                  <div className="mb-6">
+                    <CoinDisplay userId={currentUser.id} />
+                  </div>
+                )}
                 <nav className="flex flex-col space-y-4">
                   {/* Main Navigation Items */}
                   {[
