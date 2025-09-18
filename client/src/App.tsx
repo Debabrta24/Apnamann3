@@ -158,7 +158,7 @@ function Router() {
         {/* Left Sidebar Navigation - Always rendered, mobile slides in from left */}
         <div 
           id="mobile-sidebar"
-          className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} fixed inset-y-0 left-0 z-50 w-72 flex flex-col transform transition-transform duration-300 ease-in-out md:relative md:inset-y-auto md:left-auto md:z-auto`}
+          className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} fixed top-[4.5rem] bottom-0 md:top-0 left-0 z-50 w-72 flex flex-col transform transition-transform duration-300 ease-in-out md:relative md:inset-y-auto md:left-auto md:z-auto`}
         >
           <div className="flex flex-col h-full bg-card border-r border-border shadow-lg md:shadow-none">
             {/* Logo and branding */}
