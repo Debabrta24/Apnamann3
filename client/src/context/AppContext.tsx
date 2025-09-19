@@ -359,12 +359,21 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   };
 
   const logout = () => {
+    // Preserve current theme before clearing localStorage
+    const currentTheme = localStorage.getItem("theme");
+    
     setCurrentUser(null);
     setIsAuthenticated(false);
     setIsOnboarding(false);
     setTempEmail(null);
     localStorage.removeItem("user");
     localStorage.removeItem("chatMessages");
+    
+    // Restore theme after clearing other data
+    if (currentTheme) {
+      localStorage.setItem("theme", currentTheme);
+    }
+    
     setChatMessages([{
       role: "assistant",
       content: "Hello! I'm here to provide psychological first aid and support. How are you feeling today? Remember, this is a safe space to share your thoughts.",
