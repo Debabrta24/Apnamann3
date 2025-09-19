@@ -302,12 +302,21 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                     const feeling = dailyFeeling ? dailyFeelings.find(f => f.id === dailyFeeling) : null;
                     return feeling ? (
                       <span 
-                        className="absolute -bottom-1 -right-1 text-xs bg-background rounded-full w-5 h-5 flex items-center justify-center border border-border shadow-sm"
-                        data-testid="emoji-daily-feeling-profile"
-                        aria-label={`Today's feeling: ${feeling.name}`}
-                        title={`Today's feeling: ${feeling.name}`}
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          animation: 'profile-orbit 3s ease-in-out forwards',
+                          transformOrigin: 'center',
+                          willChange: 'transform'
+                        }}
                       >
-                        {feeling.emoji}
+                        <span 
+                          className="absolute -bottom-1 -right-1 text-xs bg-background rounded-full w-5 h-5 flex items-center justify-center border border-border shadow-sm"
+                          data-testid="emoji-daily-feeling-profile"
+                          aria-label={`Today's feeling: ${feeling.name}`}
+                          title={`Today's feeling: ${feeling.name}`}
+                        >
+                          {feeling.emoji}
+                        </span>
                       </span>
                     ) : null;
                   })()}
