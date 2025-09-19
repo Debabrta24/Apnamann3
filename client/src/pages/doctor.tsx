@@ -203,6 +203,57 @@ const staticDoctors = [
     education: "MA in Counseling Psychology - Rajasthan University",
     certifications: ["Youth Counseling Specialist", "Peer Relationship Therapy"],
     achievements: "Counseled 300+ students at various colleges in Rajasthan"
+  },
+  {
+    id: 12,
+    name: "Dr. Sunita Verma",
+    specialization: "Psychiatrist",
+    experience: "16 years",
+    rating: 4.9,
+    languages: ["English", "Hindi", "Haryanvi"],
+    location: "Gurgaon, Haryana",
+    fees: "₹1,600",
+    image: "https://images.unsplash.com/photo-1594824919297-b166c1de2e63?w=300&h=300&fit=crop&face=center",
+    availableSlots: ["8:00 AM", "12:30 PM", "5:00 PM"],
+    availableConsultationTypes: ["video", "phone", "inperson"],
+    about: "Senior psychiatrist specializing in mood disorders, personality disorders, and student mental health challenges.",
+    education: "MBBS, MD Psychiatry - PGIMS Rohtak",
+    certifications: ["Mood Disorders Specialist", "Personality Assessment Certified"],
+    achievements: "Former Head of Psychiatry - Fortis Healthcare Gurgaon"
+  },
+  {
+    id: 13,
+    name: "Dr. Amit Shah",
+    specialization: "Clinical Psychologist",
+    experience: "13 years",
+    rating: 4.7,
+    languages: ["English", "Hindi", "Gujarati", "Marathi"],
+    location: "Surat, Gujarat",
+    fees: "₹1,150",
+    image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop&face=center",
+    availableSlots: ["9:00 AM", "2:00 PM", "6:00 PM"],
+    availableConsultationTypes: ["phone", "inperson"],
+    about: "Expert in behavioral therapy, addiction counseling, and stress management for students and young professionals.",
+    education: "PhD in Clinical Psychology - MSU Baroda",
+    certifications: ["Addiction Counseling Specialist", "Behavioral Therapy Certified"],
+    achievements: "Established Gujarat's first student mental health clinic"
+  },
+  {
+    id: 14,
+    name: "Dr. Ravi Kumar",
+    specialization: "Counseling Psychologist",
+    experience: "8 years",
+    rating: 4.6,
+    languages: ["English", "Hindi", "Telugu", "Kannada"],
+    location: "Visakhapatnam, Andhra Pradesh",
+    fees: "₹950",
+    image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop&face=center",
+    availableSlots: ["10:00 AM", "3:00 PM", "7:00 PM"],
+    availableConsultationTypes: ["video", "inperson"],
+    about: "Specializes in academic performance anxiety, social skills development, and confidence building for college students.",
+    education: "MA in Counseling Psychology - Andhra University",
+    certifications: ["Academic Performance Counselor", "Social Skills Training Certified"],
+    achievements: "Counseled 400+ engineering and medical students across Andhra Pradesh"
   }
 ];
 
@@ -274,7 +325,7 @@ export default function Doctor() {
   });
 
   // Use API counselors if available, fallback to static doctors with enhanced data
-  const doctors = (apiCounselors as any[])?.length > 0 ? (apiCounselors as any[]).map((counselor: any) => ({
+  const doctors = (apiCounselors as any[])?.length > 0 ? (apiCounselors as any[]).map((counselor: any, index: number) => ({
     ...counselor,
     fees: "₹1,200", // Default fee, could be added to counselor schema later
     image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&face=center", // Default image
@@ -282,7 +333,11 @@ export default function Doctor() {
     about: `Experienced ${counselor.specialization.toLowerCase()} with ${counselor.experience} years of experience.`,
     education: "Medical Professional", // Default education
     certifications: ["Licensed Professional"], // Default certifications
-    achievements: "Trusted healthcare provider" // Default achievements
+    achievements: "Trusted healthcare provider", // Default achievements
+    availableConsultationTypes: index % 3 === 0 ? ["video", "phone", "inperson"] : index % 3 === 1 ? ["video", "phone"] : ["phone", "inperson"], // Rotate consultation types
+    availableSlots: ["10:00 AM", "2:00 PM", "4:30 PM"], // Default slots
+    languages: ["English", "Hindi"], // Default languages
+    rating: 4.5 // Default rating
   })) : staticDoctors;
 
   // Booking mutation
