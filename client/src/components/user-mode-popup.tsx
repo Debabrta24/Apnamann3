@@ -40,7 +40,7 @@ export default function UserModePopup() {
 
   return (
     <Dialog open={showUserModePopup} onOpenChange={setShowUserModePopup}>
-      <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-5xl w-[96vw] sm:w-[90vw] max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
         <DialogHeader className="text-center pb-3">
           <DialogTitle className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
             How are you feeling today?
@@ -50,7 +50,7 @@ export default function UserModePopup() {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 mt-3 mb-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-1.5 sm:gap-2 mt-3 mb-3">
           {userModes.map((mode) => (
             <Card
               key={mode.id}
@@ -93,11 +93,11 @@ export default function UserModePopup() {
           ))}
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-2 mt-3 pt-2 border-t sticky bottom-0 bg-background">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-2 mt-3 pt-2 border-t sticky bottom-0 bg-background px-1 sm:px-0">
           <Button
             variant="ghost"
             onClick={handleSkip}
-            className="text-muted-foreground hover:text-foreground text-sm w-full sm:w-auto"
+            className="text-muted-foreground hover:text-foreground text-sm w-full sm:w-auto order-2 sm:order-1"
             data-testid="button-skip-mode"
           >
             Skip for now
@@ -105,7 +105,7 @@ export default function UserModePopup() {
           <Button
             onClick={handleConfirm}
             disabled={!selectedMode}
-            className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white px-4 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm w-full sm:w-auto"
+            className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white px-4 py-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm w-full sm:w-auto order-1 sm:order-2"
             data-testid="button-confirm-mode"
           >
             {selectedMode ? `Let's go ${userModes.find(m => m.id === selectedMode)?.emoji}` : "Select a mode"}
