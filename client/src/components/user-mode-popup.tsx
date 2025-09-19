@@ -39,17 +39,17 @@ export default function UserModePopup() {
 
   return (
     <Dialog open={showUserModePopup} onOpenChange={setShowUserModePopup}>
-      <DialogContent className="max-w-5xl w-[96vw] sm:w-[90vw] max-h-[85vh] sm:max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="text-center pb-3">
-          <DialogTitle className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+      <DialogContent className="max-w-4xl w-[98vw] sm:w-[95vw] md:w-[90vw] max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="text-center pb-2 px-2">
+          <DialogTitle className="text-lg sm:text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
             How are you feeling today?
           </DialogTitle>
-          <DialogDescription className="text-sm mt-1">
+          <DialogDescription className="text-xs sm:text-sm mt-1 px-2">
             Choose your current feeling to personalize your experience. We'll adjust the theme and content to match your mood.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-1.5 sm:gap-2 mt-3 mb-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2 sm:gap-3 mt-2 mb-3 px-2">
           {dailyFeelings.map((feeling) => (
             <Card
               key={feeling.id}
@@ -61,26 +61,26 @@ export default function UserModePopup() {
               onClick={() => handleFeelingSelect(feeling.id)}
               data-testid={`card-feeling-${feeling.id}`}
             >
-              <CardHeader className="text-center pb-0 px-2 pt-2">
-                <div className="text-lg mb-0.5" data-testid={`emoji-feeling-${feeling.id}`}>
+              <CardHeader className="text-center pb-1 px-1.5 pt-2">
+                <div className="text-xl sm:text-2xl mb-1" data-testid={`emoji-feeling-${feeling.id}`}>
                   {feeling.emoji}
                 </div>
-                <CardTitle className="text-xs font-medium flex items-center justify-center gap-0.5 leading-tight">
-                  {feeling.name}
+                <CardTitle className="text-[10px] sm:text-xs font-medium flex items-center justify-center gap-0.5 leading-tight px-1">
+                  <span className="text-center">{feeling.name}</span>
                   {selectedFeeling === feeling.id && (
-                    <Check className="h-3 w-3 text-primary" data-testid={`check-feeling-${feeling.id}`} />
+                    <Check className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-primary flex-shrink-0" data-testid={`check-feeling-${feeling.id}`} />
                   )}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="pt-1 px-2 pb-2">
-                <CardDescription className="text-center text-xs leading-snug mb-2 line-clamp-2">
+              <CardContent className="pt-0 px-1.5 pb-2">
+                <CardDescription className="text-center text-[9px] sm:text-xs leading-tight mb-1.5 line-clamp-2">
                   {feeling.description}
                 </CardDescription>
-                <div className="flex flex-wrap gap-1 justify-center">
+                <div className="flex flex-wrap gap-0.5 sm:gap-1 justify-center">
                   {feeling.suggestedThemes.slice(0, 2).map((theme, index) => (
                     <div
                       key={theme}
-                      className="px-1 py-0.5 text-[11px] bg-muted rounded-full text-muted-foreground"
+                      className="px-1 py-0.5 text-[8px] sm:text-[10px] bg-muted rounded-full text-muted-foreground"
                       data-testid={`theme-suggestion-${feeling.id}-${theme}`}
                     >
                       {theme}
@@ -92,11 +92,11 @@ export default function UserModePopup() {
           ))}
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-2 mt-3 pt-2 border-t sticky bottom-0 bg-background px-1 sm:px-0">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-2 mt-2 pt-3 border-t sticky bottom-0 bg-background/95 backdrop-blur-sm px-2 sm:px-4">
           <Button
             variant="ghost"
             onClick={handleSkip}
-            className="text-muted-foreground hover:text-foreground text-sm w-full sm:w-auto order-2 sm:order-1"
+            className="text-muted-foreground hover:text-foreground text-xs sm:text-sm w-full sm:w-auto order-2 sm:order-1"
             data-testid="button-skip-mode"
           >
             Skip for now
@@ -104,7 +104,7 @@ export default function UserModePopup() {
           <Button
             onClick={handleConfirm}
             disabled={!selectedFeeling}
-            className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white px-4 py-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm w-full sm:w-auto order-1 sm:order-2"
+            className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white px-3 sm:px-4 py-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm w-full sm:w-auto order-1 sm:order-2"
             data-testid="button-confirm-mode"
           >
             {selectedFeeling ? `Let's go ${dailyFeelings.find(f => f.id === selectedFeeling)?.emoji}` : "Select a feeling"}
