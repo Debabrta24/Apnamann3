@@ -10,7 +10,7 @@ interface ChatMessage {
 
 export type ThemeType = "light" | "dark" | "ocean" | "sunset" | "forest" | "lavender" | "cosmic" | "coral" | "sky" | "mint" | "cream" | "rose" | "peach" | "lavender-light";
 
-export type UserMode = "focus" | "relax" | "social" | "energy" | "mindful" | "creative" | "recovery";
+export type UserMode = "focus" | "relax" | "social" | "energy" | "mindful" | "creative" | "recovery" | "desperate" | "anxious" | "overwhelmed" | "motivated" | "lonely" | "stressed";
 
 export interface UserModeOption {
   id: UserMode;
@@ -69,6 +69,48 @@ export const userModes: UserModeOption[] = [
     emoji: "💤",
     description: "Take a break and recharge",
     suggestedThemes: ["dark", "lavender", "cream"]
+  },
+  {
+    id: "desperate",
+    name: "Desperate & Need Help",
+    emoji: "😰",
+    description: "Feeling urgent need for support and guidance",
+    suggestedThemes: ["dark", "ocean", "cosmic"]
+  },
+  {
+    id: "anxious",
+    name: "Anxious & Worried",
+    emoji: "😟",
+    description: "Experiencing anxiety and worry",
+    suggestedThemes: ["lavender", "mint", "cream"]
+  },
+  {
+    id: "overwhelmed",
+    name: "Overwhelmed & Stressed",
+    emoji: "🌪️",
+    description: "Feeling like everything is too much",
+    suggestedThemes: ["forest", "dark", "ocean"]
+  },
+  {
+    id: "motivated",
+    name: "Driven & Motivated",
+    emoji: "🔥",
+    description: "High energy and ready to take action",
+    suggestedThemes: ["sunset", "cosmic", "coral"]
+  },
+  {
+    id: "lonely",
+    name: "Lonely & Isolated",
+    emoji: "😔",
+    description: "Feeling disconnected and alone",
+    suggestedThemes: ["lavender-light", "mint", "cream"]
+  },
+  {
+    id: "stressed",
+    name: "Stressed & Pressure",
+    emoji: "😤",
+    description: "Under pressure and feeling stressed",
+    suggestedThemes: ["ocean", "forest", "dark"]
   }
 ];
 
