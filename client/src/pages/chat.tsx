@@ -490,21 +490,6 @@ export default function Chat() {
                           {user.status}
                         </p>
                         
-                        <div className="flex flex-wrap gap-1 mb-3">
-                          {user.interests.slice(0, 2).map((interest, index) => (
-                            <span 
-                              key={index} 
-                              className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full"
-                            >
-                              {interest}
-                            </span>
-                          ))}
-                          {user.interests.length > 2 && (
-                            <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full">
-                              +{user.interests.length - 2} more
-                            </span>
-                          )}
-                        </div>
                         
                         <div className={`p-2 rounded text-xs ${
                           user.isOnline 
@@ -686,23 +671,6 @@ export default function Chat() {
                     : selectedPersonality.description
                   }
                 </p>
-                {chatType === "live" && selectedUser && (
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {selectedUser.interests.slice(0, 3).map((interest: string, index: number) => (
-                      <span 
-                        key={index} 
-                        className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full"
-                      >
-                        {interest}
-                      </span>
-                    ))}
-                    {selectedUser.interests.length > 3 && (
-                      <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full">
-                        +{selectedUser.interests.length - 3}
-                      </span>
-                    )}
-                  </div>
-                )}
               </CardContent>
             </Card>
 
