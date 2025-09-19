@@ -23,7 +23,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAppContext, userModes } from "@/context/AppContext";
+import { useAppContext, userModes, dailyFeelings } from "@/context/AppContext";
 import { useLocation } from "wouter";
 import GlobalSearch from "@/components/global-search";
 import NotificationCenter from "@/components/notifications/notification-center";
@@ -66,7 +66,7 @@ interface HeaderProps {
 }
 
 export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}) {
-  const { currentUser, theme, setTheme, userMode, logout } = useAppContext();
+  const { currentUser, theme, setTheme, userMode, dailyFeeling, logout } = useAppContext();
   const [, setLocation] = useLocation();
   const [showSmartWatchPopup, setShowSmartWatchPopup] = useState(false);
   const { ts, changeLanguage, currentLanguage, isTranslating } =
@@ -95,8 +95,8 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
     // Return suggested themes first, then other themes
     const suggested = currentMode.suggestedThemes;
     const allThemes = [...lightThemes, ...darkThemes];
-    const suggestedThemeObjects = allThemes.filter(theme => suggested.includes(theme.value));
-    const otherThemes = allThemes.filter(theme => !suggested.includes(theme.value));
+    const suggestedThemeObjects = allThemes.filter(theme => suggested.includes(theme.value as any));
+    const otherThemes = allThemes.filter(theme => !suggested.includes(theme.value as any));
     
     return [...suggestedThemeObjects, ...otherThemes];
   };
@@ -199,7 +199,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                         <DropdownMenuSubContent>
                           {suggestedThemes.filter(themeOption => 
                             lightThemes.some(t => t.value === themeOption.value) &&
-                            (!userMode || !userModes.find(m => m.id === userMode)?.suggestedThemes?.includes(themeOption.value))
+                            (!userMode || !userModes.find(m => m.id === userMode)?.suggestedThemes?.includes(themeOption.value as any))
                           ).map((themeOption) => (
                             <DropdownMenuItem
                               key={themeOption.value}
@@ -226,7 +226,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                         <DropdownMenuSubContent>
                           {suggestedThemes.filter(themeOption => 
                             !lightThemes.some(t => t.value === themeOption.value) &&
-                            (!userMode || !userModes.find(m => m.id === userMode)?.suggestedThemes?.includes(themeOption.value))
+                            (!userMode || !userModes.find(m => m.id === userMode)?.suggestedThemes?.includes(themeOption.value as any))
                           ).map((themeOption) => (
                             <DropdownMenuItem
                               key={themeOption.value}
@@ -298,6 +298,19 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps = {}
                       {userModes.find(m => m.id === userMode)?.emoji}
                     </span>
                   )}
+                  {(() => {
+                    const feeling = dailyFeeling ? dailyFeelings.find(f => f.id === dailyFeeling) : null;
+                    return feeling ? (
+                      <span 
+                        className="absolute -top-1 -left-1 text-xs bg-background rounded-full w-5 h-5 flex items-center justify-center border border-border shadow-sm"
+                        data-testid="emoji-daily-feeling-profile"
+                        aria-label={`Today's feeling: ${feeling.name}`}
+                        title={`Today's feeling: ${feeling.name}`}
+                      >
+                        {feeling.emoji}
+                      </span>
+                    ) : null;
+                  })()}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
