@@ -126,7 +126,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
             </DialogDescription>
           </DialogHeader>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           <div className="space-y-1">
             <div className="flex items-center justify-between text-xs">
               <span>Step {step} of {totalSteps}</span>
@@ -144,7 +144,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   Personal Information
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3 pt-2">
+              <CardContent className="space-y-2 pt-2">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
                     <Label htmlFor="firstName" className="text-sm">First Name</Label>
@@ -195,7 +195,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   Academic Information
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3 pt-2">
+              <CardContent className="space-y-2 pt-2">
                 <div className="space-y-1">
                   <Label htmlFor="institution" className="text-sm">Institution</Label>
                   <Input
@@ -250,7 +250,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   These questions help us understand how to best support you
                 </p>
               </CardHeader>
-              <CardContent className="space-y-3 pt-2">
+              <CardContent className="space-y-2 pt-2">
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">How has your mood been lately?</Label>
                   <RadioGroup value={data.mood} onValueChange={(value) => updateData("mood", value)}>
