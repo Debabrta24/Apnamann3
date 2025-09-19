@@ -254,11 +254,7 @@ export default function Doctor() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/appointments/user", currentUser?.id] });
-      toast({
-        title: "Appointment booked",
-        description: `Your ${bookingData.consultationType} consultation has been scheduled successfully.`,
-      });
-      handleCloseBookingModal();
+      setBookingStep("success");
     },
     onError: (error) => {
       toast({
@@ -1030,6 +1026,90 @@ export default function Doctor() {
                       onPaymentSuccess={handlePaymentSuccess}
                       onPaymentCancel={handlePaymentCancel}
                     />
+                  );
+                })()
+              )}
+
+              {/* Success Step */}
+              {bookingStep === "success" && bookingData.doctorId && (
+                (() => {
+                  const selectedDoctor = doctors.find(d => d.id.toString() === bookingData.doctorId);
+                  const consultationType = consultationTypes.find(type => type.type === bookingData.consultationType);
+                  
+                  if (!selectedDoctor) return null;
+
+                  return (
+                    <div className="text-center py-8">
+                      <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-6" />
+                      <h3 className="text-2xl font-bold mb-4 text-green-700">Booking Confirmed!</h3>
+                      <p className="text-lg text-muted-foreground mb-6">
+                        Your consultation has been successfully booked and payment processed.
+                      </p>
+                      
+                      {/* Booking Summary */}
+                      <Card className="max-w-md mx-auto mb-6">
+                        <CardContent className="p-6">
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-3 justify-center">
+                              <img 
+                                src={selectedDoctor.image} 
+                                alt={selectedDoctor.name}
+                                className="w-12 h-12 rounded-full object-cover"
+                              />
+                              <div className="text-left">
+                                <h4 className="font-semibold">{selectedDoctor.name}</h4>
+                                <p className="text-sm text-muted-foreground">{selectedDoctor.specialization}</p>
+                              </div>
+                            </div>
+                            
+                            <div className="space-y-2 text-sm">
+                              <div className="flex justify-between">
+                                <span>Type:</span>
+                                <Badge variant="secondary">{consultationType?.title}</Badge>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>Date:</span>
+                                <span className="font-medium">{bookingData.preferredDate}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>Time:</span>
+                                <span className="font-medium">{bookingData.preferredTime}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>Amount Paid:</span>
+                                <span className="font-semibold text-green-600">{selectedDoctor.fees}</span>
+                              </div>
+                              {paymentIntentId && (
+                                <div className="flex justify-between text-xs">
+                                  <span>Payment ID:</span>
+                                  <span className="font-mono">{paymentIntentId.slice(-8)}</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <div className="space-y-3">
+                        <p className="text-sm text-muted-foreground">
+                          You will receive a confirmation email with appointment details and joining instructions.
+                        </p>
+                        
+                        <Button 
+                          onClick={() => {
+                            toast({
+                              title: "Appointment booked",
+                              description: `Your ${bookingData.consultationType} consultation has been scheduled successfully.`,
+                            });
+                            handleCloseBookingModal();
+                          }}
+                          className="w-full"
+                          data-testid="button-close-success"
+                        >
+                          Close
+                        </Button>
+                      </div>
+                    </div>
                   );
                 })()
               )}
