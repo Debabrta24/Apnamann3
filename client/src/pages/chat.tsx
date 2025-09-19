@@ -471,13 +471,6 @@ export default function Chat() {
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
                               <CardTitle className="text-lg">{user.name}</CardTitle>
-                              <div className={`px-2 py-1 text-xs rounded-full font-medium ${
-                                user.connectionType === 'trained-peer' 
-                                  ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-foreground' 
-                                  : 'bg-secondary/20 text-secondary-foreground dark:bg-secondary/30 dark:text-secondary-foreground'
-                              }`}>
-                                {user.connectionType === 'trained-peer' ? 'Trained' : 'Peer'}
-                              </div>
                             </div>
                             <CardDescription className="text-sm">
                               Age {user.age} • {user.lastSeen}
