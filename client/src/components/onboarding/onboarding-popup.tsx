@@ -110,19 +110,21 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
-      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto w-full mx-4 my-8">
-        <DialogHeader className="pb-2">
-          <div className="flex items-center justify-center mb-2">
-            <img src={logoUrl} alt="ApnaMann Logo" className="w-8 h-8 rounded-lg object-cover" data-testid="img-logo-onboarding" />
-          </div>
-          <DialogTitle className="flex items-center justify-center text-lg">
-            <User className="h-4 w-4 mr-2" />
-            Welcome! Let's get you started
-          </DialogTitle>
-          <DialogDescription className="text-sm">
-            We need some information to personalize your experience
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="p-0 sm:max-w-lg w-full overflow-hidden my-2 sm:my-8 mx-4">
+        {/* Scrollable Content Area */}
+        <div className="max-h-[75vh] overflow-y-auto px-6 pt-6 pb-3">
+          <DialogHeader className="pb-2">
+            <div className="flex items-center justify-center mb-2">
+              <img src={logoUrl} alt="ApnaMann Logo" className="w-8 h-8 rounded-lg object-cover" data-testid="img-logo-onboarding" />
+            </div>
+            <DialogTitle className="flex items-center justify-center text-lg">
+              <User className="h-4 w-4 mr-2" />
+              Welcome! Let's get you started
+            </DialogTitle>
+            <DialogDescription className="text-sm">
+              We need some information to personalize your experience
+            </DialogDescription>
+          </DialogHeader>
 
         <div className="space-y-3">
           <div className="space-y-1">
@@ -345,9 +347,10 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
           )}
 
         </div>
+        </div>
 
-        {/* Navigation Buttons */}
-        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t mt-4 sticky bottom-0 bg-background">
+        {/* Navigation Buttons - Sticky Footer */}
+        <div className="sticky bottom-0 -mx-6 px-6 py-3 bg-background border-t flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <Button
             variant="outline"
             onClick={handlePrevious}
