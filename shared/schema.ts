@@ -8,11 +8,22 @@ import {
   timestamp, 
   jsonb,
   serial,
-  uuid
+  uuid,
+  pgEnum,
+  check
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+
+// Payment status enum
+export const paymentStatusEnum = pgEnum("payment_status", [
+  "pending",
+  "processing", 
+  "completed",
+  "failed",
+  "refunded"
+]);
 
 // Users table
 export const users = pgTable("users", {
@@ -79,6 +90,12 @@ export const appointments = pgTable("appointments", {
   status: text("status").default("scheduled"), // 'scheduled', 'completed', 'cancelled', 'no-show'
   notes: text("notes"),
   isConfidential: boolean("is_confidential").default(true),
+  // Payment fields
+  paymentStatus: paymentStatusEnum("payment_status").default("pending"),
+  paymentAmount: integer("payment_amount").notNull(), // Amount in paise (INR)
+  paymentCurrency: text("payment_currency").default("inr"),
+  paymentIntentId: text("payment_intent_id"), // Stripe payment intent ID
+  paidAt: timestamp("paid_at"), // When payment was completed
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -385,6 +402,9 @@ export const insertScreeningAssessmentSchema = createInsertSchema(screeningAsses
 export const insertAppointmentSchema = createInsertSchema(appointments).omit({
   id: true,
   createdAt: true,
+  paymentStatus: true,
+  paymentIntentId: true,
+  paidAt: true,
 });
 
 export const insertForumPostSchema = createInsertSchema(forumPosts).omit({
