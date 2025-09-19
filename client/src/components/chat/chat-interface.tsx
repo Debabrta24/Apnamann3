@@ -36,9 +36,9 @@ export default function ChatInterface({ selectedAction, selectedPersonality, cha
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { sendMessage, isConnected } = useWebSocket(currentUser?.id || "", (message) => {
-    if (message.type === "chat_response") {
+    if (message.type === "chat_response" || message.type === "peer_message") {
       addChatMessage({
-        role: "assistant",
+        role: "assistant", // In peer chat, "assistant" represents the other peer
         content: message.message,
         timestamp: new Date(),
       });
@@ -53,6 +53,11 @@ export default function ChatInterface({ selectedAction, selectedPersonality, cha
   useEffect(() => {
     scrollToBottom();
   }, [chatMessages]);
+
+  // Clear chat when switching between AI and peer modes
+  useEffect(() => {
+    clearChat();
+  }, [chatType, selectedUser?.id]);
 
   useEffect(() => {
     if (selectedAction) {
@@ -72,12 +77,23 @@ export default function ChatInterface({ selectedAction, selectedPersonality, cha
     addChatMessage(userMessage);
     setIsTyping(true);
     
-    sendMessage({
-      type: "chat_message",
-      message: inputMessage,
-      chatHistory: chatMessages,
-      personality: selectedPersonality,
-    });
+    if (chatType === "live" && selectedUser) {
+      // Send peer-to-peer message
+      sendMessage({
+        type: "peer_message",
+        message: inputMessage,
+        toUserId: selectedUser.id,
+        fromUserId: currentUser?.id,
+      });
+    } else {
+      // Send AI chat message
+      sendMessage({
+        type: "chat_message",
+        message: inputMessage,
+        chatHistory: chatMessages,
+        personality: selectedPersonality,
+      });
+    }
 
     setInputMessage("");
   };
@@ -97,11 +113,21 @@ export default function ChatInterface({ selectedAction, selectedPersonality, cha
   };
 
   const clearChat = () => {
-    setChatMessages([{
-      role: "assistant",
-      content: "Hello! I'm here to provide psychological first aid and support. How are you feeling today? Remember, this is a safe space to share your thoughts.",
-      timestamp: new Date(),
-    }]);
+    if (chatType === "live" && selectedUser) {
+      // For peer chat, start with empty chat or a simple greeting
+      setChatMessages([{
+        role: "assistant", // Represents system message
+        content: `You are now connected with ${selectedUser.name}. Start your conversation!`,
+        timestamp: new Date(),
+      }]);
+    } else {
+      // For AI chat, use the original greeting
+      setChatMessages([{
+        role: "assistant",
+        content: "Hello! I'm here to provide psychological first aid and support. How are you feeling today? Remember, this is a safe space to share your thoughts.",
+        timestamp: new Date(),
+      }]);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
