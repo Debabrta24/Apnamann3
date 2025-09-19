@@ -174,11 +174,17 @@ export default function ChatInterface({ selectedAction, selectedPersonality, cha
             >
               {message.role === "assistant" && (
                 <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16 rounded-full flex-shrink-0 shadow-xl border-3 sm:border-4 border-primary/30 overflow-hidden bg-primary/5">
-                  <img 
-                    src={getAiAvatar(index)}
-                    alt="AI Assistant"
-                    className="w-full h-full object-cover"
-                  />
+                  {chatType === "live" && selectedUser ? (
+                    <div className="w-full h-full bg-gradient-to-br from-accent/20 to-primary/20 dark:from-accent/30 dark:to-primary/30 flex items-center justify-center">
+                      <User className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 xl:h-8 xl:w-8 text-primary dark:text-primary-foreground" />
+                    </div>
+                  ) : (
+                    <img 
+                      src={getAiAvatar(index)}
+                      alt="AI Assistant"
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                 </div>
               )}
               
@@ -206,18 +212,24 @@ export default function ChatInterface({ selectedAction, selectedPersonality, cha
           {isTyping && (
             <div className="flex space-x-2 sm:space-x-3 animate-in slide-in-from-left-2 duration-300">
               <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full flex-shrink-0 shadow-md border-2 sm:border-3 border-primary/30 overflow-hidden bg-primary/5">
-                <img 
-                  src={getAiAvatar(chatMessages.length)}
-                  alt="AI Assistant"
-                  className="w-full h-full object-cover"
-                />
+                {chatType === "live" && selectedUser ? (
+                  <div className="w-full h-full bg-gradient-to-br from-accent/20 to-primary/20 dark:from-accent/30 dark:to-primary/30 flex items-center justify-center">
+                    <User className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-primary dark:text-primary-foreground" />
+                  </div>
+                ) : (
+                  <img 
+                    src={getAiAvatar(chatMessages.length)}
+                    alt="AI Assistant"
+                    className="w-full h-full object-cover"
+                  />
+                )}
               </div>
               <div className="bg-card border-2 sm:border-3 border-border/50 rounded-2xl rounded-bl-md p-3 sm:p-4 max-w-[75%] sm:max-w-md shadow-sm backdrop-blur-sm">
                 <div className="flex space-x-1 items-center">
                   <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
                   <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce delay-100"></div>
                   <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce delay-200"></div>
-                  <span className="text-xs text-muted-foreground ml-2">AI is thinking...</span>
+                  <span className="text-xs text-muted-foreground ml-2">{chatType === "live" && selectedUser ? `${selectedUser.name} is typing...` : "AI is thinking..."}</span>
                 </div>
               </div>
             </div>
