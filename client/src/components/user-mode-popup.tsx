@@ -50,7 +50,7 @@ export default function UserModePopup() {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-4 mb-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 mt-3 mb-3">
           {userModes.map((mode) => (
             <Card
               key={mode.id}
@@ -62,26 +62,26 @@ export default function UserModePopup() {
               onClick={() => handleModeSelect(mode.id)}
               data-testid={`card-mode-${mode.id}`}
             >
-              <CardHeader className="text-center pb-1 px-3 pt-3">
-                <div className="text-2xl mb-1" data-testid={`emoji-mode-${mode.id}`}>
+              <CardHeader className="text-center pb-0 px-2 pt-2">
+                <div className="text-lg mb-0.5" data-testid={`emoji-mode-${mode.id}`}>
                   {mode.emoji}
                 </div>
-                <CardTitle className="text-sm font-semibold flex items-center justify-center gap-1">
+                <CardTitle className="text-xs font-medium flex items-center justify-center gap-0.5 leading-tight">
                   {mode.name}
                   {selectedMode === mode.id && (
-                    <Check className="h-4 w-4 text-primary" data-testid={`check-mode-${mode.id}`} />
+                    <Check className="h-3 w-3 text-primary" data-testid={`check-mode-${mode.id}`} />
                   )}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="pt-0 px-3 pb-3">
-                <CardDescription className="text-center text-xs leading-snug mb-2">
+              <CardContent className="pt-1 px-2 pb-2">
+                <CardDescription className="text-center text-xs leading-snug mb-2 line-clamp-2">
                   {mode.description}
                 </CardDescription>
                 <div className="flex flex-wrap gap-1 justify-center">
                   {mode.suggestedThemes.slice(0, 2).map((theme, index) => (
                     <div
                       key={theme}
-                      className="px-1.5 py-0.5 text-xs bg-muted rounded-full text-muted-foreground"
+                      className="px-1 py-0.5 text-[11px] bg-muted rounded-full text-muted-foreground"
                       data-testid={`theme-suggestion-${mode.id}-${theme}`}
                     >
                       {theme}
@@ -93,7 +93,7 @@ export default function UserModePopup() {
           ))}
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 mt-4 pt-3 border-t sticky bottom-0 bg-background">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-2 mt-3 pt-2 border-t sticky bottom-0 bg-background">
           <Button
             variant="ghost"
             onClick={handleSkip}
@@ -105,7 +105,7 @@ export default function UserModePopup() {
           <Button
             onClick={handleConfirm}
             disabled={!selectedMode}
-            className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white px-6 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm w-full sm:w-auto"
+            className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white px-4 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm w-full sm:w-auto"
             data-testid="button-confirm-mode"
           >
             {selectedMode ? `Let's go ${userModes.find(m => m.id === selectedMode)?.emoji}` : "Select a mode"}
