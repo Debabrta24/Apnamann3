@@ -356,19 +356,19 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
             onClick={handlePrevious}
             disabled={step === 1}
             data-testid="button-previous"
-            className="w-full sm:w-auto min-w-[100px] sm:min-w-[120px] h-10 sm:h-9"
+            className="w-full sm:w-auto min-w-[100px] sm:min-w-[120px] h-10 sm:h-9 text-xs sm:text-sm"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
             Previous
           </Button>
 
           {step < totalSteps ? (
-            <Button onClick={handleNext} data-testid="button-next" className="w-full sm:w-auto h-10 sm:h-9">
+            <Button onClick={handleNext} data-testid="button-next" className="w-full sm:w-auto h-10 sm:h-9 text-xs sm:text-sm">
               Next
-              <ArrowRight className="h-4 w-4 ml-2" />
+              <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1 sm:ml-2" />
             </Button>
           ) : (
-            <Button onClick={handleComplete} data-testid="button-complete" className="w-full sm:w-auto h-10 sm:h-9">
+            <Button onClick={handleComplete} data-testid="button-complete" className="w-full sm:w-auto h-10 sm:h-9 text-xs sm:text-sm">
               Complete Setup
             </Button>
           )}
