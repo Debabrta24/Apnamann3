@@ -73,6 +73,7 @@ export const appointments = pgTable("appointments", {
   userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   counselorId: uuid("counselor_id").notNull().references(() => counselors.id),
   sessionType: text("session_type").notNull(), // 'individual', 'group', 'crisis'
+  consultationType: text("consultation_type").notNull().default("video"), // 'phone', 'video', 'inperson'
   scheduledFor: timestamp("scheduled_for").notNull(),
   duration: integer("duration_minutes").default(60),
   status: text("status").default("scheduled"), // 'scheduled', 'completed', 'cancelled', 'no-show'
