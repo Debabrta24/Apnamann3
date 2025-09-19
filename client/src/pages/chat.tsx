@@ -688,7 +688,7 @@ export default function Chat() {
                 </p>
                 {chatType === "live" && selectedUser && (
                   <div className="flex flex-wrap gap-1 mt-2">
-                    {selectedUser.interests.slice(0, 3).map((interest, index) => (
+                    {selectedUser.interests.slice(0, 3).map((interest: string, index: number) => (
                       <span 
                         key={index} 
                         className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full"
