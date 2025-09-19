@@ -350,7 +350,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
         </div>
 
         {/* Navigation Buttons - Sticky Footer */}
-        <div className="sticky bottom-0 -mx-6 px-6 py-3 bg-background border-t flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="sticky bottom-0 -mx-6 px-6 py-3 pb-[env(safe-area-inset-bottom,12px)] bg-background border-t flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <Button
             variant="outline"
             onClick={handlePrevious}
