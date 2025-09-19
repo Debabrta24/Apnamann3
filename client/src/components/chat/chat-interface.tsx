@@ -19,6 +19,8 @@ interface ChatMessage {
 interface ChatInterfaceProps {
   selectedAction?: string | null;
   selectedPersonality?: any;
+  chatType?: "assistance" | "live";
+  selectedUser?: any;
 }
 
 // AI Avatar selection based on message index for variety
@@ -27,7 +29,7 @@ const getAiAvatar = (messageIndex: number) => {
   return avatars[messageIndex % avatars.length];
 };
 
-export default function ChatInterface({ selectedAction, selectedPersonality }: ChatInterfaceProps) {
+export default function ChatInterface({ selectedAction, selectedPersonality, chatType, selectedUser }: ChatInterfaceProps) {
   const { currentUser, chatMessages, setChatMessages, addChatMessage } = useAppContext();
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -116,7 +118,11 @@ export default function ChatInterface({ selectedAction, selectedPersonality }: C
           <div className="flex items-center space-x-4">
             <div className="relative">
               <div className="w-12 h-12 sm:w-14 sm:h-14 bg-primary rounded-full flex items-center justify-center shadow-xl border-4 border-primary/20">
-                <Bot className="text-primary-foreground h-6 w-6 sm:h-7 sm:w-7" />
+                {chatType === "live" && selectedUser ? (
+                  <User className="text-primary-foreground h-6 w-6 sm:h-7 sm:w-7" />
+                ) : (
+                  <Bot className="text-primary-foreground h-6 w-6 sm:h-7 sm:w-7" />
+                )}
               </div>
               {/* Connection status indicator */}
               <div 
@@ -127,11 +133,15 @@ export default function ChatInterface({ selectedAction, selectedPersonality }: C
             </div>
             <div className="min-w-0 flex-1">
               <CardTitle className="text-xl sm:text-2xl lg:text-3xl font-bold truncate">
-                {selectedPersonality?.name || "Medical AI Assistant"}
+                {chatType === "live" && selectedUser 
+                  ? selectedUser.name 
+                  : selectedPersonality?.name || "Medical AI Assistant"}
               </CardTitle>
               <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
                 {isConnected ? (
-                  selectedPersonality?.role || "Online • Medical & Psychological Support"
+                  chatType === "live" && selectedUser 
+                    ? `${selectedUser.connectionType === 'trained-peer' ? 'Trained Peer' : 'Peer Support'} • ${selectedUser.isOnline ? 'Online' : 'Offline'}` 
+                    : selectedPersonality?.role || "Online • Medical & Psychological Support"
                 ) : (
                   <span className="flex items-center gap-1">
                     <div className="w-2 h-2 bg-current rounded-full animate-pulse" />
@@ -223,7 +233,9 @@ export default function ChatInterface({ selectedAction, selectedPersonality }: C
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Ask about your health or share what's on your mind..."
+              placeholder={chatType === "live" && selectedUser 
+                ? `Message ${selectedUser.name}...` 
+                : "Ask about your health or share what's on your mind..."}
               className="flex-1 rounded-full px-5 py-3 sm:py-4 lg:py-5 border-3 sm:border-4 lg:border-5 border-border/50 focus:border-primary/50 transition-colors text-base sm:text-lg lg:text-xl shadow-lg focus:shadow-xl"
               disabled={!isConnected}
               data-testid="input-chat-message"
