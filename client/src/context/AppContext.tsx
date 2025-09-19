@@ -12,6 +12,16 @@ export type ThemeType = "light" | "dark" | "ocean" | "sunset" | "forest" | "lave
 
 export type UserMode = "focus" | "relax" | "social" | "energy" | "mindful" | "creative" | "recovery" | "desperate" | "anxious" | "overwhelmed" | "motivated" | "lonely" | "stressed";
 
+export type DailyFeeling = "happy" | "sad" | "angry" | "excited" | "tired" | "confused" | "proud" | "grateful" | "hopeful" | "frustrated" | "peaceful" | "nervous";
+
+export interface DailyFeelingOption {
+  id: DailyFeeling;
+  name: string;
+  emoji: string;
+  description: string;
+  suggestedThemes: ThemeType[];
+}
+
 export interface UserModeOption {
   id: UserMode;
   name: string;
@@ -114,6 +124,93 @@ export const userModes: UserModeOption[] = [
   }
 ];
 
+export const dailyFeelings: DailyFeelingOption[] = [
+  {
+    id: "happy",
+    name: "Happy & Joyful",
+    emoji: "😊",
+    description: "Feeling good and content today",
+    suggestedThemes: ["coral", "peach", "light"]
+  },
+  {
+    id: "sad",
+    name: "Sad & Down",
+    emoji: "😢",
+    description: "Feeling low and melancholy",
+    suggestedThemes: ["dark", "ocean", "lavender"]
+  },
+  {
+    id: "angry",
+    name: "Angry & Frustrated",
+    emoji: "😠",
+    description: "Feeling irritated and upset",
+    suggestedThemes: ["sunset", "cosmic", "dark"]
+  },
+  {
+    id: "excited",
+    name: "Excited & Energetic",
+    emoji: "🤩",
+    description: "Full of enthusiasm and energy",
+    suggestedThemes: ["cosmic", "sunset", "coral"]
+  },
+  {
+    id: "tired",
+    name: "Tired & Drained",
+    emoji: "😴",
+    description: "Feeling exhausted and worn out",
+    suggestedThemes: ["lavender", "mint", "cream"]
+  },
+  {
+    id: "confused",
+    name: "Confused & Lost",
+    emoji: "😕",
+    description: "Feeling uncertain and unclear",
+    suggestedThemes: ["forest", "ocean", "dark"]
+  },
+  {
+    id: "proud",
+    name: "Proud & Accomplished",
+    emoji: "😌",
+    description: "Feeling satisfied with achievements",
+    suggestedThemes: ["rose", "coral", "peach"]
+  },
+  {
+    id: "grateful",
+    name: "Grateful & Thankful",
+    emoji: "🙏",
+    description: "Appreciating what you have",
+    suggestedThemes: ["lavender-light", "mint", "cream"]
+  },
+  {
+    id: "hopeful",
+    name: "Hopeful & Optimistic",
+    emoji: "🌟",
+    description: "Looking forward to the future",
+    suggestedThemes: ["sky", "cosmic", "light"]
+  },
+  {
+    id: "frustrated",
+    name: "Frustrated & Stuck",
+    emoji: "😤",
+    description: "Feeling blocked and impatient",
+    suggestedThemes: ["dark", "forest", "ocean"]
+  },
+  {
+    id: "peaceful",
+    name: "Peaceful & Calm",
+    emoji: "🕊️",
+    description: "Feeling serene and balanced",
+    suggestedThemes: ["mint", "lavender-light", "cream"]
+  },
+  {
+    id: "nervous",
+    name: "Nervous & Worried",
+    emoji: "😰",
+    description: "Feeling anxious about something",
+    suggestedThemes: ["lavender", "dark", "ocean"]
+  }
+];
+
 interface AppContextType {
   currentUser: User | null;
   setCurrentUser: (user: User | null) => void;
@@ -122,6 +219,8 @@ interface AppContextType {
   toggleTheme: () => void;
   userMode: UserMode | null;
   setUserMode: (mode: UserMode) => void;
+  dailyFeeling: DailyFeeling | null;
+  setDailyFeeling: (feeling: DailyFeeling) => void;
   showUserModePopup: boolean;
   setShowUserModePopup: (show: boolean) => void;
   isAuthenticated: boolean;
@@ -183,6 +282,15 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     return null;
   });
   const [showUserModePopup, setShowUserModePopup] = useState(false);
+  
+  // Daily feeling state
+  const [dailyFeeling, setDailyFeelingState] = useState<DailyFeeling | null>(() => {
+    if (typeof window !== "undefined") {
+      const savedFeeling = localStorage.getItem("dailyFeeling");
+      return (savedFeeling as DailyFeeling) || null;
+    }
+    return null;
+  });
 
   // Chat state management - initialize with default message
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([{
@@ -237,6 +345,11 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const setUserMode = (mode: UserMode) => {
     setUserModeState(mode);
     localStorage.setItem("userMode", mode);
+  };
+  
+  const setDailyFeeling = (feeling: DailyFeeling) => {
+    setDailyFeelingState(feeling);
+    localStorage.setItem("dailyFeeling", feeling);
   };
 
   const login = (email: string) => {
@@ -353,6 +466,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       toggleTheme,
       userMode,
       setUserMode,
+      dailyFeeling,
+      setDailyFeeling,
       showUserModePopup,
       setShowUserModePopup,
       isAuthenticated,
