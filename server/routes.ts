@@ -102,7 +102,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const userId = req.url?.split('userId=')[1];
     if (userId) {
       wsConnections.set(userId, ws);
-      console.log(`WebSocket connected for user: ${userId}`);
     }
 
     ws.on('message', async (message) => {
@@ -291,13 +290,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid screening type" });
       }
 
-      // Save assessment
+      // Save assessment with calculated scores
       const assessment = await storage.createScreeningAssessment({
         ...assessmentData,
         totalScore: result.totalScore,
         riskLevel: result.riskLevel,
         isHighRisk: result.isHighRisk,
-      });
+      } as any);
 
       // Check for crisis intervention
       await CrisisService.evaluateScreeningResult(
@@ -494,14 +493,8 @@ This AI has learned from real conversation patterns and will respond authentical
 
   app.post("/api/appointments", async (req, res) => {
     try {
-      // Validate the base appointment data
-      const baseData = insertAppointmentSchema.omit({
-        paymentStatus: true,
-        paymentAmount: true,
-        paymentCurrency: true,
-        paymentIntentId: true,
-        paidAt: true
-      }).parse(req.body);
+      // Validate the base appointment data (paymentStatus, paymentIntentId, paidAt are already omitted in insertAppointmentSchema)
+      const baseData = insertAppointmentSchema.parse(req.body);
       
       // Normalize payment amount: always convert rupees to paise
       let paymentAmount: number | null = null;

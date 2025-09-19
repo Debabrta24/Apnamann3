@@ -1,9 +1,20 @@
 import OpenAI from "openai";
 
 // the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ 
-  apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_KEY || "your-api-key-here" 
-});
+const getOpenAIApiKey = () => {
+  const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_KEY;
+  const isProduction = process.env.NODE_ENV === 'production';
+  
+  if (!apiKey && isProduction) {
+    console.error("Critical production error: OpenAI API key not found in environment variables");
+    return null;
+  }
+  
+  return apiKey || "your-api-key-here";
+};
+
+const apiKey = getOpenAIApiKey();
+const openai = apiKey ? new OpenAI({ apiKey }) : null;
 
 export interface ChatMessage {
   role: "user" | "assistant" | "system";
@@ -43,6 +54,10 @@ Response format: Always respond with JSON containing:
 - escalationRequired: boolean (true if immediate professional help needed)`;
 
   async generateResponse(messages: ChatMessage[]): Promise<PsychologicalResponse> {
+    if (!openai) {
+      return this.getFallbackResponse();
+    }
+    
     try {
       const response = await openai.chat.completions.create({
         model: "gpt-5",
@@ -58,17 +73,23 @@ Response format: Always respond with JSON containing:
         max_tokens: 1000,
       });
 
-      const result = JSON.parse(response.choices[0].message.content || "{}");
+      let result = {};
+      try {
+        result = JSON.parse(response.choices[0].message.content || "{}");
+      } catch (parseError) {
+        console.error("Failed to parse OpenAI response JSON:", parseError);
+        result = {};
+      }
       
       return {
-        message: result.message || "I'm here to support you. Could you tell me more about how you're feeling?",
-        supportiveActions: result.supportiveActions || [
+        message: (result as any).message || "I'm here to support you. Could you tell me more about how you're feeling?",
+        supportiveActions: (result as any).supportiveActions || [
           "Take 5 deep breaths slowly",
           "Talk to a trusted friend or counselor",
           "Practice a grounding exercise"
         ],
-        riskLevel: result.riskLevel || "low",
-        escalationRequired: result.escalationRequired || false,
+        riskLevel: (result as any).riskLevel || "low",
+        escalationRequired: (result as any).escalationRequired || false,
       };
     } catch (error) {
       console.error("OpenAI API error:", error);
@@ -88,6 +109,11 @@ Response format: Always respond with JSON containing:
   }
 
   async analyzeForCrisis(message: string): Promise<{ isHighRisk: boolean; severity: "high" | "critical" }> {
+    if (!openai) {
+      // Default to high risk if OpenAI is not available
+      return { isHighRisk: true, severity: "high" };
+    }
+    
     try {
       const response = await openai.chat.completions.create({
         model: "gpt-5",
@@ -109,10 +135,16 @@ Response format: Always respond with JSON containing:
         temperature: 0.1,
       });
 
-      const result = JSON.parse(response.choices[0].message.content || "{}");
+      let result = {};
+      try {
+        result = JSON.parse(response.choices[0].message.content || "{}");
+      } catch (parseError) {
+        console.error("Failed to parse crisis analysis JSON:", parseError);
+        result = {};
+      }
       return {
-        isHighRisk: result.isHighRisk || false,
-        severity: result.severity || "high",
+        isHighRisk: (result as any).isHighRisk || false,
+        severity: (result as any).severity || "high",
       };
     } catch (error) {
       console.error("Crisis analysis error:", error);
@@ -122,6 +154,10 @@ Response format: Always respond with JSON containing:
   }
 
   async generateGuidedExercise(type: "breathing" | "relaxation" | "mindfulness"): Promise<string[]> {
+    if (!openai) {
+      return ["Take a moment to breathe slowly", "Focus on the present moment", "Remember that this feeling will pass"];
+    }
+    
     try {
       const prompts = {
         breathing: "Generate step-by-step instructions for the 4-7-8 breathing technique for exam stress",
@@ -141,12 +177,31 @@ Response format: Always respond with JSON containing:
         response_format: { type: "json_object" },
       });
 
-      const result = JSON.parse(response.choices[0].message.content || "{}");
-      return result.steps || ["Focus on your breathing", "Take slow, deep breaths", "Notice how you feel"];
+      let result = {};
+      try {
+        result = JSON.parse(response.choices[0].message.content || "{}");
+      } catch (parseError) {
+        console.error("Failed to parse exercise JSON:", parseError);
+        result = {};
+      }
+      return (result as any).steps || ["Focus on your breathing", "Take slow, deep breaths", "Notice how you feel"];
     } catch (error) {
       console.error("Exercise generation error:", error);
       return ["Take a moment to breathe slowly", "Focus on the present moment", "Remember that this feeling will pass"];
     }
+  }
+
+  private getFallbackResponse(): PsychologicalResponse {
+    return {
+      message: "I'm here to listen and support you. While I'm having technical difficulties right now, please know that your feelings are valid and help is available.",
+      supportiveActions: [
+        "Contact campus counseling services",
+        "Call the crisis helpline: +91-9876543210",
+        "Reach out to a trusted friend or family member"
+      ],
+      riskLevel: "moderate",
+      escalationRequired: false,
+    };
   }
 }
 

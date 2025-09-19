@@ -27,8 +27,14 @@ export function useWebSocket(userId: string, onMessage: (message: any) => void) 
       ws.current.close();
     }
 
+    // Fix WebSocket URL construction to handle undefined port
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/ws?userId=${encodeURIComponent(userId)}`;
+    const hostname = window.location.hostname;
+    const port = window.location.port || (protocol === "wss:" ? "443" : "80");
+    
+    // For development, if port is undefined or empty, use 5000 as default
+    const finalPort = (!port || port === "undefined") ? "5000" : port;
+    const wsUrl = `${protocol}//${hostname}:${finalPort}/ws?userId=${encodeURIComponent(userId)}`;
     
     console.log(`Attempting WebSocket connection to: ${wsUrl}`);
     

@@ -33,16 +33,13 @@ export default function PageQuoteOverlay({ isVisible, onComplete }: PageQuoteOve
   const [currentQuote, setCurrentQuote] = useState("");
 
   useEffect(() => {
-    console.log("PageQuoteOverlay isVisible:", isVisible); // Debug log
     if (isVisible) {
       // Select a random quote when overlay becomes visible
       const randomQuote = inspirationalQuotes[Math.floor(Math.random() * inspirationalQuotes.length)];
       setCurrentQuote(randomQuote);
-      console.log("Selected quote:", randomQuote); // Debug log
 
       // Auto-hide after 1.5 seconds
       const timer = setTimeout(() => {
-        console.log("Auto-hiding overlay"); // Debug log
         onComplete();
       }, 1500);
 

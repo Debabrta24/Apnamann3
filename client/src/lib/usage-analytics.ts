@@ -201,26 +201,49 @@ class UsageAnalytics {
 
 export const usageAnalytics = new UsageAnalytics();
 
+// Helper function to get current user ID from localStorage/session
+const getUserId = (): string | null => {
+  if (typeof window === 'undefined') return null;
+  
+  try {
+    // Try to get current user from localStorage (matches AppContext implementation)
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+      const user = JSON.parse(currentUser);
+      return user.id || null;
+    }
+  } catch (error) {
+    console.warn('Failed to get user ID from localStorage:', error);
+  }
+  
+  return null;
+};
+
 // Hook for easy usage in React components
 export const useUsageAnalytics = () => {
   const trackAction = (action: string, page: string, data?: any) => {
-    const userId = 'current-user'; // Would be actual user ID in real app
-    usageAnalytics.trackAction(userId, action, page, data);
+    // Get userId from localStorage or session if available
+    const userId = getUserId();
+    if (userId) {
+      usageAnalytics.trackAction(userId, action, page, data);
+    }
   };
 
   const trackPageDuration = (page: string, duration: number) => {
-    const userId = 'current-user';
-    usageAnalytics.trackPageDuration(userId, page, duration);
+    const userId = getUserId();
+    if (userId) {
+      usageAnalytics.trackPageDuration(userId, page, duration);
+    }
   };
 
   const getUserInsights = () => {
-    const userId = 'current-user';
-    return usageAnalytics.getUserInsights(userId);
+    const userId = getUserId();
+    return userId ? usageAnalytics.getUserInsights(userId) : null;
   };
 
   const getAISuggestions = () => {
-    const userId = 'current-user';
-    return usageAnalytics.getAISuggestions(userId);
+    const userId = getUserId();
+    return userId ? usageAnalytics.getAISuggestions(userId) : [];
   };
 
   return {

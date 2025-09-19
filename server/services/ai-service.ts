@@ -42,34 +42,62 @@ export class AIService {
       const configData = fs.readFileSync(configPath, 'utf8');
       this.config = JSON.parse(configData);
     } catch (error) {
-      console.warn("Config file not found, using defaults");
+      // In production, we should have proper environment variables or config files
+      const isProduction = process.env.NODE_ENV === 'production';
+      
       this.config = {
         ai_provider: "gemini",
-        openai_api_key: process.env.OPENAI_API_KEY || "your-openai-key-here",
-        gemini_api_key: process.env.GEMINI_API_KEY || "your-gemini-key-here",
+        openai_api_key: process.env.OPENAI_API_KEY || (isProduction ? "" : "your-openai-key-here"),
+        gemini_api_key: process.env.GEMINI_API_KEY || (isProduction ? "" : "your-gemini-key-here"),
         current_model: "gemini-2.5-flash",
         fallback_model: "gpt-4",
         max_tokens: 2000,
         temperature: 0.7
       };
+      
+      // Log warning in development, but error in production
+      if (isProduction) {
+        console.error("Production configuration issue: Config file not found and environment variables may be missing");
+      } else {
+        console.warn("Config file not found, using development defaults");
+      }
     }
   }
 
   private initializeProviders() {
+    const isProduction = process.env.NODE_ENV === 'production';
+    
     try {
-      if (this.config.ai_provider === "openai" && this.config.openai_api_key && this.config.openai_api_key !== "your-openai-key-here") {
-        this.openai = new OpenAI({ 
-          apiKey: this.config.openai_api_key 
-        });
+      if (this.config.ai_provider === "openai") {
+        if (this.config.openai_api_key && this.config.openai_api_key !== "your-openai-key-here") {
+          this.openai = new OpenAI({ 
+            apiKey: this.config.openai_api_key 
+          });
+        } else if (isProduction) {
+          console.error("Production error: OpenAI provider selected but no valid API key found");
+        }
       }
       
-      if (this.config.ai_provider === "gemini" && this.config.gemini_api_key && this.config.gemini_api_key !== "your-gemini-key-here") {
-        this.gemini = new GoogleGenAI({ 
-          apiKey: this.config.gemini_api_key 
-        });
+      if (this.config.ai_provider === "gemini") {
+        if (this.config.gemini_api_key && this.config.gemini_api_key !== "your-gemini-key-here") {
+          this.gemini = new GoogleGenAI({ 
+            apiKey: this.config.gemini_api_key 
+          });
+        } else if (isProduction) {
+          console.error("Production error: Gemini provider selected but no valid API key found");
+        }
+      }
+      
+      // Check if any provider was successfully initialized
+      if (isProduction && !this.openai && !this.gemini) {
+        console.error("Critical production error: No AI providers could be initialized. Check API key configuration.");
       }
     } catch (error) {
-      console.warn("AI providers not initialized, using fallback responses");
+      if (isProduction) {
+        console.error("Failed to initialize AI providers:", error);
+      } else {
+        console.warn("AI providers not initialized, using fallback responses");
+      }
     }
   }
 
@@ -211,7 +239,13 @@ Response format: Always respond with JSON containing:
       contents: prompt
     });
 
-    const result = JSON.parse(response.text || "{}");
+    let result = {};
+    try {
+      result = JSON.parse(response.text || "{}");
+    } catch (parseError) {
+      console.error("Failed to parse Gemini response JSON:", parseError);
+      result = {};
+    }
     
     return {
       message: result.message || "I'm here to support you. Could you tell me more about how you're feeling?",
@@ -240,7 +274,13 @@ Response format: Always respond with JSON containing:
       max_tokens: this.config.max_tokens,
     });
 
-    const result = JSON.parse(response.choices[0].message.content || "{}");
+    let result = {};
+    try {
+      result = JSON.parse(response.choices[0].message.content || "{}");
+    } catch (parseError) {
+      console.error("Failed to parse OpenAI response JSON:", parseError);
+      result = {};
+    }
     
     return {
       message: result.message || "I'm here to support you. Could you tell me more about how you're feeling?",
