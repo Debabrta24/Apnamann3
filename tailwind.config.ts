@@ -41,6 +41,14 @@ export default {
           DEFAULT: "var(--destructive)",
           foreground: "var(--destructive-foreground)",
         },
+        hope: {
+          DEFAULT: "var(--hope)",
+          foreground: "var(--hope-foreground)",
+        },
+        healing: {
+          DEFAULT: "var(--healing)",
+          foreground: "var(--healing-foreground)",
+        },
         border: "var(--border)",
         input: "var(--input)",
         ring: "var(--ring)",

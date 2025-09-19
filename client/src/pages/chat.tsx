@@ -26,7 +26,7 @@ const aiPersonalities = [
     role: "Cognitive Therapist",
     description: "Specializes in CBT and helps with anxiety, depression, and negative thought patterns",
     icon: Brain,
-    color: "bg-blue-100 text-blue-800",
+    color: "bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-foreground/90",
     personality: "Professional, empathetic, and evidence-based approach",
     photo: drSarahPhoto
   },
@@ -36,7 +36,7 @@ const aiPersonalities = [
     role: "Life Coach",
     description: "Motivational support for goal-setting, productivity, and personal growth",
     icon: Target,
-    color: "bg-green-100 text-green-800",
+    color: "bg-secondary/20 text-secondary-foreground dark:bg-secondary/30 dark:text-secondary-foreground",
     personality: "Energetic, goal-oriented, and encouraging",
     photo: alexPhoto
   },
@@ -46,7 +46,7 @@ const aiPersonalities = [
     role: "Mindfulness Guide",
     description: "Meditation teacher focused on present-moment awareness and stress reduction",
     icon: Heart,
-    color: "bg-purple-100 text-purple-800",
+    color: "bg-accent/20 text-accent-foreground dark:bg-accent/30 dark:text-accent-foreground",
     personality: "Calm, wise, and spiritually grounded",
     photo: zenPhoto
   },
@@ -56,7 +56,7 @@ const aiPersonalities = [
     role: "Creative Mentor",
     description: "Helps overcome creative blocks and encourages artistic expression for healing",
     icon: Lightbulb,
-    color: "bg-orange-100 text-orange-800",
+    color: "bg-hope/20 text-hope-foreground dark:bg-hope/30 dark:text-hope-foreground",
     personality: "Imaginative, inspiring, and unconventional",
     photo: mayaPhoto
   },
@@ -66,7 +66,7 @@ const aiPersonalities = [
     role: "Supportive Friend",
     description: "Casual, friendly conversation for daily support and emotional venting",
     icon: Bot,
-    color: "bg-pink-100 text-pink-800",
+    color: "bg-healing/20 text-healing-foreground dark:bg-healing/30 dark:text-healing-foreground",
     personality: "Warm, casual, and relatable",
     photo: samPhoto
   }
@@ -309,7 +309,7 @@ export default function Chat() {
                   <CardHeader>
                     <div className="flex items-center space-x-3">
                       <div className="relative">
-                        <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden shadow-lg border-3 border-white/50">
+                        <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden shadow-lg border-3 border-card/50 dark:border-card">
                           <img 
                             src={personality.photo}
                             alt={`${personality.name} profile`}
@@ -352,7 +352,7 @@ export default function Chat() {
                     <div className="relative">
                       {personality.photo ? (
                         <>
-                          <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden shadow-lg border-3 border-white/50">
+                          <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full overflow-hidden shadow-lg border-3 border-card/50 dark:border-card">
                             <img 
                               src={personality.photo}
                               alt={`${personality.name} profile`}
@@ -451,7 +451,7 @@ export default function Chat() {
                     <Card 
                       key={user.id} 
                       className={`hover:shadow-lg transition-shadow cursor-pointer border-2 ${
-                        user.isOnline ? 'border-green-200 bg-green-50/50' : 'border-gray-200 bg-gray-50/50'
+                        user.isOnline ? 'border-primary/30 bg-primary/5 dark:border-primary/50 dark:bg-primary/10' : 'border-muted-foreground/20 bg-muted/30 dark:border-muted-foreground/30 dark:bg-muted/50'
                       }`}
                       onClick={() => handleUserSelect(user)}
                       data-testid={`user-card-${user.id}`}
@@ -459,11 +459,11 @@ export default function Chat() {
                       <CardHeader>
                         <div className="flex items-center space-x-3">
                           <div className="relative">
-                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center shadow-lg">
-                              <User className="h-8 w-8 text-blue-600" />
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-accent/20 to-primary/20 dark:from-accent/30 dark:to-primary/30 flex items-center justify-center shadow-lg">
+                              <User className="h-8 w-8 text-primary dark:text-primary-foreground" />
                             </div>
-                            <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${
-                              user.isOnline ? 'bg-green-400' : 'bg-gray-400'
+                            <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-background dark:border-card ${
+                              user.isOnline ? 'bg-primary dark:bg-primary/80' : 'bg-muted-foreground dark:bg-muted-foreground/60'
                             }`} />
                           </div>
                           <div className="flex-1">
@@ -471,8 +471,8 @@ export default function Chat() {
                               <CardTitle className="text-lg">{user.name}</CardTitle>
                               <div className={`px-2 py-1 text-xs rounded-full font-medium ${
                                 user.connectionType === 'trained-peer' 
-                                  ? 'bg-blue-100 text-blue-800' 
-                                  : 'bg-green-100 text-green-800'
+                                  ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-foreground' 
+                                  : 'bg-secondary/20 text-secondary-foreground dark:bg-secondary/30 dark:text-secondary-foreground'
                               }`}>
                                 {user.connectionType === 'trained-peer' ? 'Trained' : 'Peer'}
                               </div>
@@ -506,8 +506,8 @@ export default function Chat() {
                         
                         <div className={`p-2 rounded text-xs ${
                           user.isOnline 
-                            ? 'bg-green-50 text-green-700 border border-green-200' 
-                            : 'bg-gray-50 text-gray-600 border border-gray-200'
+                            ? 'bg-primary/10 text-primary border border-primary/30 dark:bg-primary/20 dark:text-primary-foreground dark:border-primary/50' 
+                            : 'bg-muted text-muted-foreground border border-muted-foreground/20 dark:bg-muted/50 dark:text-muted-foreground dark:border-muted-foreground/30'
                         }`}>
                           <div className="flex items-center gap-2">
                             <MessageCircle className="h-3 w-3" />
@@ -543,16 +543,16 @@ export default function Chat() {
                   <div className="relative">
                     {chatType === "live" && selectedUser ? (
                       <>
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center shadow-lg border-2 border-white/50">
-                          <User className="h-6 w-6 text-blue-600" />
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent/20 to-primary/20 dark:from-accent/30 dark:to-primary/30 flex items-center justify-center shadow-lg border-2 border-background dark:border-card">
+                          <User className="h-6 w-6 text-primary dark:text-primary-foreground" />
                         </div>
-                        <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${
-                          selectedUser.isOnline ? 'bg-green-400' : 'bg-gray-400'
+                        <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-background dark:border-card ${
+                          selectedUser.isOnline ? 'bg-primary dark:bg-primary/80' : 'bg-muted-foreground dark:bg-muted-foreground/60'
                         }`} />
                       </>
                     ) : selectedPersonality.photo ? (
                       <>
-                        <div className="w-12 h-12 rounded-full overflow-hidden shadow-lg border-2 border-white/50">
+                        <div className="w-12 h-12 rounded-full overflow-hidden shadow-lg border-2 border-card/50 dark:border-card">
                           <img 
                             src={selectedPersonality.photo}
                             alt={`${selectedPersonality.name} profile`}
@@ -638,16 +638,16 @@ export default function Chat() {
                   <div className="relative">
                     {chatType === "live" && selectedUser ? (
                       <>
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center shadow-md border-2 border-white/50">
-                          <User className="h-5 w-5 text-blue-600" />
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent/20 to-primary/20 dark:from-accent/30 dark:to-primary/30 flex items-center justify-center shadow-md border-2 border-background dark:border-card">
+                          <User className="h-5 w-5 text-primary dark:text-primary-foreground" />
                         </div>
-                        <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${
-                          selectedUser.isOnline ? 'bg-green-400' : 'bg-gray-400'
+                        <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-background dark:border-card ${
+                          selectedUser.isOnline ? 'bg-primary dark:bg-primary/80' : 'bg-muted-foreground dark:bg-muted-foreground/60'
                         }`} />
                       </>
                     ) : selectedPersonality.photo ? (
                       <>
-                        <div className="w-10 h-10 rounded-full overflow-hidden shadow-md border-2 border-white/50">
+                        <div className="w-10 h-10 rounded-full overflow-hidden shadow-md border-2 border-card/50 dark:border-card">
                           <img 
                             src={selectedPersonality.photo}
                             alt={`${selectedPersonality.name} profile`}
