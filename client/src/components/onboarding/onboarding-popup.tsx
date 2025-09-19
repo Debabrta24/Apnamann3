@@ -110,7 +110,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
-      <DialogContent className="sm:max-w-lg h-fit">
+      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto w-full mx-4 my-8">
         <DialogHeader className="pb-2">
           <div className="flex items-center justify-center mb-2">
             <img src={logoUrl} alt="ApnaMann Logo" className="w-8 h-8 rounded-lg object-cover" data-testid="img-logo-onboarding" />
@@ -143,7 +143,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 pt-2">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
                     <Label htmlFor="firstName" className="text-sm">First Name</Label>
                     <Input
@@ -252,7 +252,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">How has your mood been lately?</Label>
                   <RadioGroup value={data.mood} onValueChange={(value) => updateData("mood", value)}>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 xs:grid-cols-2 gap-2">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="excellent" id="mood-excellent" />
                         <Label htmlFor="mood-excellent" className="text-xs">Excellent</Label>
@@ -276,7 +276,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">How would you rate your current stress level?</Label>
                   <RadioGroup value={data.stress} onValueChange={(value) => updateData("stress", value)}>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 xs:grid-cols-2 gap-2">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="low" id="stress-low" />
                         <Label htmlFor="stress-low" className="text-xs">Low</Label>
@@ -300,7 +300,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">How has your sleep been?</Label>
                   <RadioGroup value={data.sleep} onValueChange={(value) => updateData("sleep", value)}>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 xs:grid-cols-2 gap-2">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="excellent" id="sleep-excellent" />
                         <Label htmlFor="sleep-excellent" className="text-xs">Excellent</Label>
@@ -324,7 +324,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Have you sought mental health support before?</Label>
                   <RadioGroup value={data.previousHelp} onValueChange={(value) => updateData("previousHelp", value)}>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 xs:grid-cols-2 gap-2">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="yes" id="help-yes" />
                         <Label htmlFor="help-yes" className="text-xs">Yes</Label>
@@ -347,24 +347,25 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
         </div>
 
         {/* Navigation Buttons */}
-        <div className="flex items-center justify-between pt-3 border-t mt-4">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t mt-4 sticky bottom-0 bg-background">
           <Button
             variant="outline"
             onClick={handlePrevious}
             disabled={step === 1}
             data-testid="button-previous"
+            className="w-full sm:w-auto"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Previous
           </Button>
 
           {step < totalSteps ? (
-            <Button onClick={handleNext} data-testid="button-next">
+            <Button onClick={handleNext} data-testid="button-next" className="w-full sm:w-auto">
               Next
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           ) : (
-            <Button onClick={handleComplete} data-testid="button-complete">
+            <Button onClick={handleComplete} data-testid="button-complete" className="w-full sm:w-auto">
               Complete Setup
             </Button>
           )}
