@@ -13,7 +13,9 @@ export function useWebSocket(userId: string, onMessage: (message: any) => void) 
   const connectWebSocket = useCallback(() => {
     // Only connect if we have a valid UUID (not empty string or whitespace)
     if (!userId || userId.trim() === "") {
-      console.log("WebSocket: No valid userId provided, skipping connection");
+      if (import.meta.env.DEV) {
+        console.log("WebSocket: No valid userId provided, skipping connection");
+      }
       return;
     }
 
@@ -27,16 +29,13 @@ export function useWebSocket(userId: string, onMessage: (message: any) => void) 
       ws.current.close();
     }
 
-    // Fix WebSocket URL construction to handle undefined port
+    // Use window.location.host to avoid port assembly issues with reverse proxies/CDN
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const hostname = window.location.hostname;
-    const port = window.location.port || (protocol === "wss:" ? "443" : "80");
+    const wsUrl = `${protocol}//${window.location.host}/ws?userId=${encodeURIComponent(userId)}`;
     
-    // For development, if port is undefined or empty, use 5000 as default
-    const finalPort = (!port || port === "undefined") ? "5000" : port;
-    const wsUrl = `${protocol}//${hostname}:${finalPort}/ws?userId=${encodeURIComponent(userId)}`;
-    
-    console.log(`Attempting WebSocket connection to: ${wsUrl}`);
+    if (import.meta.env.DEV) {
+      console.log(`Attempting WebSocket connection to: ${wsUrl}`);
+    }
     
     try {
       ws.current = new WebSocket(wsUrl);
@@ -49,7 +48,9 @@ export function useWebSocket(userId: string, onMessage: (message: any) => void) 
     ws.current.onopen = () => {
       setIsConnected(true);
       setReconnectAttempts(0);
-      console.log("WebSocket connected successfully");
+      if (import.meta.env.DEV) {
+        console.log("WebSocket connected successfully");
+      }
     };
 
     ws.current.onmessage = (event) => {
@@ -63,11 +64,15 @@ export function useWebSocket(userId: string, onMessage: (message: any) => void) 
 
     ws.current.onclose = (event) => {
       setIsConnected(false);
-      console.log(`WebSocket disconnected. Code: ${event.code}, Reason: ${event.reason}`);
+      if (import.meta.env.DEV) {
+        console.log(`WebSocket disconnected. Code: ${event.code}, Reason: ${event.reason}`);
+      }
       
       // Only attempt reconnection for abnormal closures and if under retry limit
       if (event.code !== 1000 && reconnectAttempts < maxReconnectAttempts) {
-        console.log(`Attempting reconnection in ${reconnectDelay}ms... (${reconnectAttempts + 1}/${maxReconnectAttempts})`);
+        if (import.meta.env.DEV) {
+          console.log(`Attempting reconnection in ${reconnectDelay}ms... (${reconnectAttempts + 1}/${maxReconnectAttempts})`);
+        }
         setTimeout(() => {
           setReconnectAttempts(prev => prev + 1);
           connectWebSocket();
@@ -98,7 +103,9 @@ export function useWebSocket(userId: string, onMessage: (message: any) => void) 
       ws.current.send(JSON.stringify(message));
       return true;
     } else {
-      console.warn("WebSocket not connected. Message not sent:", message);
+      if (import.meta.env.DEV) {
+        console.warn("WebSocket not connected. Message not sent:", message);
+      }
       return false;
     }
   }, []);

@@ -209,13 +209,17 @@ Response format: Always respond with JSON containing:
   }
 
   private async generateGeminiResponse(messages: ChatMessage[], systemPrompt: string): Promise<PsychologicalResponse> {
+    if (!this.gemini) {
+      throw new Error("Gemini provider not initialized");
+    }
+    
     const conversationText = messages.map(msg => 
       `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`
     ).join('\n');
 
     const prompt = `${systemPrompt}\n\nConversation:\n${conversationText}\n\nPlease respond in JSON format as specified.`;
 
-    const response = await this.gemini!.models.generateContent({
+    const response = await this.gemini.models.generateContent({
       model: this.config.current_model,
       config: {
         responseMimeType: "application/json",
@@ -260,7 +264,11 @@ Response format: Always respond with JSON containing:
   }
 
   private async generateOpenAIResponse(messages: ChatMessage[], systemPrompt: string): Promise<PsychologicalResponse> {
-    const response = await this.openai!.chat.completions.create({
+    if (!this.openai) {
+      throw new Error("OpenAI provider not initialized");
+    }
+    
+    const response = await this.openai.chat.completions.create({
       model: this.config.current_model,
       messages: [
         { role: "system", content: systemPrompt },

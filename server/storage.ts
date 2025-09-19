@@ -951,6 +951,9 @@ class MockStorage implements IStorage {
     const mockAlarm: MedicineAlarm = {
       id: `alarm_${Date.now()}`,
       ...alarm,
+      isActive: alarm.isActive ?? true,
+      notes: alarm.notes ?? null,
+      endDate: alarm.endDate ?? null,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
