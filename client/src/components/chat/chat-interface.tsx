@@ -36,13 +36,25 @@ export default function ChatInterface({ selectedAction, selectedPersonality, cha
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { sendMessage, isConnected } = useWebSocket(currentUser?.id || "", (message) => {
-    if (message.type === "chat_response" || message.type === "peer_message") {
+    if (message.type === "chat_response") {
+      // AI chat response
       addChatMessage({
-        role: "assistant", // In peer chat, "assistant" represents the other peer
+        role: "assistant",
         content: message.message,
         timestamp: new Date(),
       });
       setIsTyping(false);
+    } else if (message.type === "peer_message" && chatType === "live" && selectedUser) {
+      // Peer message - validate sender and recipient
+      if (message.fromUserId === selectedUser.id && 
+          message.toUserId === currentUser?.id &&
+          message.fromUserId !== currentUser?.id) {
+        addChatMessage({
+          role: "assistant", // In peer chat, "assistant" represents the other peer
+          content: message.message,
+          timestamp: new Date(),
+        });
+      }
     }
   });
 
@@ -75,10 +87,9 @@ export default function ChatInterface({ selectedAction, selectedPersonality, cha
     };
 
     addChatMessage(userMessage);
-    setIsTyping(true);
     
     if (chatType === "live" && selectedUser) {
-      // Send peer-to-peer message
+      // Send peer-to-peer message - no typing indicator needed
       sendMessage({
         type: "peer_message",
         message: inputMessage,
@@ -86,7 +97,8 @@ export default function ChatInterface({ selectedAction, selectedPersonality, cha
         fromUserId: currentUser?.id,
       });
     } else {
-      // Send AI chat message
+      // Send AI chat message with typing indicator
+      setIsTyping(true);
       sendMessage({
         type: "chat_message",
         message: inputMessage,
@@ -114,12 +126,8 @@ export default function ChatInterface({ selectedAction, selectedPersonality, cha
 
   const clearChat = () => {
     if (chatType === "live" && selectedUser) {
-      // For peer chat, start with empty chat or a simple greeting
-      setChatMessages([{
-        role: "assistant", // Represents system message
-        content: `You are now connected with ${selectedUser.name}. Start your conversation!`,
-        timestamp: new Date(),
-      }]);
+      // For peer chat, start with empty chat
+      setChatMessages([]);
     } else {
       // For AI chat, use the original greeting
       setChatMessages([{
@@ -280,7 +288,7 @@ export default function ChatInterface({ selectedAction, selectedPersonality, cha
             />
             <Button
               onClick={handleSendMessage}
-              disabled={!inputMessage.trim() || !isConnected || isTyping}
+              disabled={!inputMessage.trim() || !isConnected || (chatType !== "live" && isTyping)}
               className="rounded-full h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16 xl:h-18 xl:w-18 p-0 shadow-xl hover:shadow-2xl transition-all hover:scale-110 border-3 sm:border-4 lg:border-5 border-primary/20"
               data-testid="button-send-message"
             >
