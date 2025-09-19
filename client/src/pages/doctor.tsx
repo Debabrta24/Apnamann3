@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Stethoscope, Calendar, Clock, MapPin, Star, Phone, Video, UserPlus, Mail, Building, Award, X, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,8 +13,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAppContext } from "@/context/AppContext";
 import { BackButton } from "@/components/ui/back-button";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
-const doctors = [
+const staticDoctors = [
   {
     id: 1,
     name: "Dr. Priya Sharma",
@@ -171,10 +173,21 @@ const consultationTypes = [
 export default function Doctor() {
   const { currentUser } = useAppContext();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [selectedSpecialization, setSelectedSpecialization] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedConsultationType, setSelectedConsultationType] = useState("video");
   const [selectedDoctor, setSelectedDoctor] = useState(null);
+  
+  // Booking state
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [bookingData, setBookingData] = useState({
+    doctorId: "",
+    consultationType: "video",
+    preferredDate: "",
+    preferredTime: "",
+    notes: ""
+  });
   
   // Doctor registration form state
   const [registrationForm, setRegistrationForm] = useState({
@@ -192,6 +205,109 @@ export default function Doctor() {
     about: "",
     availableSlots: []
   });
+
+  // Fetch counselors from API
+  const { data: apiCounselors, isLoading: counselorsLoading } = useQuery({
+    queryKey: ["/api/counselors"],
+  });
+
+  // Use API counselors if available, fallback to static doctors with enhanced data
+  const doctors = (apiCounselors as any[])?.length > 0 ? (apiCounselors as any[]).map((counselor: any) => ({
+    ...counselor,
+    fees: "₹1,200", // Default fee, could be added to counselor schema later
+    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&face=center", // Default image
+    location: "Available Online", // Default location for online consultations
+    about: `Experienced ${counselor.specialization.toLowerCase()} with ${counselor.experience} years of experience.`,
+    education: "Medical Professional", // Default education
+    certifications: ["Licensed Professional"], // Default certifications
+    achievements: "Trusted healthcare provider" // Default achievements
+  })) : staticDoctors;
+
+  // Booking mutation
+  const bookingMutation = useMutation({
+    mutationFn: async (data: any) => {
+      // Convert time from "9:00 AM" format to "09:00"
+      const timeString = data.preferredTime;
+      const [time, period] = timeString.split(' '); // Split "9:00" and "AM"
+      const [hours, minutes] = time.split(':'); // Split "9" and "00"
+      
+      let hour24 = parseInt(hours);
+      if (period === 'PM' && hour24 !== 12) hour24 += 12;
+      if (period === 'AM' && hour24 === 12) hour24 = 0;
+      
+      const formattedTime = `${hour24.toString().padStart(2, '0')}:${minutes}`;
+      const scheduledFor = new Date(`${data.preferredDate}T${formattedTime}:00`);
+      
+      return await apiRequest("POST", "/api/appointments", {
+        userId: currentUser?.id,
+        counselorId: data.doctorId, // Using counselorId as the doctor ID for compatibility with existing schema
+        sessionType: "individual", // Default session type for doctor appointments
+        consultationType: data.consultationType, // Include the consultation type
+        scheduledFor: scheduledFor.toISOString(),
+        notes: data.notes,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/appointments/user", currentUser?.id] });
+      toast({
+        title: "Appointment booked",
+        description: `Your ${bookingData.consultationType} consultation has been scheduled successfully.`,
+      });
+      handleCloseBookingModal();
+    },
+    onError: (error) => {
+      toast({
+        title: "Booking failed",
+        description: "Unable to book appointment. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Booking handlers
+  const handleOpenBookingModal = (doctorId: number) => {
+    if (!currentUser?.id) {
+      toast({
+        title: "Authentication required",
+        description: "Please log in to book an appointment.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setBookingData({
+      doctorId: doctorId.toString(),
+      consultationType: selectedConsultationType,
+      preferredDate: "",
+      preferredTime: "",
+      notes: ""
+    });
+    setIsBookingModalOpen(true);
+  };
+
+  const handleCloseBookingModal = () => {
+    setBookingData({
+      doctorId: "",
+      consultationType: "video",
+      preferredDate: "",
+      preferredTime: "",
+      notes: ""
+    });
+    setIsBookingModalOpen(false);
+  };
+
+  const handleBookingSubmit = () => {
+    if (!bookingData.doctorId || !bookingData.preferredDate || !bookingData.preferredTime) {
+      toast({
+        title: "Missing information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    bookingMutation.mutate(bookingData);
+  };
 
   const filteredDoctors = doctors.filter(doctor => {
     const matchesSpecialization = selectedSpecialization === "all" || 
@@ -401,6 +517,7 @@ export default function Doctor() {
                             <div className="space-y-2">
                               <Button 
                                 className="w-full" 
+                                onClick={() => handleOpenBookingModal(doctor.id)}
                                 data-testid={`button-book-appointment-${doctor.id}`}
                               >
                                 <Calendar className="h-4 w-4 mr-2" />
@@ -528,7 +645,10 @@ export default function Doctor() {
                                     
                                     {/* Actions */}
                                     <div className="flex gap-3 pt-4 border-t">
-                                      <Button className="flex-1">
+                                      <Button 
+                                        className="flex-1"
+                                        onClick={() => handleOpenBookingModal(doctor.id)}
+                                      >
                                         <Calendar className="h-4 w-4 mr-2" />
                                         Book Appointment
                                       </Button>
@@ -704,6 +824,158 @@ export default function Doctor() {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Booking Modal */}
+        <Dialog open={isBookingModalOpen} onOpenChange={handleCloseBookingModal}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <div className="flex items-center justify-between">
+                <DialogTitle className="text-xl font-semibold">Book Doctor Consultation</DialogTitle>
+                <Button variant="ghost" size="sm" onClick={handleCloseBookingModal} data-testid="button-close-booking-modal">
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Schedule your consultation with our qualified doctors
+              </p>
+            </DialogHeader>
+
+            <div className="space-y-6 py-4">
+              {/* Selected Doctor Display */}
+              {bookingData.doctorId && (
+                <div className="p-4 bg-muted/30 rounded-lg">
+                  {(() => {
+                    const selectedDoctor = doctors.find(d => d.id.toString() === bookingData.doctorId);
+                    return selectedDoctor ? (
+                      <div className="flex items-center gap-3">
+                        <img 
+                          src={selectedDoctor.image} 
+                          alt={selectedDoctor.name}
+                          className="w-12 h-12 rounded-full object-cover"
+                        />
+                        <div>
+                          <h3 className="font-medium">{selectedDoctor.name}</h3>
+                          <p className="text-sm text-muted-foreground">{selectedDoctor.specialization}</p>
+                          <p className="text-sm font-medium text-primary">{selectedDoctor.fees}</p>
+                        </div>
+                      </div>
+                    ) : null;
+                  })()}
+                </div>
+              )}
+
+              {/* Consultation Type Selection */}
+              <div>
+                <Label className="block text-sm font-medium text-card-foreground mb-3">
+                  Consultation Type
+                </Label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {consultationTypes.map((type) => {
+                    const IconComponent = type.icon;
+                    return (
+                      <label
+                        key={type.type}
+                        className={`flex items-center space-x-3 p-4 border-2 rounded-lg cursor-pointer transition-colors ${
+                          bookingData.consultationType === type.type 
+                            ? "bg-primary/10 border-primary text-primary" 
+                            : "bg-muted/50 border-transparent hover:bg-muted"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="consultationType"
+                          value={type.type}
+                          checked={bookingData.consultationType === type.type}
+                          onChange={(e) => setBookingData(prev => ({ ...prev, consultationType: e.target.value }))}
+                          className="sr-only"
+                          data-testid={`radio-consultation-${type.type}`}
+                        />
+                        <IconComponent className="h-5 w-5" />
+                        <div className="flex-1">
+                          <div className="font-medium">{type.title}</div>
+                          <div className="text-sm text-muted-foreground">{type.description}</div>
+                          <Badge variant="secondary" className="text-xs mt-1">{type.duration}</Badge>
+                        </div>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Date Selection */}
+              <div>
+                <Label htmlFor="preferredDate" className="block text-sm font-medium text-card-foreground mb-2">
+                  Preferred Date
+                </Label>
+                <Input
+                  id="preferredDate"
+                  type="date"
+                  min={new Date().toISOString().split('T')[0]}
+                  value={bookingData.preferredDate}
+                  onChange={(e) => setBookingData(prev => ({ ...prev, preferredDate: e.target.value }))}
+                  data-testid="input-booking-date"
+                />
+              </div>
+
+              {/* Time Selection */}
+              <div>
+                <Label htmlFor="preferredTime" className="block text-sm font-medium text-card-foreground mb-2">
+                  Preferred Time
+                </Label>
+                <Select 
+                  value={bookingData.preferredTime} 
+                  onValueChange={(value) => setBookingData(prev => ({ ...prev, preferredTime: value }))}
+                >
+                  <SelectTrigger data-testid="select-booking-time">
+                    <SelectValue placeholder="Select time slot" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {bookingData.doctorId && (() => {
+                      const selectedDoctor = doctors.find(d => d.id.toString() === bookingData.doctorId);
+                      return selectedDoctor?.availableSlots.map((slot) => (
+                        <SelectItem key={slot} value={slot}>{slot}</SelectItem>
+                      )) || [];
+                    })()}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Notes */}
+              <div>
+                <Label htmlFor="notes" className="block text-sm font-medium text-card-foreground mb-2">
+                  Additional Notes (Optional)
+                </Label>
+                <Textarea
+                  id="notes"
+                  placeholder="Any specific concerns or requirements..."
+                  value={bookingData.notes}
+                  onChange={(e) => setBookingData(prev => ({ ...prev, notes: e.target.value }))}
+                  data-testid="textarea-booking-notes"
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-4 border-t">
+                <Button 
+                  variant="outline" 
+                  onClick={handleCloseBookingModal}
+                  className="flex-1"
+                  data-testid="button-cancel-booking"
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={handleBookingSubmit}
+                  disabled={bookingMutation.isPending}
+                  className="flex-1"
+                  data-testid="button-confirm-booking"
+                >
+                  {bookingMutation.isPending ? "Booking..." : "Confirm Booking"}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

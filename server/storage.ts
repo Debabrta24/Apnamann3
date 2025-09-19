@@ -746,6 +746,7 @@ class MockStorage implements IStorage {
   private mockUsers = new Map<string, User>();
   private mockTransactions = new Map<string, CoinTransaction[]>();
   private mockLiveSessions = new Map<string, LiveSession[]>();
+  private mockCounselors = new Map<string, Counselor>();
 
   constructor() {
     // Initialize with some sample users and coins for testing
@@ -815,6 +816,44 @@ class MockStorage implements IStorage {
         createdAt: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
       }
     ]);
+
+    // Add sample counselors with proper UUIDs for phone consultation testing
+    const counselorsData = [
+      {
+        id: 'c1a1b2c3-d4e5-f6a7-b8c9-d0e1f2a3b4c5',
+        name: 'Dr. Priya Sharma',
+        specialization: 'Psychiatrist',
+        languages: ['English', 'Hindi', 'Bengali'],
+        experience: 8,
+        rating: 48, // 4.8 * 10
+        isAvailable: true,
+        availableSlots: ['10:00 AM', '2:00 PM', '4:30 PM']
+      },
+      {
+        id: 'c2b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6',
+        name: 'Dr. Rajesh Kumar',
+        specialization: 'Clinical Psychologist',
+        languages: ['English', 'Hindi', 'Tamil'],
+        experience: 12,
+        rating: 49, // 4.9 * 10
+        isAvailable: true,
+        availableSlots: ['9:00 AM', '11:30 AM', '3:00 PM']
+      },
+      {
+        id: 'c3c3d4e5-f6a7-b8c9-d0e1-f2a3b4c5d6e7',
+        name: 'Dr. Anita Desai',
+        specialization: 'Psychiatrist',
+        languages: ['English', 'Hindi', 'Gujarati'],
+        experience: 15,
+        rating: 47, // 4.7 * 10
+        isAvailable: true,
+        availableSlots: ['1:00 PM', '3:30 PM', '5:00 PM']
+      }
+    ];
+
+    counselorsData.forEach(counselor => {
+      this.mockCounselors.set(counselor.id, counselor as Counselor);
+    });
   }
 
   async addCoins(userId: string, amount: number, type: string, description: string, relatedEntityId?: string): Promise<CoinTransaction> {
@@ -877,7 +916,9 @@ class MockStorage implements IStorage {
   async getUserAppointments(userId: string): Promise<Appointment[]> { return []; }
   async getCounselorAppointments(counselorId: string): Promise<Appointment[]> { return []; }
   async updateAppointmentStatus(id: string, status: string): Promise<Appointment> { throw new Error('Not implemented in mock'); }
-  async getCounselors(): Promise<Counselor[]> { return []; }
+  async getCounselors(): Promise<Counselor[]> { 
+    return Array.from(this.mockCounselors.values()).filter(counselor => counselor.isAvailable);
+  }
   async createForumPost(post: InsertForumPost): Promise<ForumPost> { throw new Error('Not implemented in mock'); }
   async getForumPosts(category?: string): Promise<ForumPost[]> { return []; }
   async getForumPostWithReplies(postId: string): Promise<ForumPost & { replies: ForumReply[] }> { throw new Error('Not implemented in mock'); }
