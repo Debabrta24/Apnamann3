@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Stethoscope, Calendar, Clock, MapPin, Star, Phone, Video, UserPlus, Mail, Building, Award, X, GraduationCap } from "lucide-react";
+import { Stethoscope, Calendar, Clock, MapPin, Star, Phone, Video, UserPlus, Mail, Building, Award, X, GraduationCap, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +28,7 @@ const staticDoctors = [
     fees: "₹1,200",
     image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&face=center",
     availableSlots: ["10:00 AM", "2:00 PM", "4:30 PM"],
+    availableConsultationTypes: ["video", "phone", "inperson"],
     about: "Specializes in anxiety, depression, and stress management for college students.",
     education: "MBBS, MD Psychiatry - AIIMS Delhi",
     certifications: ["Certified CBT Therapist", "Mindfulness-Based Therapy"],
@@ -44,6 +45,7 @@ const staticDoctors = [
     fees: "₹1,000",
     image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop&face=center",
     availableSlots: ["9:00 AM", "11:30 AM", "3:00 PM"],
+    availableConsultationTypes: ["video", "phone"],
     about: "Expert in cognitive behavioral therapy and trauma counseling.",
     education: "PhD in Clinical Psychology - University of Madras",
     certifications: ["Trauma-Informed Care Specialist", "EMDR Certified"],
@@ -60,6 +62,7 @@ const staticDoctors = [
     fees: "₹1,500",
     image: "https://images.unsplash.com/photo-1594824919297-b166c1de2e63?w=300&h=300&fit=crop&face=center",
     availableSlots: ["1:00 PM", "3:30 PM", "5:00 PM"],
+    availableConsultationTypes: ["phone", "inperson"],
     about: "Focuses on mood disorders and academic stress management.",
     education: "MBBS, MD Psychiatry - Medical College Gujarat",
     certifications: ["Adolescent Psychiatry Specialist", "Family Therapy Certified"],
@@ -76,6 +79,7 @@ const staticDoctors = [
     fees: "₹800",
     image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop&face=center",
     availableSlots: ["11:00 AM", "2:30 PM", "6:00 PM"],
+    availableConsultationTypes: ["video", "phone", "inperson"],
     about: "Specializes in academic stress, relationship counseling, and career guidance for young adults.",
     education: "MA in Counseling Psychology - Fergusson College",
     certifications: ["Solution-Focused Brief Therapy", "Career Counseling Specialist"],
@@ -92,6 +96,7 @@ const staticDoctors = [
     fees: "₹2,000",
     image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop&face=center",
     availableSlots: ["9:30 AM", "1:00 PM", "4:00 PM"],
+    availableConsultationTypes: ["video", "phone"],
     about: "Senior psychiatrist with expertise in severe mental health conditions and crisis intervention.",
     education: "MBBS, MD Psychiatry - AIIMS Delhi, Fellowship in Addiction Medicine",
     certifications: ["Crisis Intervention Specialist", "Addiction Medicine Certified"],
@@ -108,6 +113,7 @@ const staticDoctors = [
     fees: "₹1,100",
     image: "https://images.unsplash.com/photo-1594824919297-b166c1de2e63?w=300&h=300&fit=crop&face=center",
     availableSlots: ["10:30 AM", "3:00 PM", "5:30 PM"],
+    availableConsultationTypes: ["video", "inperson"],
     about: "Focuses on anxiety disorders, social phobia, and confidence building for college students.",
     education: "PhD in Clinical Psychology - University of Hyderabad",
     certifications: ["Anxiety Disorders Specialist", "Group Therapy Certified"],
@@ -124,6 +130,7 @@ const staticDoctors = [
     fees: "₹1,300",
     image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop&face=center",
     availableSlots: ["8:00 AM", "12:00 PM", "6:00 PM"],
+    availableConsultationTypes: ["phone", "inperson"],
     about: "Specializes in sleep disorders, depression, and holistic mental wellness approaches.",
     education: "MBBS, MD Psychiatry - Medical College Kerala",
     certifications: ["Sleep Medicine Specialist", "Integrative Medicine Certified"],
@@ -140,10 +147,62 @@ const staticDoctors = [
     fees: "₹900",
     image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&face=center",
     availableSlots: ["9:00 AM", "1:30 PM", "7:00 PM"],
+    availableConsultationTypes: ["video", "phone"],
     about: "Expert in tech industry stress, work-life balance, and digital wellness for young professionals.",
     education: "MA in Applied Psychology - Christ University",
     certifications: ["Digital Wellness Coach", "Workplace Mental Health Specialist"],
     achievements: "Mental health consultant for 20+ tech companies in Bangalore"
+  },
+  {
+    id: 9,
+    name: "Dr. Rohan Khanna",
+    specialization: "Psychiatrist",
+    experience: "14 years",
+    rating: 4.8,
+    languages: ["English", "Hindi", "Urdu"],
+    location: "Lucknow, Uttar Pradesh",
+    fees: "₹1,400",
+    image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop&face=center",
+    availableSlots: ["8:30 AM", "2:00 PM", "5:30 PM"],
+    availableConsultationTypes: ["video", "phone", "inperson"],
+    about: "Specializes in bipolar disorders, schizophrenia, and comprehensive mental health care for young adults.",
+    education: "MBBS, MD Psychiatry - King George's Medical University",
+    certifications: ["Adult Psychiatry Board Certified", "Psychopharmacology Specialist"],
+    achievements: "Head of Psychiatry Department - Ram Manohar Lohia Hospital"
+  },
+  {
+    id: 10,
+    name: "Dr. Pooja Bansal",
+    specialization: "Clinical Psychologist",
+    experience: "10 years",
+    rating: 4.6,
+    languages: ["English", "Hindi", "Punjabi"],
+    location: "Chandigarh, Punjab",
+    fees: "₹1,000",
+    image: "https://images.unsplash.com/photo-1594824919297-b166c1de2e63?w=300&h=300&fit=crop&face=center",
+    availableSlots: ["10:00 AM", "3:30 PM", "6:30 PM"],
+    availableConsultationTypes: ["video", "inperson"],
+    about: "Expert in eating disorders, body image issues, and self-esteem counseling for college students.",
+    education: "PhD in Clinical Psychology - Panjab University",
+    certifications: ["Eating Disorders Specialist", "Body Dysmorphic Disorder Treatment Certified"],
+    achievements: "Published research on eating disorders in Indian Journal of Psychology"
+  },
+  {
+    id: 11,
+    name: "Dr. Aditya Gupta",
+    specialization: "Counseling Psychologist",
+    experience: "5 years",
+    rating: 4.4,
+    languages: ["English", "Hindi", "Rajasthani"],
+    location: "Jaipur, Rajasthan",
+    fees: "₹750",
+    image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop&face=center",
+    availableSlots: ["9:30 AM", "1:00 PM", "4:00 PM"],
+    availableConsultationTypes: ["phone", "inperson"],
+    about: "Young and enthusiastic psychologist focusing on academic pressure, peer relationships, and social anxiety.",
+    education: "MA in Counseling Psychology - Rajasthan University",
+    certifications: ["Youth Counseling Specialist", "Peer Relationship Therapy"],
+    achievements: "Counseled 300+ students at various colleges in Rajasthan"
   }
 ];
 
@@ -339,7 +398,8 @@ export default function Doctor() {
       doctor.specialization.toLowerCase().includes(selectedSpecialization.toLowerCase());
     const matchesSearch = doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       doctor.specialization.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesSpecialization && matchesSearch;
+    const matchesConsultationType = doctor.availableConsultationTypes?.includes(selectedConsultationType) || false;
+    return matchesSpecialization && matchesSearch && matchesConsultationType;
   });
 
   const handleRegistrationSubmit = (e: React.FormEvent) => {
