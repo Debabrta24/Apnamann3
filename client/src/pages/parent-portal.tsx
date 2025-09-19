@@ -15,7 +15,7 @@ import { useLocation } from "wouter";
 import { useAppContext } from "@/context/AppContext";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "@/hooks/use-translation";
-import logoUrl from '@/assets/logo.png';
+import logoUrl from '@assets/logo (1)_1758315813528.png';
 
 const languages = [
   { code: "en", name: "English" },

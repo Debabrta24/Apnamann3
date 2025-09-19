@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { User, GraduationCap, Heart, ArrowRight, ArrowLeft } from "lucide-react";
-import logoUrl from '@/assets/logo.png';
+import logoUrl from '@assets/logo (1)_1758315813528.png';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";

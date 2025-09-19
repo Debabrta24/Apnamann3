@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useAppContext } from "@/context/AppContext";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
-import logoUrl from '@/assets/logo.png';
+import logoUrl from '@assets/logo (1)_1758315813528.png';
 
 export default function Login() {
   const [email, setEmail] = useState("");

@@ -8,7 +8,7 @@ import { AppProvider, useAppContext } from "@/context/AppContext";
 import { useUsageAnalytics } from "@/lib/usage-analytics";
 import { translationService } from "@/lib/translation-service";
 import { Brain, User, Music, BookOpen, Video, MessageSquare, Gamepad2, Stethoscope, Play, Radio, Flower, Moon, Save, Phone, ChevronDown, ChevronRight, Pill, Heart, AlarmClock, X } from "lucide-react";
-import logoUrl from '@/assets/logo.png';
+import logoUrl from '@assets/logo (1)_1758315813528.png';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/layout/header";

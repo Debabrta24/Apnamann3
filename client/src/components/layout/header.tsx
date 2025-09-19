@@ -30,7 +30,7 @@ import NotificationCenter from "@/components/notifications/notification-center";
 import CoinDisplay from "@/components/coins/coin-display";
 import SmartWatchIntegrationPopup from "@/components/smartwatch-integration-popup";
 import { useTranslation } from "@/hooks/use-translation";
-import logoUrl from "@/assets/logo.png";
+import logoUrl from "@assets/logo (1)_1758315813528.png";
 
 const languages = [
   { code: "en", name: "English" },
