@@ -14,6 +14,7 @@ import { useAppContext } from "@/context/AppContext";
 import { BackButton } from "@/components/ui/back-button";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import ConsultationPayment from "@/components/payment/consultation-payment";
 
 const staticDoctors = [
   {
@@ -181,6 +182,7 @@ export default function Doctor() {
   
   // Booking state
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [bookingStep, setBookingStep] = useState<"details" | "payment" | "success">("details");
   const [bookingData, setBookingData] = useState({
     doctorId: "",
     consultationType: "video",
@@ -188,6 +190,7 @@ export default function Doctor() {
     preferredTime: "",
     notes: ""
   });
+  const [paymentIntentId, setPaymentIntentId] = useState("");
   
   // Doctor registration form state
   const [registrationForm, setRegistrationForm] = useState({
@@ -245,6 +248,8 @@ export default function Doctor() {
         consultationType: data.consultationType, // Include the consultation type
         scheduledFor: scheduledFor.toISOString(),
         notes: data.notes,
+        paymentAmount: data.paymentAmount || null,
+        paymentIntentId: data.paymentIntentId || null,
       });
     },
     onSuccess: () => {
@@ -293,6 +298,8 @@ export default function Doctor() {
       preferredTime: "",
       notes: ""
     });
+    setBookingStep("details");
+    setPaymentIntentId("");
     setIsBookingModalOpen(false);
   };
 
@@ -306,7 +313,29 @@ export default function Doctor() {
       return;
     }
 
-    bookingMutation.mutate(bookingData);
+    // Proceed to payment step
+    setBookingStep("payment");
+  };
+
+  const handlePaymentSuccess = (paymentIntentId: string) => {
+    setPaymentIntentId(paymentIntentId);
+    
+    // Include payment information in booking data
+    const selectedDoctor = doctors.find(d => d.id.toString() === bookingData.doctorId);
+    const paymentAmount = selectedDoctor ? parseInt(selectedDoctor.fees.replace(/[^0-9]/g, '')) : 1000;
+    
+    const bookingWithPayment = {
+      ...bookingData,
+      paymentStatus: "completed",
+      paymentAmount: paymentAmount * 100, // Convert to paise
+      paymentIntentId: paymentIntentId
+    };
+    
+    bookingMutation.mutate(bookingWithPayment);
+  };
+
+  const handlePaymentCancel = () => {
+    setBookingStep("details");
   };
 
   const filteredDoctors = doctors.filter(doctor => {
@@ -841,28 +870,30 @@ export default function Doctor() {
             </DialogHeader>
 
             <div className="space-y-6 py-4">
-              {/* Selected Doctor Display */}
-              {bookingData.doctorId && (
-                <div className="p-4 bg-muted/30 rounded-lg">
-                  {(() => {
-                    const selectedDoctor = doctors.find(d => d.id.toString() === bookingData.doctorId);
-                    return selectedDoctor ? (
-                      <div className="flex items-center gap-3">
-                        <img 
-                          src={selectedDoctor.image} 
-                          alt={selectedDoctor.name}
-                          className="w-12 h-12 rounded-full object-cover"
-                        />
-                        <div>
-                          <h3 className="font-medium">{selectedDoctor.name}</h3>
-                          <p className="text-sm text-muted-foreground">{selectedDoctor.specialization}</p>
-                          <p className="text-sm font-medium text-primary">{selectedDoctor.fees}</p>
-                        </div>
-                      </div>
-                    ) : null;
-                  })()}
-                </div>
-              )}
+              {bookingStep === "details" && (
+                <>
+                  {/* Selected Doctor Display */}
+                  {bookingData.doctorId && (
+                    <div className="p-4 bg-muted/30 rounded-lg">
+                      {(() => {
+                        const selectedDoctor = doctors.find(d => d.id.toString() === bookingData.doctorId);
+                        return selectedDoctor ? (
+                          <div className="flex items-center gap-3">
+                            <img 
+                              src={selectedDoctor.image} 
+                              alt={selectedDoctor.name}
+                              className="w-12 h-12 rounded-full object-cover"
+                            />
+                            <div>
+                              <h3 className="font-medium">{selectedDoctor.name}</h3>
+                              <p className="text-sm text-muted-foreground">{selectedDoctor.specialization}</p>
+                              <p className="text-sm font-medium text-primary">{selectedDoctor.fees}</p>
+                            </div>
+                          </div>
+                        ) : null;
+                      })()}
+                    </div>
+                  )}
 
               {/* Consultation Type Selection */}
               <div>
@@ -954,25 +985,54 @@ export default function Doctor() {
                 />
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex gap-3 pt-4 border-t">
-                <Button 
-                  variant="outline" 
-                  onClick={handleCloseBookingModal}
-                  className="flex-1"
-                  data-testid="button-cancel-booking"
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  onClick={handleBookingSubmit}
-                  disabled={bookingMutation.isPending}
-                  className="flex-1"
-                  data-testid="button-confirm-booking"
-                >
-                  {bookingMutation.isPending ? "Booking..." : "Confirm Booking"}
-                </Button>
-              </div>
+                  {/* Action Buttons */}
+                  <div className="flex gap-3 pt-4 border-t">
+                    <Button 
+                      variant="outline" 
+                      onClick={handleCloseBookingModal}
+                      className="flex-1"
+                      data-testid="button-cancel-booking"
+                    >
+                      Cancel
+                    </Button>
+                    <Button 
+                      onClick={handleBookingSubmit}
+                      disabled={bookingMutation.isPending}
+                      className="flex-1"
+                      data-testid="button-confirm-booking"
+                    >
+                      {bookingMutation.isPending ? "Booking..." : "Proceed to Payment"}
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {/* Payment Step */}
+              {bookingStep === "payment" && bookingData.doctorId && (
+                (() => {
+                  const selectedDoctor = doctors.find(d => d.id.toString() === bookingData.doctorId);
+                  const consultationType = consultationTypes.find(type => type.type === bookingData.consultationType);
+                  
+                  if (!selectedDoctor) return null;
+                  
+                  const paymentDetails = {
+                    doctorName: selectedDoctor.name,
+                    consultationType: consultationType?.title || bookingData.consultationType,
+                    date: bookingData.preferredDate,
+                    time: bookingData.preferredTime,
+                    amount: parseInt(selectedDoctor.fees.replace(/[^0-9]/g, '')),
+                    currency: "inr"
+                  };
+
+                  return (
+                    <ConsultationPayment
+                      paymentDetails={paymentDetails}
+                      onPaymentSuccess={handlePaymentSuccess}
+                      onPaymentCancel={handlePaymentCancel}
+                    />
+                  );
+                })()
+              )}
             </div>
           </DialogContent>
         </Dialog>
