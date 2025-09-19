@@ -494,8 +494,82 @@ This AI has learned from real conversation patterns and will respond authentical
 
   app.post("/api/appointments", async (req, res) => {
     try {
-      const appointmentData = insertAppointmentSchema.parse(req.body);
-      const appointment = await storage.createAppointment(appointmentData);
+      // Validate the base appointment data
+      const baseData = insertAppointmentSchema.omit({
+        paymentStatus: true,
+        paymentAmount: true,
+        paymentCurrency: true,
+        paymentIntentId: true,
+        paidAt: true
+      }).parse(req.body);
+      
+      // Normalize payment amount: always convert rupees to paise
+      let paymentAmount: number | null = null;
+      if (req.body.paymentAmount !== undefined && req.body.paymentAmount !== null) {
+        const rawAmount = req.body.paymentAmount;
+        let rupees: number;
+        
+        if (typeof rawAmount === 'string') {
+          // Extract numeric value from string (handle ₹, commas, etc.)
+          const cleanAmount = rawAmount.replace(/[^0-9.]/g, '');
+          rupees = parseFloat(cleanAmount);
+        } else {
+          rupees = Number(rawAmount);
+        }
+        
+        if (!Number.isFinite(rupees) || rupees < 0) {
+          return res.status(400).json({ message: "Invalid payment amount" });
+        }
+        
+        paymentAmount = Math.round(rupees * 100); // Convert to paise
+      }
+      
+      // Normalize payment status
+      let paymentStatus: 'pending' | 'processing' | 'completed' | 'failed' = 'pending';
+      if (req.body.paymentStatus) {
+        switch (req.body.paymentStatus) {
+          case 'succeeded':
+          case 'completed':
+            paymentStatus = 'completed';
+            break;
+          case 'failed':
+            paymentStatus = 'failed';
+            break;
+          case 'processing':
+            paymentStatus = 'processing';
+            break;
+          default:
+            paymentStatus = 'pending';
+        }
+      }
+      
+      // Validate payment integrity for completed payments
+      const paymentIntentId = req.body.paymentIntentId || null;
+      let paidAt: Date | null = null;
+      
+      if (paymentStatus === 'completed') {
+        if (!paymentIntentId || !paymentAmount) {
+          return res.status(400).json({ 
+            message: "Payment intent ID and amount are required for completed payments" 
+          });
+        }
+        paidAt = new Date();
+      }
+      
+      // Construct final appointment data
+      const appointmentData = {
+        ...baseData,
+        paymentAmount,
+        paymentCurrency: paymentAmount ? 'inr' : null,
+        paymentStatus,
+        paymentIntentId,
+        paidAt
+      };
+      
+      // Re-validate the complete appointment data
+      const validatedData = insertAppointmentSchema.parse(appointmentData);
+      
+      const appointment = await storage.createAppointment(validatedData);
       res.json(appointment);
     } catch (error: any) {
       res.status(400).json({ message: error.message });
