@@ -128,7 +128,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
 
         <div className="space-y-3 sm:space-y-2">
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-[10px] sm:text-xs px-1 py-1">
+            <div className="flex items-center justify-between text-[10px] sm:text-xs px-1 py-1 mr-2">
               <span className="font-medium">Step {step} of {totalSteps}</span>
               <span className="font-medium text-muted-foreground">{Math.round(progress)}% complete</span>
             </div>
