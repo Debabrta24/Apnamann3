@@ -110,44 +110,44 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
-      <DialogContent className="p-0 w-full max-w-sm sm:max-w-xl lg:max-w-2xl overflow-hidden my-2 sm:my-8 mx-4 rounded-xl">
+      <DialogContent className="p-0 w-full max-w-[95vw] sm:max-w-xl lg:max-w-2xl overflow-hidden my-2 sm:my-8 mx-2 sm:mx-4 rounded-lg sm:rounded-xl">
         {/* Scrollable Content Area */}
-        <div className="max-h-[75vh] overflow-y-auto px-4 sm:px-6 lg:px-8 pt-6 pb-3">
-          <DialogHeader className="pb-2">
-            <div className="flex items-center justify-center mb-2">
-              <img src={logoUrl} alt="ApnaMann Logo" className="w-8 h-8 rounded-lg object-cover" data-testid="img-logo-onboarding" />
+        <div className="max-h-[80vh] sm:max-h-[75vh] overflow-y-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-2 sm:pb-3">
+          <DialogHeader className="pb-3 sm:pb-2">
+            <div className="flex items-center justify-center mb-2 sm:mb-2">
+              <img src={logoUrl} alt="ApnaMann Logo" className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg object-cover" data-testid="img-logo-onboarding" />
             </div>
-            <DialogTitle className="flex items-center justify-center text-lg">
+            <DialogTitle className="flex items-center justify-center text-base sm:text-lg font-semibold">
               <User className="h-4 w-4 mr-2" />
               Welcome! Let's get you started
             </DialogTitle>
-            <DialogDescription className="text-sm">
+            <DialogDescription className="text-xs sm:text-sm text-center px-1">
               We need some information to personalize your experience
             </DialogDescription>
           </DialogHeader>
 
-        <div className="space-y-2">
-          <div className="space-y-1">
+        <div className="space-y-3 sm:space-y-2">
+          <div className="space-y-2">
             <div className="flex items-center justify-between text-xs sm:text-sm px-1 py-1">
               <span className="font-medium">Step {step} of {totalSteps}</span>
               <span className="font-medium text-muted-foreground">{Math.round(progress)}% complete</span>
             </div>
-            <Progress value={progress} className="h-1.5" />
+            <Progress value={progress} className="h-2 sm:h-1.5" />
           </div>
 
           {/* Step 1: Personal Information */}
           {step === 1 && (
             <Card className="rounded-lg border-0 shadow-sm bg-card/50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base flex items-center">
+              <CardHeader className="pb-2 sm:pb-2">
+                <CardTitle className="text-sm sm:text-base flex items-center font-medium">
                   <User className="h-4 w-4 mr-2" />
                   Personal Information
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2 pt-2">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4">
-                  <div className="space-y-1">
-                    <Label htmlFor="firstName" className="text-sm">First Name</Label>
+              <CardContent className="space-y-3 sm:space-y-2 pt-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName" className="text-sm font-medium">First Name</Label>
                     <Input
                       id="firstName"
                       placeholder="Enter your first name"
@@ -156,8 +156,8 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                       data-testid="input-first-name"
                     />
                   </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="lastName" className="text-sm">Last Name</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName" className="text-sm font-medium">Last Name</Label>
                     <Input
                       id="lastName"
                       placeholder="Enter your last name"
@@ -168,8 +168,8 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <Label className="text-sm">Preferred Language</Label>
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Preferred Language</Label>
                   <Select value={data.language} onValueChange={(value) => updateData("language", value)}>
                     <SelectTrigger data-testid="select-language">
                       <SelectValue />
@@ -189,15 +189,15 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
           {/* Step 2: Academic Information */}
           {step === 2 && (
             <Card className="rounded-lg border-0 shadow-sm bg-card/50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base flex items-center">
+              <CardHeader className="pb-2 sm:pb-2">
+                <CardTitle className="text-sm sm:text-base flex items-center font-medium">
                   <GraduationCap className="h-4 w-4 mr-2" />
                   Academic Information
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2 pt-2">
-                <div className="space-y-1">
-                  <Label htmlFor="institution" className="text-sm">Institution</Label>
+              <CardContent className="space-y-3 sm:space-y-2 pt-2">
+                <div className="space-y-2">
+                  <Label htmlFor="institution" className="text-sm font-medium">Institution</Label>
                   <Input
                     id="institution"
                     placeholder="e.g., IIT Delhi, Delhi University"
@@ -207,8 +207,8 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   />
                 </div>
 
-                <div className="space-y-1">
-                  <Label htmlFor="course" className="text-sm">Course/Major</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="course" className="text-sm font-medium">Course/Major</Label>
                   <Input
                     id="course"
                     placeholder="e.g., Computer Science, Psychology"
@@ -218,8 +218,8 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   />
                 </div>
 
-                <div className="space-y-1">
-                  <Label className="text-sm">Year of Study</Label>
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Year of Study</Label>
                   <Select value={data.year.toString()} onValueChange={(value) => updateData("year", parseInt(value))}>
                     <SelectTrigger data-testid="select-year">
                       <SelectValue />
@@ -241,20 +241,20 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
           {/* Step 3: Initial Screening Questions */}
           {step === 3 && (
             <Card className="rounded-lg border-0 shadow-sm bg-card/50">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base flex items-center">
+              <CardHeader className="pb-2 sm:pb-2">
+                <CardTitle className="text-sm sm:text-base flex items-center font-medium">
                   <Heart className="h-4 w-4 mr-2" />
                   Quick Wellness Check
                 </CardTitle>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground px-1">
                   These questions help us understand how to best support you
                 </p>
               </CardHeader>
-              <CardContent className="space-y-2 pt-2">
-                <div className="space-y-2">
+              <CardContent className="space-y-3 sm:space-y-2 pt-2">
+                <div className="space-y-3">
                   <Label className="text-sm font-medium">How has your mood been lately?</Label>
                   <RadioGroup value={data.mood} onValueChange={(value) => updateData("mood", value)}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="excellent" id="mood-excellent" />
                         <Label htmlFor="mood-excellent" className="text-xs">Excellent</Label>
@@ -275,10 +275,10 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   </RadioGroup>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label className="text-sm font-medium">How would you rate your current stress level?</Label>
                   <RadioGroup value={data.stress} onValueChange={(value) => updateData("stress", value)}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="low" id="stress-low" />
                         <Label htmlFor="stress-low" className="text-xs">Low</Label>
@@ -299,10 +299,10 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   </RadioGroup>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label className="text-sm font-medium">How has your sleep been?</Label>
                   <RadioGroup value={data.sleep} onValueChange={(value) => updateData("sleep", value)}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="excellent" id="sleep-excellent" />
                         <Label htmlFor="sleep-excellent" className="text-xs">Excellent</Label>
@@ -323,10 +323,10 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   </RadioGroup>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label className="text-sm font-medium">Have you sought mental health support before?</Label>
                   <RadioGroup value={data.previousHelp} onValueChange={(value) => updateData("previousHelp", value)}>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="yes" id="help-yes" />
                         <Label htmlFor="help-yes" className="text-xs">Yes</Label>
@@ -350,25 +350,25 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
         </div>
 
         {/* Navigation Buttons - Sticky Footer */}
-        <div className="sticky bottom-0 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-3 pb-[env(safe-area-inset-bottom,12px)] bg-background/95 backdrop-blur-sm border-t flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 rounded-b-xl">
+        <div className="sticky bottom-0 -mx-2 sm:-mx-6 lg:-mx-8 px-3 sm:px-6 lg:px-8 py-3 pb-[env(safe-area-inset-bottom,12px)] bg-background/95 backdrop-blur-sm border-t flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 rounded-b-lg sm:rounded-b-xl">
           <Button
             variant="outline"
             onClick={handlePrevious}
             disabled={step === 1}
             data-testid="button-previous"
-            className="w-full sm:w-auto min-w-[120px]"
+            className="w-full sm:w-auto min-w-[100px] sm:min-w-[120px] h-10 sm:h-9"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Previous
           </Button>
 
           {step < totalSteps ? (
-            <Button onClick={handleNext} data-testid="button-next" className="w-full sm:w-auto">
+            <Button onClick={handleNext} data-testid="button-next" className="w-full sm:w-auto h-10 sm:h-9">
               Next
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           ) : (
-            <Button onClick={handleComplete} data-testid="button-complete" className="w-full sm:w-auto">
+            <Button onClick={handleComplete} data-testid="button-complete" className="w-full sm:w-auto h-10 sm:h-9">
               Complete Setup
             </Button>
           )}
