@@ -110,7 +110,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
-      <DialogContent className="p-0 sm:max-w-lg w-full overflow-hidden my-2 sm:my-8 mx-4">
+      <DialogContent className="p-0 w-full max-w-sm sm:max-w-xl lg:max-w-2xl overflow-hidden my-2 sm:my-8 mx-4 rounded-xl">
         {/* Scrollable Content Area */}
         <div className="max-h-[75vh] overflow-y-auto px-6 pt-6 pb-3">
           <DialogHeader className="pb-2">
