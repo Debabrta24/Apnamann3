@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Wind, PenTool, Waves, AlertTriangle, Bot, Heart, Brain, Lightbulb, Target, Plus, Upload, FileText, File, X, Sparkles, Users, MessageCircle, User } from "lucide-react";
+import { Wind, PenTool, Waves, AlertTriangle, Bot, Heart, Brain, Lightbulb, Target, Plus, Upload, FileText, File, X, Sparkles, Users, MessageCircle, User, ArrowLeft } from "lucide-react";
 import drSarahPhoto from '@assets/generated_images/Dr_Sarah_therapist_photo_c6bcfbb6.png';
 import alexPhoto from '@assets/generated_images/Alex_life_coach_photo_9e882e79.png';
 import zenPhoto from '@assets/generated_images/Zen_mindfulness_guide_photo_17ae2476.png';
@@ -267,7 +267,7 @@ export default function Chat() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <BackButton />
+      {showPersonalities && <BackButton />}
       {showPersonalities ? (
         /* Chat Type Selection */
         <div className="space-y-6">
@@ -586,7 +586,9 @@ export default function Chat() {
                   size="sm" 
                   onClick={() => setShowPersonalities(true)}
                   data-testid={chatType === "live" ? "button-change-user" : "button-change-personality"}
+                  className="flex items-center gap-2"
                 >
+                  <ArrowLeft className="h-4 w-4" />
                   {chatType === "live" ? "Change User" : "Change AI"}
                 </Button>
               </div>
