@@ -247,6 +247,8 @@ export default function Chat() {
 
   const handleUserSelect = (user: any) => {
     setSelectedUser(user);
+    setChatType("live"); // Ensure chat type is set to live
+    setSelectedPersonality(aiPersonalities[0]); // Clear any personality conflicts
     setShowPersonalities(false);
     toast({
       title: "Connection Request Sent",
