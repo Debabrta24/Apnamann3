@@ -460,13 +460,13 @@ export default function Doctor() {
     queryKey: ["/api/counselors"],
   });
 
-  // Use API counselors if available, fallback to static doctors with enhanced data
-  const doctors = (apiCounselors as any[])?.length > 0 ? (apiCounselors as any[]).map((counselor: any, index: number) => ({
+  // Combine API counselors with static doctors for better coverage
+  const apiDoctors = (apiCounselors as any[])?.length > 0 ? (apiCounselors as any[]).map((counselor: any, index: number) => ({
     ...counselor,
     fees: "₹1,200", // Default fee, could be added to counselor schema later
     image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&face=center", // Default image
     location: index % 3 === 0 || index % 3 === 2 ? `${counselor.name?.split(' ')[0] || 'Medical'} Clinic, Mumbai` : "Available Online", // Use physical location for in-person doctors
-    about: `Experienced ${counselor.specialization.toLowerCase()} with ${counselor.experience} years of experience.`,
+    about: `Experienced ${counselor.specialization?.toLowerCase() || 'counselor'} with ${counselor.experience || '5'} years of experience.`,
     education: "Medical Professional", // Default education
     certifications: ["Licensed Professional"], // Default certifications
     achievements: "Trusted healthcare provider", // Default achievements
@@ -474,7 +474,10 @@ export default function Doctor() {
     availableSlots: ["10:00 AM", "2:00 PM", "4:30 PM"], // Default slots
     languages: ["English", "Hindi"], // Default languages
     rating: 4.5 // Default rating
-  })) : staticDoctors;
+  })) : [];
+
+  // Always combine API doctors with static doctors for comprehensive coverage
+  const doctors = [...apiDoctors, ...staticDoctors];
 
   // Booking mutation
   const bookingMutation = useMutation({
