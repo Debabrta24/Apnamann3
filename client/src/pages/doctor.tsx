@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Stethoscope, Calendar, Clock, MapPin, Star, Phone, Video, UserPlus, Mail, Building, Award, X, GraduationCap, CheckCircle } from "lucide-react";
+import { Stethoscope, Calendar, Clock, MapPin, Star, Phone, Video, UserPlus, Mail, Building, Award, X, GraduationCap, CheckCircle, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -329,7 +329,7 @@ export default function Doctor() {
     ...counselor,
     fees: "₹1,200", // Default fee, could be added to counselor schema later
     image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&face=center", // Default image
-    location: "Available Online", // Default location for online consultations
+    location: index % 3 === 0 || index % 3 === 2 ? `${counselor.name?.split(' ')[0] || 'Medical'} Clinic, Mumbai` : "Available Online", // Use physical location for in-person doctors
     about: `Experienced ${counselor.specialization.toLowerCase()} with ${counselor.experience} years of experience.`,
     education: "Medical Professional", // Default education
     certifications: ["Licensed Professional"], // Default certifications
@@ -617,6 +617,21 @@ export default function Doctor() {
                               <span className="flex items-center gap-1">
                                 <MapPin className="h-4 w-4" />
                                 {doctor.location}
+                                {selectedConsultationType === "inperson" && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      const encodedLocation = encodeURIComponent(doctor.location);
+                                      const mapWindow = window.open(`https://maps.google.com/maps?q=${encodedLocation}`, '_blank');
+                                      if (mapWindow) mapWindow.opener = null;
+                                    }}
+                                    className="ml-2 p-1 hover:bg-primary/10 rounded-full transition-colors"
+                                    title="Open in Google Maps"
+                                    data-testid={`button-maps-${doctor.id}`}
+                                  >
+                                    <Map className="h-4 w-4 text-primary hover:text-primary/80" />
+                                  </button>
+                                )}
                               </span>
                             </div>
                           </div>
@@ -764,8 +779,30 @@ export default function Doctor() {
                                       <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
                                         <MapPin className="h-5 w-5" />
                                         Location
+                                        {selectedConsultationType === "inperson" && (
+                                          <button
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              const encodedLocation = encodeURIComponent(doctor.location);
+                                              const mapWindow = window.open(`https://maps.google.com/maps?q=${encodedLocation}`, '_blank');
+                                              if (mapWindow) mapWindow.opener = null;
+                                            }}
+                                            className="ml-2 p-1 hover:bg-primary/10 rounded-full transition-colors"
+                                            title="Open in Google Maps"
+                                            data-testid={`button-maps-profile-${doctor.id}`}
+                                          >
+                                            <Map className="h-5 w-5 text-primary hover:text-primary/80" />
+                                          </button>
+                                        )}
                                       </h3>
-                                      <p className="text-muted-foreground">{doctor.location}</p>
+                                      <p className="text-muted-foreground flex items-center gap-2">
+                                        {doctor.location}
+                                        {selectedConsultationType === "inperson" && (
+                                          <span className="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-2 py-1 rounded-full">
+                                            Available for In-Person Visit
+                                          </span>
+                                        )}
+                                      </p>
                                     </div>
                                     
                                     {/* Available Slots */}
