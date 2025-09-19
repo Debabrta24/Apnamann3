@@ -112,7 +112,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
     <Dialog open={isOpen} onOpenChange={() => {}}>
       <DialogContent className="p-0 w-full max-w-sm sm:max-w-xl lg:max-w-2xl overflow-hidden my-2 sm:my-8 mx-4 rounded-xl">
         {/* Scrollable Content Area */}
-        <div className="max-h-[75vh] overflow-y-auto px-6 pt-6 pb-3">
+        <div className="max-h-[75vh] overflow-y-auto px-4 sm:px-6 lg:px-8 pt-6 pb-3">
           <DialogHeader className="pb-2">
             <div className="flex items-center justify-center mb-2">
               <img src={logoUrl} alt="ApnaMann Logo" className="w-8 h-8 rounded-lg object-cover" data-testid="img-logo-onboarding" />
@@ -137,7 +137,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
 
           {/* Step 1: Personal Information */}
           {step === 1 && (
-            <Card>
+            <Card className="rounded-lg border-0 shadow-sm bg-card/50">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center">
                   <User className="h-4 w-4 mr-2" />
@@ -145,7 +145,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 pt-2">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4">
                   <div className="space-y-1">
                     <Label htmlFor="firstName" className="text-sm">First Name</Label>
                     <Input
@@ -188,7 +188,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
 
           {/* Step 2: Academic Information */}
           {step === 2 && (
-            <Card>
+            <Card className="rounded-lg border-0 shadow-sm bg-card/50">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center">
                   <GraduationCap className="h-4 w-4 mr-2" />
@@ -240,7 +240,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
 
           {/* Step 3: Initial Screening Questions */}
           {step === 3 && (
-            <Card>
+            <Card className="rounded-lg border-0 shadow-sm bg-card/50">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center">
                   <Heart className="h-4 w-4 mr-2" />
@@ -254,7 +254,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">How has your mood been lately?</Label>
                   <RadioGroup value={data.mood} onValueChange={(value) => updateData("mood", value)}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="excellent" id="mood-excellent" />
                         <Label htmlFor="mood-excellent" className="text-xs">Excellent</Label>
@@ -278,7 +278,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">How would you rate your current stress level?</Label>
                   <RadioGroup value={data.stress} onValueChange={(value) => updateData("stress", value)}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="low" id="stress-low" />
                         <Label htmlFor="stress-low" className="text-xs">Low</Label>
@@ -302,7 +302,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">How has your sleep been?</Label>
                   <RadioGroup value={data.sleep} onValueChange={(value) => updateData("sleep", value)}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="excellent" id="sleep-excellent" />
                         <Label htmlFor="sleep-excellent" className="text-xs">Excellent</Label>
@@ -326,7 +326,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Have you sought mental health support before?</Label>
                   <RadioGroup value={data.previousHelp} onValueChange={(value) => updateData("previousHelp", value)}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="yes" id="help-yes" />
                         <Label htmlFor="help-yes" className="text-xs">Yes</Label>
@@ -350,13 +350,13 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
         </div>
 
         {/* Navigation Buttons - Sticky Footer */}
-        <div className="sticky bottom-0 -mx-6 px-6 py-3 pb-[env(safe-area-inset-bottom,12px)] bg-background border-t flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="sticky bottom-0 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-3 pb-[env(safe-area-inset-bottom,12px)] bg-background/95 backdrop-blur-sm border-t flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 rounded-b-xl">
           <Button
             variant="outline"
             onClick={handlePrevious}
             disabled={step === 1}
             data-testid="button-previous"
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto min-w-[120px]"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Previous
