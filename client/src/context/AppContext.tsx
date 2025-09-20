@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { useLocation } from "wouter";
 import type { User } from "@/types";
 import { generateRandomName } from "@/utils/nameGenerator";
 
@@ -268,6 +269,7 @@ interface AppProviderProps {
 }
 
 export const AppProvider = ({ children }: AppProviderProps) => {
+  const [, setLocation] = useLocation();
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isOnboarding, setIsOnboarding] = useState(false);
@@ -412,6 +414,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     setCurrentUser(newUser);
     setIsOnboarding(false);
     localStorage.setItem("user", JSON.stringify(newUser));
+    
+    // Redirect to home page after onboarding completion
+    setLocation("/");
     
     // Show user mode popup after onboarding is complete
     setShowUserModePopup(true);

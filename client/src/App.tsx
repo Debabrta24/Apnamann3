@@ -201,6 +201,12 @@ function Router() {
     );
   }
 
+  // If authenticated user tries to access login page, redirect to home
+  if (isAuthenticated && !isOnboarding && location === '/login') {
+    setLocation('/');
+    return null; // Prevent rendering while redirecting
+  }
+
   // Show main app with onboarding popup if needed
   return (
     <>
