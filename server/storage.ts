@@ -1294,19 +1294,43 @@ class MockStorage implements IStorage {
 }
 
 // Initialize storage - prioritize database when available
-let storage: IStorage;
-
-if (process.env.DATABASE_URL) {
-  try {
-    storage = new DatabaseStorage();
-    console.log('Using DatabaseStorage with DATABASE_URL');
-  } catch (error) {
-    console.log('DatabaseStorage initialization failed, falling back to MockStorage:', error);
-    storage = new MockStorage();
+async function initializeStorage(): Promise<IStorage> {
+  if (process.env.DATABASE_URL) {
+    try {
+      console.log('DATABASE_URL found, attempting to connect to PostgreSQL...');
+      
+      // Test database connection
+      const testStorage = new DatabaseStorage();
+      
+      // Perform a simple connection test
+      try {
+        await db().execute(sql`SELECT 1 as test`);
+        console.log('✅ PostgreSQL connection successful - Using DatabaseStorage');
+        return testStorage;
+      } catch (connectionError) {
+        console.error('❌ PostgreSQL connection failed:', connectionError);
+        console.log('Falling back to MockStorage for development');
+        return new MockStorage();
+      }
+    } catch (initError) {
+      console.error('❌ DatabaseStorage initialization failed:', initError);
+      console.log('Falling back to MockStorage for development');
+      return new MockStorage();
+    }
+  } else {
+    console.log('📝 DATABASE_URL not found in environment variables');
+    console.log('Using MockStorage for development');
+    return new MockStorage();
   }
-} else {
-  console.log('DATABASE_URL not found, using MockStorage for development');
-  storage = new MockStorage();
 }
+
+// Initialize storage asynchronously
+let storage: IStorage = new MockStorage(); // Default fallback
+initializeStorage().then(initializedStorage => {
+  storage = initializedStorage;
+}).catch(error => {
+  console.error('Storage initialization error:', error);
+  storage = new MockStorage();
+});
 
 export { storage };
