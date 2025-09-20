@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Brain, Mail, Lock, Eye, EyeOff, Users } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
@@ -15,9 +15,16 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAppContext();
+  const { login, isAuthenticated, isOnboarding } = useAppContext();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+
+  // Redirect to dashboard when user is authenticated and not in onboarding
+  useEffect(() => {
+    if (isAuthenticated && !isOnboarding) {
+      setLocation("/");
+    }
+  }, [isAuthenticated, isOnboarding, setLocation]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
