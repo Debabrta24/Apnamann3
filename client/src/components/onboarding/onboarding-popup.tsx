@@ -263,19 +263,19 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   </Label>
                   <RadioGroup value={data.mood} onValueChange={(value) => updateData("mood", value)}>
                     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-1">
-                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("mood", "excellent")}>
                         <RadioGroupItem value="excellent" id="mood-excellent" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="mood-excellent" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Excellent</Label>
                       </div>
-                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("mood", "good")}>
                         <RadioGroupItem value="good" id="mood-good" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="mood-good" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Good</Label>
                       </div>
-                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("mood", "fair")}>
                         <RadioGroupItem value="fair" id="mood-fair" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="mood-fair" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Fair</Label>
                       </div>
-                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("mood", "poor")}>
                         <RadioGroupItem value="poor" id="mood-poor" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="mood-poor" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Poor</Label>
                       </div>
@@ -289,19 +289,19 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   </Label>
                   <RadioGroup value={data.stress} onValueChange={(value) => updateData("stress", value)}>
                     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-1">
-                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("stress", "low")}>
                         <RadioGroupItem value="low" id="stress-low" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="stress-low" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Low</Label>
                       </div>
-                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("stress", "moderate")}>
                         <RadioGroupItem value="moderate" id="stress-moderate" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="stress-moderate" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Moderate</Label>
                       </div>
-                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("stress", "high")}>
                         <RadioGroupItem value="high" id="stress-high" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="stress-high" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">High</Label>
                       </div>
-                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("stress", "very-high")}>
                         <RadioGroupItem value="very-high" id="stress-very-high" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="stress-very-high" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Very High</Label>
                       </div>
@@ -315,19 +315,19 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   </Label>
                   <RadioGroup value={data.sleep} onValueChange={(value) => updateData("sleep", value)}>
                     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-1">
-                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("sleep", "excellent")}>
                         <RadioGroupItem value="excellent" id="sleep-excellent" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="sleep-excellent" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Excellent</Label>
                       </div>
-                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("sleep", "good")}>
                         <RadioGroupItem value="good" id="sleep-good" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="sleep-good" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Good</Label>
                       </div>
-                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("sleep", "fair")}>
                         <RadioGroupItem value="fair" id="sleep-fair" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="sleep-fair" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Fair</Label>
                       </div>
-                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("sleep", "poor")}>
                         <RadioGroupItem value="poor" id="sleep-poor" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="sleep-poor" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Poor</Label>
                       </div>
@@ -341,15 +341,15 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   </Label>
                   <RadioGroup value={data.previousHelp} onValueChange={(value) => updateData("previousHelp", value)}>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("previousHelp", "yes")}>
                         <RadioGroupItem value="yes" id="help-yes" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="help-yes" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Yes</Label>
                       </div>
-                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("previousHelp", "no")}>
                         <RadioGroupItem value="no" id="help-no" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="help-no" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">No</Label>
                       </div>
-                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("previousHelp", "prefer-not-to-say")}>
                         <RadioGroupItem value="prefer-not-to-say" id="help-prefer-not" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="help-prefer-not" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Prefer not to say</Label>
                       </div>
