@@ -183,7 +183,12 @@ export class DatabaseStorage implements IStorage {
   async createScreeningAssessment(assessment: InsertScreeningAssessment): Promise<ScreeningAssessment> {
     const [result] = await db()
       .insert(screeningAssessments)
-      .values(assessment)
+      .values({
+        ...assessment,
+        totalScore: 0, // Will be calculated by caller
+        riskLevel: 'minimal', // Will be set by caller
+        isHighRisk: false // Will be set by caller
+      })
       .returning();
     return result;
   }
@@ -559,7 +564,13 @@ export class DatabaseStorage implements IStorage {
   async createUserSkill(skill: InsertUserSkill): Promise<UserSkill> {
     const [result] = await db()
       .insert(userSkills)
-      .values(skill)
+      .values({
+        ...skill,
+        description: skill.description ?? null,
+        yearsOfExperience: skill.yearsOfExperience ?? 0,
+        endorsements: 0,
+        isVerified: false
+      })
       .returning();
     return result;
   }
@@ -573,9 +584,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateUserSkill(id: string, updates: Partial<UserSkill>): Promise<UserSkill> {
+    const cleanUpdates = {
+      ...updates,
+      description: updates.description === undefined ? null : updates.description,
+      yearsOfExperience: updates.yearsOfExperience === undefined ? null : updates.yearsOfExperience,
+      updatedAt: new Date()
+    };
     const [skill] = await db()
       .update(userSkills)
-      .set({ ...updates, updatedAt: new Date() })
+      .set(cleanUpdates)
       .where(eq(userSkills.id, id))
       .returning();
     return skill;
@@ -591,7 +608,15 @@ export class DatabaseStorage implements IStorage {
   async createSkillShowcase(showcase: InsertSkillShowcase): Promise<SkillShowcase> {
     const [result] = await db()
       .insert(skillShowcases)
-      .values(showcase)
+      .values({
+        ...showcase,
+        mediaUrl: showcase.mediaUrl ?? null,
+        externalUrl: showcase.externalUrl ?? null,
+        tags: showcase.tags ?? [],
+        likes: 0,
+        views: 0,
+        isFeatured: false
+      })
       .returning();
     return result;
   }
@@ -612,9 +637,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateSkillShowcase(id: string, updates: Partial<SkillShowcase>): Promise<SkillShowcase> {
+    const cleanUpdates = {
+      ...updates,
+      mediaUrl: updates.mediaUrl === undefined ? null : updates.mediaUrl,
+      externalUrl: updates.externalUrl === undefined ? null : updates.externalUrl,
+      updatedAt: new Date()
+    };
     const [showcase] = await db()
       .update(skillShowcases)
-      .set({ ...updates, updatedAt: new Date() })
+      .set(cleanUpdates)
       .where(eq(skillShowcases.id, id))
       .returning();
     return showcase;
@@ -641,7 +672,10 @@ export class DatabaseStorage implements IStorage {
     // First create the endorsement
     const [result] = await db()
       .insert(skillEndorsements)
-      .values(endorsement)
+      .values({
+        ...endorsement,
+        comment: endorsement.comment ?? null
+      })
       .returning();
 
     // Then increment the endorsement count on the skill
@@ -653,14 +687,30 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(userSkills.id, endorsement.skillId));
 
-    return result;
+    return {
+      ...result,
+      comment: result.comment ?? null
+    } as SkillEndorsement;
   }
 
   // Live sessions methods
   async createLiveSession(session: InsertLiveSession): Promise<LiveSession> {
     const [result] = await db()
       .insert(liveSessions)
-      .values(session)
+      .values({
+        ...session,
+        status: session.status ?? 'scheduled',
+        scheduledStart: session.scheduledStart ?? null,
+        actualStart: session.actualStart ?? null,
+        actualEnd: session.actualEnd ?? null,
+        isAudio: session.isAudio ?? false,
+        maxParticipants: session.maxParticipants ?? 100,
+        streamUrl: session.streamUrl ?? null,
+        thumbnailUrl: session.thumbnailUrl ?? null,
+        tags: session.tags ?? [],
+        currentViewers: 0,
+        totalViews: 0
+      })
       .returning();
     return result;
   }
@@ -689,9 +739,19 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateLiveSession(id: string, updates: Partial<LiveSession>): Promise<LiveSession> {
+    const cleanUpdates = {
+      ...updates,
+      status: updates.status === undefined ? null : updates.status,
+      scheduledStart: updates.scheduledStart === undefined ? null : updates.scheduledStart,
+      actualStart: updates.actualStart === undefined ? null : updates.actualStart,
+      actualEnd: updates.actualEnd === undefined ? null : updates.actualEnd,
+      streamUrl: updates.streamUrl === undefined ? null : updates.streamUrl,
+      thumbnailUrl: updates.thumbnailUrl === undefined ? null : updates.thumbnailUrl,
+      updatedAt: new Date()
+    };
     const [session] = await db()
       .update(liveSessions)
-      .set({ ...updates, updatedAt: new Date() })
+      .set(cleanUpdates)
       .where(eq(liveSessions.id, id))
       .returning();
     return session;

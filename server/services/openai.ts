@@ -5,12 +5,17 @@ const getOpenAIApiKey = () => {
   const apiKey = process.env.OPENAI_API_KEY || process.env.OPENAI_KEY;
   const isProduction = process.env.NODE_ENV === 'production';
   
-  if (!apiKey && isProduction) {
-    console.error("Critical production error: OpenAI API key not found in environment variables");
-    return null;
+  if (!apiKey) {
+    if (isProduction) {
+      console.error("Critical production error: OpenAI API key not found in environment variables");
+      throw new Error("OpenAI API key is required in production");
+    } else {
+      console.warn("OpenAI API key not found. AI features will be disabled in development.");
+      return null;
+    }
   }
   
-  return apiKey || "your-api-key-here";
+  return apiKey;
 };
 
 const apiKey = getOpenAIApiKey();

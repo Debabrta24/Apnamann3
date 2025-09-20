@@ -47,8 +47,8 @@ export class AIService {
       
       this.config = {
         ai_provider: "gemini",
-        openai_api_key: process.env.OPENAI_API_KEY || (isProduction ? "" : "your-openai-key-here"),
-        gemini_api_key: process.env.GEMINI_API_KEY || (isProduction ? "" : "your-gemini-key-here"),
+        openai_api_key: process.env.OPENAI_API_KEY || "",
+        gemini_api_key: process.env.GEMINI_API_KEY || "",
         current_model: "gemini-2.5-flash",
         fallback_model: "gpt-4",
         max_tokens: 2000,
@@ -58,8 +58,11 @@ export class AIService {
       // Log warning in development, but error in production
       if (isProduction) {
         console.error("Production configuration issue: Config file not found and environment variables may be missing");
+        if (!this.config.openai_api_key && !this.config.gemini_api_key) {
+          throw new Error("At least one AI provider API key must be configured in production");
+        }
       } else {
-        console.warn("Config file not found, using development defaults");
+        console.warn("Config file not found, using development defaults. AI features may be limited without API keys.");
       }
     }
   }
@@ -243,7 +246,7 @@ Response format: Always respond with JSON containing:
       contents: prompt
     });
 
-    let result = {};
+    let result: any = {};
     try {
       result = JSON.parse(response.text || "{}");
     } catch (parseError) {
@@ -252,14 +255,14 @@ Response format: Always respond with JSON containing:
     }
     
     return {
-      message: result.message || "I'm here to support you. Could you tell me more about how you're feeling?",
-      supportiveActions: result.supportiveActions || [
+      message: (result as any).message || "I'm here to support you. Could you tell me more about how you're feeling?",
+      supportiveActions: (result as any).supportiveActions || [
         "Take 5 deep breaths slowly",
         "Talk to a trusted friend or counselor",
         "Practice a grounding exercise"
       ],
-      riskLevel: result.riskLevel || "low",
-      escalationRequired: result.escalationRequired || false,
+      riskLevel: (result as any).riskLevel || "low",
+      escalationRequired: (result as any).escalationRequired || false,
     };
   }
 
@@ -282,7 +285,7 @@ Response format: Always respond with JSON containing:
       max_tokens: this.config.max_tokens,
     });
 
-    let result = {};
+    let result: any = {};
     try {
       result = JSON.parse(response.choices[0].message.content || "{}");
     } catch (parseError) {
@@ -291,14 +294,14 @@ Response format: Always respond with JSON containing:
     }
     
     return {
-      message: result.message || "I'm here to support you. Could you tell me more about how you're feeling?",
-      supportiveActions: result.supportiveActions || [
+      message: (result as any).message || "I'm here to support you. Could you tell me more about how you're feeling?",
+      supportiveActions: (result as any).supportiveActions || [
         "Take 5 deep breaths slowly",
         "Talk to a trusted friend or counselor",
         "Practice a grounding exercise"
       ],
-      riskLevel: result.riskLevel || "low",
-      escalationRequired: result.escalationRequired || false,
+      riskLevel: (result as any).riskLevel || "low",
+      escalationRequired: (result as any).escalationRequired || false,
     };
   }
 
