@@ -156,7 +156,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                       value={data.firstName}
                       onChange={(e) => updateData("firstName", e.target.value)}
                       data-testid="input-first-name"
-                      className="border-slate-300 focus:border-slate-500 focus:ring-slate-500 dark:border-slate-600 dark:focus:border-slate-400 bg-white dark:bg-slate-900"
+                      className="border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 bg-white dark:bg-slate-900 transition-all duration-200 rounded-md"
                     />
                   </div>
                   <div className="space-y-2">
@@ -167,7 +167,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                       value={data.lastName}
                       onChange={(e) => updateData("lastName", e.target.value)}
                       data-testid="input-last-name"
-                      className="border-slate-300 focus:border-slate-500 focus:ring-slate-500 dark:border-slate-600 dark:focus:border-slate-400 bg-white dark:bg-slate-900"
+                      className="border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 bg-white dark:bg-slate-900 transition-all duration-200 rounded-md"
                     />
                   </div>
                 </div>
@@ -175,7 +175,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">Preferred Language</Label>
                   <Select value={data.language} onValueChange={(value) => updateData("language", value)}>
-                    <SelectTrigger data-testid="select-language" className="border-slate-300 focus:border-slate-500 focus:ring-slate-500 dark:border-slate-600 bg-white dark:bg-slate-900">
+                    <SelectTrigger data-testid="select-language" className="border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 bg-white dark:bg-slate-900 transition-all duration-200 rounded-md">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -208,7 +208,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                     value={data.institution}
                     onChange={(e) => updateData("institution", e.target.value)}
                     data-testid="input-institution"
-                    className="border-slate-300 focus:border-slate-500 focus:ring-slate-500 dark:border-slate-600 dark:focus:border-slate-400 bg-white dark:bg-slate-900"
+                    className="border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 bg-white dark:bg-slate-900 transition-all duration-200 rounded-md"
                   />
                 </div>
 
@@ -220,14 +220,14 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                     value={data.course}
                     onChange={(e) => updateData("course", e.target.value)}
                     data-testid="input-course"
-                    className="border-slate-300 focus:border-slate-500 focus:ring-slate-500 dark:border-slate-600 dark:focus:border-slate-400 bg-white dark:bg-slate-900"
+                    className="border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 bg-white dark:bg-slate-900 transition-all duration-200 rounded-md"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">Year of Study</Label>
                   <Select value={data.year.toString()} onValueChange={(value) => updateData("year", parseInt(value))}>
-                    <SelectTrigger data-testid="select-year" className="border-slate-300 focus:border-slate-500 focus:ring-slate-500 dark:border-slate-600 bg-white dark:bg-slate-900">
+                    <SelectTrigger data-testid="select-year" className="border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 bg-white dark:bg-slate-900 transition-all duration-200 rounded-md">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
