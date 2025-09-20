@@ -176,37 +176,37 @@ export default function Login() {
 
             {/* Additional Info Sections */}
             <div className="space-y-3 sm:space-y-4">
-              <div className="text-center text-xs sm:text-[13px] text-slate-600 p-2 sm:p-3 bg-gradient-to-br from-slate-50 to-slate-100/50 backdrop-blur-sm rounded-lg border border-slate-200">
-                <p className="font-medium mb-0.5 sm:mb-1 text-slate-800">New User?</p>
+              <div className="text-center text-xs sm:text-[13px] text-teal-700 dark:text-teal-300 p-2 sm:p-3 bg-gradient-to-br from-teal-50 to-teal-100/50 dark:from-teal-950/50 dark:to-teal-900/30 backdrop-blur-sm rounded-lg border border-teal-200 dark:border-teal-800">
+                <p className="font-medium mb-0.5 sm:mb-1 text-teal-800 dark:text-teal-200">New User?</p>
                 <p className="leading-tight">Contact student services for account setup</p>
               </div>
 
               <div 
-                className="p-2 sm:p-3 bg-gradient-to-br from-blue-50 to-blue-100/50 backdrop-blur-sm rounded-lg text-xs sm:text-[13px] border border-blue-200 text-center cursor-pointer hover:from-blue-100 hover:to-blue-150 hover:border-blue-300 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                className="p-2 sm:p-3 bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-950/50 dark:to-emerald-900/30 backdrop-blur-sm rounded-lg text-xs sm:text-[13px] border border-emerald-200 dark:border-emerald-800 text-center cursor-pointer hover:from-emerald-100 hover:to-emerald-200 hover:border-emerald-300 dark:hover:from-emerald-900/70 dark:hover:to-emerald-800/50 dark:hover:border-emerald-700 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                 onClick={() => window.open('/privacy', '_blank', 'noopener,noreferrer')}
                 data-testid="div-privacy-security"
               >
-                <h4 className="font-medium text-slate-800 mb-0.5 sm:mb-1 flex items-center justify-center">
-                  <Lock className="h-3 w-3 mr-1 text-blue-600" />
+                <h4 className="font-medium text-emerald-800 dark:text-emerald-200 mb-0.5 sm:mb-1 flex items-center justify-center">
+                  <Lock className="h-3 w-3 mr-1 text-emerald-600 dark:text-emerald-400" />
                   Privacy & Security
                 </h4>
-                <p className="text-slate-600 leading-tight">
-                  <span className="font-bold text-slate-800">Nobody knows details - your parents, institute, or no one.</span>
+                <p className="text-emerald-700 dark:text-emerald-300 leading-tight">
+                  <span className="font-bold text-emerald-800 dark:text-emerald-200">Nobody knows details - your parents, institute, or no one.</span>
                 </p>
-                <p className="text-[10px] sm:text-xs text-blue-600/80 mt-0.5 sm:mt-1 font-medium">Click for full details →</p>
+                <p className="text-[10px] sm:text-xs text-emerald-700 dark:text-emerald-300 mt-0.5 sm:mt-1 font-medium">Click for full details →</p>
               </div>
 
-              <div className="p-2 sm:p-3 bg-gradient-to-br from-purple-50 to-purple-100/50 backdrop-blur-sm rounded-lg text-xs sm:text-[13px] border border-purple-200">
+              <div className="p-2 sm:p-3 bg-gradient-to-br from-orange-50 to-orange-100/50 dark:from-orange-950/50 dark:to-orange-900/30 backdrop-blur-sm rounded-lg text-xs sm:text-[13px] border border-orange-200 dark:border-orange-800">
                 <div className="text-center">
-                  <Users className="h-4 w-4 sm:h-5 sm:w-5 mx-auto text-purple-600 mb-0.5 sm:mb-1" />
-                  <h4 className="font-medium text-slate-800 mb-0.5 sm:mb-1">Parent Guide</h4>
-                  <p className="text-slate-600 mb-1.5 sm:mb-2 leading-tight">
-                    <span className="font-bold text-slate-800">Register as a student parent</span>
+                  <Users className="h-4 w-4 sm:h-5 sm:w-5 mx-auto text-orange-600 dark:text-orange-400 mb-0.5 sm:mb-1" />
+                  <h4 className="font-medium text-orange-800 dark:text-orange-200 mb-0.5 sm:mb-1">Parent Guide</h4>
+                  <p className="text-orange-700 dark:text-orange-300 mb-1.5 sm:mb-2 leading-tight">
+                    <span className="font-bold text-orange-800 dark:text-orange-200">Register as a student parent</span>
                   </p>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-7 sm:h-8 text-[10px] sm:text-xs bg-gradient-to-r from-purple-50 to-purple-100 border-purple-200 hover:bg-purple-100 hover:scale-105 active:scale-95 text-purple-700 font-medium shadow-md hover:shadow-purple-400/20 hover:shadow-lg transition-all duration-200"
+                    className="w-full h-7 sm:h-8 text-[10px] sm:text-xs bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/50 dark:to-orange-800/30 border-orange-200 dark:border-orange-700 hover:bg-orange-100 dark:hover:bg-orange-800/40 hover:scale-105 active:scale-95 text-orange-700 dark:text-orange-300 font-medium shadow-md hover:shadow-orange-400/20 hover:shadow-lg transition-all duration-200"
                     onClick={() => setLocation("/parent-portal")}
                     data-testid="button-parent-portal"
                   >
