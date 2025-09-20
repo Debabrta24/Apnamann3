@@ -80,13 +80,13 @@ export default function Login() {
   };
 
   return (
-    <div className="h-[100svh] bg-gradient-to-br from-primary/20 via-background to-secondary/20 flex items-center justify-center p-3">
-      <Card className="w-full max-w-sm sm:max-w-md lg:max-w-lg max-h-[92svh] overflow-hidden flex flex-col bg-card/70 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:bg-card/50 dark:border-white/5">
+    <div className="h-[100svh] bg-gradient-to-br from-primary/10 via-background to-secondary/20 flex items-center justify-center p-3">
+      <Card className="w-full max-w-sm sm:max-w-md lg:max-w-lg max-h-[92svh] overflow-hidden flex flex-col bg-card/90 backdrop-blur-xl border border-border shadow-[0_8px_30px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)]">
         <CardHeader className="py-2 sm:py-3 text-center flex-shrink-0">
           <div className="mx-auto mb-1 sm:mb-2 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center">
             <img src={logoUrl} alt="ApnaMann Logo" className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover" data-testid="img-logo-login" />
           </div>
-          <CardTitle className="text-base sm:text-lg font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">ApnaMann</CardTitle>
+          <CardTitle className="text-base sm:text-lg font-bold text-foreground">ApnaMann</CardTitle>
           <p className="text-xs sm:text-[13px] text-muted-foreground leading-tight">Mental Health Support • Sign in to access your platform</p>
         </CardHeader>
         
@@ -96,7 +96,7 @@ export default function Login() {
             <div className="space-y-2">
               <form onSubmit={handleLogin} className="space-y-2">
                 <div className="space-y-1">
-                  <Label htmlFor="email" className="text-[13px] font-medium">Email</Label>
+                  <Label htmlFor="email" className="text-[13px] font-medium text-foreground">Email</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
@@ -105,14 +105,14 @@ export default function Login() {
                       placeholder="your.email@student.edu"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10 h-9 text-[13px] bg-blue-50/80 dark:bg-blue-950/50 backdrop-blur-sm border-blue-200/40 dark:border-blue-800/40 hover:border-blue-300 dark:hover:border-blue-700 hover:bg-blue-100/80 dark:hover:bg-blue-900/50 focus:border-blue-400 dark:focus:border-blue-500 focus:ring-0 focus:ring-offset-0 text-blue-900 dark:text-blue-100 transition-all duration-200"
+                      className="pl-10 h-9 text-[13px] bg-muted/30 backdrop-blur-sm border-border hover:border-primary/30 hover:bg-muted/50 focus:border-primary focus:ring-0 focus:ring-offset-0 text-foreground transition-all duration-200"
                       data-testid="input-email"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <Label htmlFor="password" className="text-[13px] font-medium">Password</Label>
+                  <Label htmlFor="password" className="text-[13px] font-medium text-foreground">Password</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
@@ -121,14 +121,14 @@ export default function Login() {
                       placeholder="Enter password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10 pr-10 h-9 text-[13px] bg-green-50/80 dark:bg-green-950/50 backdrop-blur-sm border-green-200/40 dark:border-green-800/40 hover:border-green-300 dark:hover:border-green-700 hover:bg-green-100/80 dark:hover:bg-green-900/50 focus:border-green-400 dark:focus:border-green-500 focus:ring-0 focus:ring-offset-0 text-green-900 dark:text-green-100 transition-all duration-200"
+                      className="pl-10 pr-10 h-9 text-[13px] bg-muted/30 backdrop-blur-sm border-border hover:border-primary/30 hover:bg-muted/50 focus:border-primary focus:ring-0 focus:ring-offset-0 text-foreground transition-all duration-200"
                       data-testid="input-password"
                     />
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 hover:bg-primary/10"
+                      className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 hover:bg-muted/50"
                       onClick={() => setShowPassword(!showPassword)}
                       data-testid="button-toggle-password"
                     >
@@ -144,7 +144,7 @@ export default function Login() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-1" data-testid="row-auth-buttons">
                   <Button
                     type="submit"
-                    className="h-10 text-sm sm:text-xs bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:scale-105 active:scale-95 text-white font-medium shadow-lg hover:shadow-blue-500/30 hover:shadow-xl transition-all duration-200"
+                    className="h-10 text-sm sm:text-xs bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 hover:scale-105 active:scale-95 text-white font-medium shadow-lg hover:shadow-slate-500/30 hover:shadow-xl transition-all duration-200"
                     disabled={isLoading}
                     data-testid="button-signin"
                   >
@@ -152,7 +152,7 @@ export default function Login() {
                   </Button>
                   <Button
                     type="button"
-                    className="h-10 text-sm sm:text-xs bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 hover:scale-105 active:scale-95 text-white font-medium shadow-lg hover:shadow-emerald-500/30 hover:shadow-xl transition-all duration-200"
+                    className="h-10 text-sm sm:text-xs bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 hover:scale-105 active:scale-95 text-white font-medium shadow-lg hover:shadow-teal-500/30 hover:shadow-xl transition-all duration-200"
                     onClick={handleLogin}
                     disabled={isLoading}
                     data-testid="button-login"
@@ -161,12 +161,12 @@ export default function Login() {
                   </Button>
                   <Button
                     variant="outline"
-                    className="h-10 text-sm sm:text-xs bg-gradient-to-r from-red-50 to-red-100 dark:from-red-950 dark:to-red-900 border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900 hover:scale-105 active:scale-95 text-red-700 dark:text-red-300 font-medium shadow-lg hover:shadow-red-500/30 hover:shadow-xl transition-all duration-200"
+                    className="h-10 text-sm sm:text-xs bg-gradient-to-r from-gray-50 to-gray-100 border-gray-200 hover:bg-gray-100 hover:scale-105 active:scale-95 text-gray-700 font-medium shadow-lg hover:shadow-gray-400/20 hover:shadow-xl transition-all duration-200"
                     onClick={handleGoogleLogin}
                     disabled={isLoading}
                     data-testid="button-google-login"
                   >
-                    <FaGoogle className="h-4 w-4 mr-2 text-red-500" />
+                    <FaGoogle className="h-4 w-4 mr-2 text-gray-600" />
                     <span className="hidden sm:inline">Google</span>
                     <span className="sm:hidden">Sign in with Google</span>
                   </Button>
@@ -176,37 +176,37 @@ export default function Login() {
 
             {/* Additional Info Sections */}
             <div className="space-y-1.5 sm:space-y-2">
-              <div className="text-center text-xs sm:text-[13px] text-muted-foreground p-2 sm:p-3 bg-gradient-to-br from-muted/40 to-muted/20 backdrop-blur-sm rounded-lg border border-white/10">
-                <p className="font-medium mb-0.5 sm:mb-1 text-foreground">New User?</p>
+              <div className="text-center text-xs sm:text-[13px] text-slate-600 p-2 sm:p-3 bg-gradient-to-br from-slate-50 to-slate-100/50 backdrop-blur-sm rounded-lg border border-slate-200">
+                <p className="font-medium mb-0.5 sm:mb-1 text-slate-800">New User?</p>
                 <p className="leading-tight">Contact student services for account setup</p>
               </div>
 
               <div 
-                className="p-2 sm:p-3 bg-gradient-to-br from-primary/5 to-primary/10 backdrop-blur-sm rounded-lg text-xs sm:text-[13px] border border-primary/20 text-center cursor-pointer hover:from-primary/10 hover:to-primary/15 hover:border-primary/30 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                className="p-2 sm:p-3 bg-gradient-to-br from-blue-50 to-blue-100/50 backdrop-blur-sm rounded-lg text-xs sm:text-[13px] border border-blue-200 text-center cursor-pointer hover:from-blue-100 hover:to-blue-150 hover:border-blue-300 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                 onClick={() => window.open('/privacy', '_blank', 'noopener,noreferrer')}
                 data-testid="div-privacy-security"
               >
-                <h4 className="font-medium text-foreground mb-0.5 sm:mb-1 flex items-center justify-center">
-                  <Lock className="h-3 w-3 mr-1 text-primary" />
+                <h4 className="font-medium text-slate-800 mb-0.5 sm:mb-1 flex items-center justify-center">
+                  <Lock className="h-3 w-3 mr-1 text-blue-600" />
                   Privacy & Security
                 </h4>
-                <p className="text-muted-foreground leading-tight">
-                  <span className="font-bold text-foreground">Nobody knows details - your parents, institute, or no one.</span>
+                <p className="text-slate-600 leading-tight">
+                  <span className="font-bold text-slate-800">Nobody knows details - your parents, institute, or no one.</span>
                 </p>
-                <p className="text-[10px] sm:text-xs text-primary/70 mt-0.5 sm:mt-1 font-medium">Click for full details →</p>
+                <p className="text-[10px] sm:text-xs text-blue-600/80 mt-0.5 sm:mt-1 font-medium">Click for full details →</p>
               </div>
 
-              <div className="p-2 sm:p-3 bg-gradient-to-br from-secondary/10 to-secondary/5 backdrop-blur-sm rounded-lg text-xs sm:text-[13px] border border-secondary/20">
+              <div className="p-2 sm:p-3 bg-gradient-to-br from-purple-50 to-purple-100/50 backdrop-blur-sm rounded-lg text-xs sm:text-[13px] border border-purple-200">
                 <div className="text-center">
-                  <Users className="h-4 w-4 sm:h-5 sm:w-5 mx-auto text-secondary mb-0.5 sm:mb-1" />
-                  <h4 className="font-medium text-foreground mb-0.5 sm:mb-1">Parent Guide</h4>
-                  <p className="text-muted-foreground mb-1.5 sm:mb-2 leading-tight">
-                    <span className="font-bold text-foreground">Register as a student parent</span>
+                  <Users className="h-4 w-4 sm:h-5 sm:w-5 mx-auto text-purple-600 mb-0.5 sm:mb-1" />
+                  <h4 className="font-medium text-slate-800 mb-0.5 sm:mb-1">Parent Guide</h4>
+                  <p className="text-slate-600 mb-1.5 sm:mb-2 leading-tight">
+                    <span className="font-bold text-slate-800">Register as a student parent</span>
                   </p>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full h-7 sm:h-8 text-[10px] sm:text-xs bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900 border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900 hover:scale-105 active:scale-95 text-purple-700 dark:text-purple-300 font-medium shadow-md hover:shadow-purple-500/30 hover:shadow-lg transition-all duration-200"
+                    className="w-full h-7 sm:h-8 text-[10px] sm:text-xs bg-gradient-to-r from-purple-50 to-purple-100 border-purple-200 hover:bg-purple-100 hover:scale-105 active:scale-95 text-purple-700 font-medium shadow-md hover:shadow-purple-400/20 hover:shadow-lg transition-all duration-200"
                     onClick={() => setLocation("/parent-portal")}
                     data-testid="button-parent-portal"
                   >

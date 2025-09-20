@@ -3,35 +3,35 @@
 @tailwind utilities;
 
 :root {
-  /* Soft Pastels & Nature-Inspired Light Theme */
-  --background: hsl(210 40% 98%);
-  --foreground: hsl(220 13% 18%);
-  --card: hsl(210 40% 96%);
-  --card-foreground: hsl(220 13% 18%);
-  --popover: hsl(210 40% 98%);
-  --popover-foreground: hsl(220 13% 18%);
-  --primary: hsl(142 71% 45%); /* Healing green */
+  /* Professional Mental Health Theme */
+  --background: hsl(210 20% 98%);
+  --foreground: hsl(215 20% 25%);
+  --card: hsl(210 20% 97%);
+  --card-foreground: hsl(215 20% 25%);
+  --popover: hsl(210 20% 98%);
+  --popover-foreground: hsl(215 20% 25%);
+  --primary: hsl(210 50% 55%); /* Calming blue */
   --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(160 60% 95%); /* Mint green background */
-  --secondary-foreground: hsl(160 60% 20%);
-  --muted: hsl(200 20% 94%); /* Soft blue-gray */
-  --muted-foreground: hsl(220 13% 45%);
-  --accent: hsl(300 20% 88%); /* Soft lavender */
-  --accent-foreground: hsl(300 40% 25%);
-  --wellness: hsl(159 61% 51%); /* Nature green */
+  --secondary: hsl(170 25% 85%); /* Soft teal background */
+  --secondary-foreground: hsl(170 50% 30%);
+  --muted: hsl(210 15% 92%); /* Subtle gray-blue */
+  --muted-foreground: hsl(215 15% 50%);
+  --accent: hsl(200 30% 80%); /* Gentle blue-gray */
+  --accent-foreground: hsl(200 50% 30%);
+  --wellness: hsl(150 30% 60%); /* Muted sage green */
   --wellness-foreground: hsl(0 0% 100%);
-  --focus: hsl(260 60% 80%); /* Calm purple */
-  --focus-foreground: hsl(260 40% 25%);
-  --calm: hsl(195 60% 85%); /* Peaceful blue */
-  --calm-foreground: hsl(195 50% 25%);
-  --hope: hsl(45 90% 75%); /* Warm orange-yellow */
-  --hope-foreground: hsl(45 50% 25%);
-  --healing: hsl(320 30% 82%); /* Soft pink */
-  --healing-foreground: hsl(320 40% 25%);
-  --nature: hsl(120 40% 78%); /* Earthy green */
-  --nature-foreground: hsl(120 50% 20%);
-  --destructive: hsl(45 80% 75%); /* Warm orange-yellow instead of red */
-  --destructive-foreground: hsl(45 50% 25%);
+  --focus: hsl(240 30% 65%); /* Soft purple-gray */
+  --focus-foreground: hsl(240 50% 20%);
+  --calm: hsl(200 40% 75%); /* Calming blue */
+  --calm-foreground: hsl(200 60% 25%);
+  --hope: hsl(40 50% 70%); /* Warm but muted gold */
+  --hope-foreground: hsl(40 60% 25%);
+  --healing: hsl(300 20% 75%); /* Very soft lavender */
+  --healing-foreground: hsl(300 50% 25%);
+  --nature: hsl(120 25% 70%); /* Muted green */
+  --nature-foreground: hsl(120 50% 25%);
+  --destructive: hsl(35 45% 70%); /* Muted warm tone */
+  --destructive-foreground: hsl(35 60% 25%);
   --border: hsl(200 20% 88%);
   --input: hsl(210 40% 96%);
   --ring: hsl(142 71% 45%);
@@ -65,35 +65,35 @@
 }
 
 .dark {
-  /* Calming Dark Theme with Muted Colors */
-  --background: hsl(220 27% 8%);
-  --foreground: hsl(210 15% 92%);
-  --card: hsl(220 27% 12%);
-  --card-foreground: hsl(210 15% 88%);
-  --popover: hsl(220 27% 8%);
-  --popover-foreground: hsl(210 15% 92%);
-  --primary: hsl(142 45% 58%); /* Softer green for dark mode */
-  --primary-foreground: hsl(220 27% 8%);
-  --secondary: hsl(220 27% 16%);
-  --secondary-foreground: hsl(210 15% 82%);
-  --muted: hsl(220 27% 14%);
-  --muted-foreground: hsl(210 10% 65%);
-  --accent: hsl(260 30% 25%); /* Muted purple */
-  --accent-foreground: hsl(260 60% 85%);
-  --wellness: hsl(159 45% 48%); /* Dimmed nature green */
-  --wellness-foreground: hsl(220 27% 8%);
-  --focus: hsl(260 40% 55%); /* Gentle purple */
-  --focus-foreground: hsl(260 30% 95%);
-  --calm: hsl(195 40% 35%); /* Deep calm blue */
-  --calm-foreground: hsl(195 60% 88%);
-  --hope: hsl(45 60% 65%); /* Warm but dimmed */
-  --hope-foreground: hsl(45 80% 15%);
-  --healing: hsl(320 25% 55%); /* Gentle pink */
-  --healing-foreground: hsl(320 30% 95%);
-  --nature: hsl(120 30% 45%); /* Forest green */
-  --nature-foreground: hsl(120 40% 90%);
-  --destructive: hsl(45 70% 65%); /* Warm orange-yellow for dark mode */
-  --destructive-foreground: hsl(45 80% 15%);
+  /* Professional Dark Mode */
+  --background: hsl(215 25% 12%);
+  --foreground: hsl(210 15% 88%);
+  --card: hsl(215 25% 16%);
+  --card-foreground: hsl(210 15% 85%);
+  --popover: hsl(215 25% 12%);
+  --popover-foreground: hsl(210 15% 88%);
+  --primary: hsl(210 45% 55%); /* Calming blue for dark mode */
+  --primary-foreground: hsl(215 25% 12%);
+  --secondary: hsl(170 20% 20%);
+  --secondary-foreground: hsl(170 25% 75%);
+  --muted: hsl(215 20% 18%);
+  --muted-foreground: hsl(210 12% 65%);
+  --accent: hsl(200 25% 35%); /* Muted blue-gray */
+  --accent-foreground: hsl(200 40% 80%);
+  --wellness: hsl(150 25% 50%); /* Muted sage for dark */
+  --wellness-foreground: hsl(215 25% 12%);
+  --focus: hsl(240 25% 55%); /* Soft purple-gray */
+  --focus-foreground: hsl(240 40% 85%);
+  --calm: hsl(200 35% 45%); /* Calming blue */
+  --calm-foreground: hsl(200 50% 80%);
+  --hope: hsl(40 40% 60%); /* Warm but professional */
+  --hope-foreground: hsl(40 60% 20%);
+  --healing: hsl(300 15% 55%); /* Very soft lavender */
+  --healing-foreground: hsl(300 40% 80%);
+  --nature: hsl(120 20% 50%); /* Professional green */
+  --nature-foreground: hsl(120 35% 80%);
+  --destructive: hsl(35 40% 60%); /* Professional warm tone */
+  --destructive-foreground: hsl(35 50% 20%);
   --border: hsl(220 20% 18%);
   --input: hsl(220 27% 16%);
   --ring: hsl(142 45% 58%);
