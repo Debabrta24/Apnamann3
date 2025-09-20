@@ -226,6 +226,7 @@ interface AppContextType {
   isAuthenticated: boolean;
   isOnboarding: boolean;
   showStartupPopup: boolean;
+  isAuthLoading: boolean;
   login: (email: string) => void;
   logout: () => void;
   completeOnboarding: (data: OnboardingData) => void;
@@ -272,6 +273,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [isOnboarding, setIsOnboarding] = useState(false);
   const [showStartupPopup, setShowStartupPopup] = useState(false);
   const [tempEmail, setTempEmail] = useState<string | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
   
   // User mode state
   const [userMode, setUserModeState] = useState<UserMode | null>(() => {
@@ -464,6 +466,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     if (startupPopupSeen === "true") {
       setShowStartupPopup(false);
     }
+    
+    // Mark auth loading as complete
+    setIsAuthLoading(false);
   }, []);
 
   return (
@@ -482,6 +487,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       isAuthenticated,
       isOnboarding,
       showStartupPopup,
+      isAuthLoading,
       login,
       logout,
       completeOnboarding,

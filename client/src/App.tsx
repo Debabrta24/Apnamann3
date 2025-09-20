@@ -49,7 +49,7 @@ import Privacy from "@/pages/privacy";
 import NotFound from "@/pages/not-found";
 
 function Router() {
-  const { isAuthenticated, isOnboarding, showStartupPopup, completeOnboarding, closeStartupPopup, showQuoteOverlay, setShowQuoteOverlay, triggerQuoteOverlay } = useAppContext();
+  const { isAuthenticated, isOnboarding, showStartupPopup, isAuthLoading, completeOnboarding, closeStartupPopup, showQuoteOverlay, setShowQuoteOverlay, triggerQuoteOverlay } = useAppContext();
   const [location, setLocation] = useLocation();
   const { trackAction, trackPageDuration } = useUsageAnalytics();
   
@@ -158,6 +158,18 @@ function Router() {
       }
     };
   }, [sidebarOpen]);
+
+  // Show loading spinner while checking authentication
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+          <p className="text-muted-foreground text-sm">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Show startup popup first (if not seen before)
   if (showStartupPopup && !isAuthenticated) {
