@@ -112,44 +112,44 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
     <Dialog open={isOpen} onOpenChange={() => {}}>
       <DialogContent className="p-0 w-full max-w-[95vw] sm:max-w-xl lg:max-w-2xl overflow-hidden my-2 sm:my-8 mx-2 sm:mx-4 rounded-xl bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-slate-700">
         {/* Scrollable Content Area */}
-        <div className="max-h-[80vh] sm:max-h-[75vh] overflow-y-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-2 sm:pb-3">
-          <DialogHeader className="pb-4 sm:pb-6">
-            <div className="flex items-center justify-center mb-3 sm:mb-4">
-              <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
-                <img src={logoUrl} alt="ApnaMann Logo" className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg object-cover" data-testid="img-logo-onboarding" />
+        <div className="px-3 sm:px-4 lg:px-6 pt-3 sm:pt-4 pb-1 sm:pb-2">
+          <DialogHeader className="pb-2 sm:pb-3">
+            <div className="flex items-center justify-center mb-2 sm:mb-2">
+              <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
+                <img src={logoUrl} alt="ApnaMann Logo" className="w-6 h-6 sm:w-8 sm:h-8 rounded-md object-cover" data-testid="img-logo-onboarding" />
               </div>
             </div>
-            <DialogTitle className="flex items-center justify-center text-lg sm:text-xl font-semibold text-slate-800 dark:text-slate-100">
-              <User className="h-5 w-5 mr-2 text-slate-600 dark:text-slate-400" />
+            <DialogTitle className="flex items-center justify-center text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-100">
+              <User className="h-4 w-4 mr-2 text-slate-600 dark:text-slate-400" />
               Welcome! Let's get you started
             </DialogTitle>
-            <DialogDescription className="text-sm sm:text-base text-center px-2 text-slate-600 dark:text-slate-400 max-w-md mx-auto">
+            <DialogDescription className="text-xs sm:text-sm text-center px-2 text-slate-600 dark:text-slate-400 max-w-md mx-auto">
               We need some information to personalize your mental health journey
             </DialogDescription>
           </DialogHeader>
 
-        <div className="space-y-4 sm:space-y-6">
-          <div className="space-y-3 bg-slate-50 dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
-            <div className="flex items-center justify-between text-xs sm:text-sm px-1">
+        <div className="space-y-2 sm:space-y-3">
+          <div className="space-y-2 bg-slate-50 dark:bg-slate-800 rounded-lg p-2 border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center justify-between text-xs px-1">
               <span className="font-medium text-slate-700 dark:text-slate-300">Step {step} of {totalSteps}</span>
               <span className="font-medium text-slate-600 dark:text-slate-400">{Math.round(progress)}% complete</span>
             </div>
-            <Progress value={progress} className="h-2 bg-slate-200 dark:bg-slate-700" />
+            <Progress value={progress} className="h-1.5 bg-slate-200 dark:bg-slate-700" />
           </div>
 
           {/* Step 1: Personal Information */}
           {step === 1 && (
             <Card className="rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg bg-white dark:bg-slate-900">
-              <CardHeader className="pb-3 sm:pb-4 bg-slate-800 dark:bg-slate-800 text-white rounded-t-xl">
-                <CardTitle className="text-base sm:text-lg flex items-center font-semibold">
+              <CardHeader className="pb-1 sm:pb-2 bg-slate-800 dark:bg-slate-800 text-white rounded-t-lg">
+                <CardTitle className="text-sm sm:text-base flex items-center font-semibold">
                   <User className="h-5 w-5 mr-3 text-slate-300" />
                   Personal Information
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4 sm:space-y-5 pt-4 pb-5 bg-slate-50 dark:bg-slate-800 rounded-b-xl">
+              <CardContent className="space-y-2 sm:space-y-2 pt-2 pb-3 bg-slate-50 dark:bg-slate-800 rounded-b-lg">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName" className="text-sm font-medium text-slate-700 dark:text-slate-300">First Name</Label>
+                  <div className="space-y-1">
+                    <Label htmlFor="firstName" className="text-xs font-medium text-slate-700 dark:text-slate-300">First Name</Label>
                     <Input
                       id="firstName"
                       placeholder="Enter your first name"
@@ -159,8 +159,8 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                       className="border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 bg-white dark:bg-slate-900 transition-all duration-200 rounded-md"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName" className="text-sm font-medium text-slate-700 dark:text-slate-300">Last Name</Label>
+                  <div className="space-y-1">
+                    <Label htmlFor="lastName" className="text-xs font-medium text-slate-700 dark:text-slate-300">Last Name</Label>
                     <Input
                       id="lastName"
                       placeholder="Enter your last name"
@@ -173,7 +173,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">Preferred Language</Label>
+                  <Label className="text-xs font-medium text-slate-700 dark:text-slate-300">Preferred Language</Label>
                   <Select value={data.language} onValueChange={(value) => updateData("language", value)}>
                     <SelectTrigger data-testid="select-language" className="border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 bg-white dark:bg-slate-900 transition-all duration-200 rounded-md">
                       <SelectValue />
@@ -194,14 +194,14 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
           {step === 2 && (
             <Card className="rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg bg-white dark:bg-slate-900">
               <CardHeader className="pb-3 sm:pb-4 bg-slate-700 dark:bg-slate-700 text-white rounded-t-xl">
-                <CardTitle className="text-base sm:text-lg flex items-center font-semibold">
+                <CardTitle className="text-sm sm:text-base flex items-center font-semibold">
                   <GraduationCap className="h-5 w-5 mr-3 text-slate-300" />
                   Academic Information
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4 sm:space-y-5 pt-4 pb-5 bg-slate-50 dark:bg-slate-800 rounded-b-xl">
+              <CardContent className="space-y-2 sm:space-y-2 pt-2 pb-3 bg-slate-50 dark:bg-slate-800 rounded-b-lg">
                 <div className="space-y-2">
-                  <Label htmlFor="institution" className="text-sm font-medium text-slate-700 dark:text-slate-300">Institution</Label>
+                  <Label htmlFor="institution" className="text-xs font-medium text-slate-700 dark:text-slate-300">Institution</Label>
                   <Input
                     id="institution"
                     placeholder="e.g., IIT Delhi, Delhi University"
@@ -213,7 +213,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="course" className="text-sm font-medium text-slate-700 dark:text-slate-300">Course/Major</Label>
+                  <Label htmlFor="course" className="text-xs font-medium text-slate-700 dark:text-slate-300">Course/Major</Label>
                   <Input
                     id="course"
                     placeholder="e.g., Computer Science, Psychology"
@@ -225,7 +225,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">Year of Study</Label>
+                  <Label className="text-xs font-medium text-slate-700 dark:text-slate-300">Year of Study</Label>
                   <Select value={data.year.toString()} onValueChange={(value) => updateData("year", parseInt(value))}>
                     <SelectTrigger data-testid="select-year" className="border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 bg-white dark:bg-slate-900 transition-all duration-200 rounded-md">
                       <SelectValue />
@@ -248,7 +248,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
           {step === 3 && (
             <Card className="rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg bg-white dark:bg-slate-900">
               <CardHeader className="pb-3 sm:pb-4 bg-slate-600 dark:bg-slate-600 text-white rounded-t-xl">
-                <CardTitle className="text-base sm:text-lg flex items-center font-semibold">
+                <CardTitle className="text-sm sm:text-base flex items-center font-semibold">
                   <Heart className="h-5 w-5 mr-3 text-slate-300" />
                   Quick Wellness Check
                 </CardTitle>
@@ -256,26 +256,26 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   These questions help us understand how to best support your mental health journey
                 </p>
               </CardHeader>
-              <CardContent className="space-y-4 sm:space-y-5 pt-4 pb-5 bg-slate-50 dark:bg-slate-800 rounded-b-xl">
-                <div className="space-y-3 p-4 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
-                  <Label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center">
+              <CardContent className="space-y-2 sm:space-y-2 pt-2 pb-3 bg-slate-50 dark:bg-slate-800 rounded-b-lg">
+                <div className="space-y-1 p-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <Label className="text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center">
                     How has your mood been lately?
                   </Label>
                   <RadioGroup value={data.mood} onValueChange={(value) => updateData("mood", value)}>
-                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                      <div className="flex items-center space-x-2 p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-1">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <RadioGroupItem value="excellent" id="mood-excellent" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="mood-excellent" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Excellent</Label>
                       </div>
-                      <div className="flex items-center space-x-2 p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <RadioGroupItem value="good" id="mood-good" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="mood-good" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Good</Label>
                       </div>
-                      <div className="flex items-center space-x-2 p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <RadioGroupItem value="fair" id="mood-fair" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="mood-fair" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Fair</Label>
                       </div>
-                      <div className="flex items-center space-x-2 p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <RadioGroupItem value="poor" id="mood-poor" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="mood-poor" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Poor</Label>
                       </div>
@@ -283,25 +283,25 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   </RadioGroup>
                 </div>
 
-                <div className="space-y-3 p-4 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
-                  <Label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center">
+                <div className="space-y-1 p-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <Label className="text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center">
                     How would you rate your current stress level?
                   </Label>
                   <RadioGroup value={data.stress} onValueChange={(value) => updateData("stress", value)}>
-                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                      <div className="flex items-center space-x-2 p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-1">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <RadioGroupItem value="low" id="stress-low" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="stress-low" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Low</Label>
                       </div>
-                      <div className="flex items-center space-x-2 p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <RadioGroupItem value="moderate" id="stress-moderate" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="stress-moderate" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Moderate</Label>
                       </div>
-                      <div className="flex items-center space-x-2 p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <RadioGroupItem value="high" id="stress-high" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="stress-high" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">High</Label>
                       </div>
-                      <div className="flex items-center space-x-2 p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <RadioGroupItem value="very-high" id="stress-very-high" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="stress-very-high" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Very High</Label>
                       </div>
@@ -309,25 +309,25 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   </RadioGroup>
                 </div>
 
-                <div className="space-y-3 p-4 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
-                  <Label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center">
+                <div className="space-y-1 p-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <Label className="text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center">
                     How has your sleep been?
                   </Label>
                   <RadioGroup value={data.sleep} onValueChange={(value) => updateData("sleep", value)}>
-                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                      <div className="flex items-center space-x-2 p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-1">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <RadioGroupItem value="excellent" id="sleep-excellent" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="sleep-excellent" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Excellent</Label>
                       </div>
-                      <div className="flex items-center space-x-2 p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <RadioGroupItem value="good" id="sleep-good" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="sleep-good" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Good</Label>
                       </div>
-                      <div className="flex items-center space-x-2 p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <RadioGroupItem value="fair" id="sleep-fair" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="sleep-fair" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Fair</Label>
                       </div>
-                      <div className="flex items-center space-x-2 p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <RadioGroupItem value="poor" id="sleep-poor" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="sleep-poor" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Poor</Label>
                       </div>
@@ -335,21 +335,21 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                   </RadioGroup>
                 </div>
 
-                <div className="space-y-3 p-4 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
-                  <Label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center">
+                <div className="space-y-1 p-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <Label className="text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center">
                     Have you sought mental health support before?
                   </Label>
                   <RadioGroup value={data.previousHelp} onValueChange={(value) => updateData("previousHelp", value)}>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <div className="flex items-center space-x-2 p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <RadioGroupItem value="yes" id="help-yes" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="help-yes" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Yes</Label>
                       </div>
-                      <div className="flex items-center space-x-2 p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <RadioGroupItem value="no" id="help-no" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="help-no" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">No</Label>
                       </div>
-                      <div className="flex items-center space-x-2 p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <RadioGroupItem value="prefer-not-to-say" id="help-prefer-not" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="help-prefer-not" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Prefer not to say</Label>
                       </div>
@@ -364,7 +364,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
         </div>
 
         {/* Navigation Buttons - Sticky Footer */}
-        <div className="sticky bottom-0 -mx-2 sm:-mx-6 lg:-mx-8 px-3 sm:px-6 lg:px-8 py-4 pb-[env(safe-area-inset-bottom,16px)] bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-t border-slate-200 dark:border-slate-700 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-4 rounded-b-xl">
+        <div className="sticky bottom-0 -mx-3 sm:-mx-4 lg:-mx-6 px-2 sm:px-4 lg:px-6 py-2 pb-[env(safe-area-inset-bottom,8px)] bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-t border-slate-200 dark:border-slate-700 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2 rounded-b-lg">
           <Button
             variant="outline"
             onClick={handlePrevious}
