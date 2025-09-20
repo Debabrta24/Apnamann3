@@ -20,6 +20,7 @@ import QuickActionsFAB from "@/components/quick-actions-fab";
 import OnboardingPopup from "@/components/onboarding/onboarding-popup";
 import StartupPopup from "@/components/startup-popup";
 import UserModePopup from "@/components/user-mode-popup";
+import Landing from "@/pages/landing";
 import Login from "@/pages/login";
 import Dashboard from "@/pages/dashboard";
 import Chat from "@/pages/chat";
@@ -165,7 +166,8 @@ function Router() {
         <Switch>
           <Route path="/parent-portal" component={ParentPortal} />
           <Route path="/privacy" component={Privacy} />
-          <Route component={Login} />
+          <Route path="/login" component={Login} />
+          <Route component={Landing} />
         </Switch>
         <StartupPopup 
           isOpen={showStartupPopup} 
@@ -175,13 +177,14 @@ function Router() {
     );
   }
 
-  // Show login if not authenticated
+  // Show landing page if not authenticated
   if (!isAuthenticated) {
     return (
       <Switch>
         <Route path="/parent-portal" component={ParentPortal} />
         <Route path="/privacy" component={Privacy} />
-        <Route component={Login} />
+        <Route path="/login" component={Login} />
+        <Route component={Landing} />
       </Switch>
     );
   }
