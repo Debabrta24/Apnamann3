@@ -340,7 +340,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                     Have you sought mental health support before?
                   </Label>
                   <RadioGroup value={data.previousHelp} onValueChange={(value) => updateData("previousHelp", value)}>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("previousHelp", "yes")}>
                         <RadioGroupItem value="yes" id="help-yes" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="help-yes" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Yes</Label>
@@ -348,10 +348,6 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
                       <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("previousHelp", "no")}>
                         <RadioGroupItem value="no" id="help-no" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
                         <Label htmlFor="help-no" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">No</Label>
-                      </div>
-                      <div className="flex items-center space-x-1 p-1.5 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" onClick={() => updateData("previousHelp", "prefer-not-to-say")}>
-                        <RadioGroupItem value="prefer-not-to-say" id="help-prefer-not" className="border-slate-400 text-slate-600 dark:border-slate-500 dark:text-slate-400" />
-                        <Label htmlFor="help-prefer-not" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer">Prefer not to say</Label>
                       </div>
                     </div>
                   </RadioGroup>
