@@ -270,7 +270,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isOnboarding, setIsOnboarding] = useState(false);
-  const [showStartupPopup, setShowStartupPopup] = useState(true);
+  const [showStartupPopup, setShowStartupPopup] = useState(false);
   const [tempEmail, setTempEmail] = useState<string | null>(null);
   
   // User mode state
