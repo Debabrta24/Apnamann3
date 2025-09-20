@@ -112,7 +112,7 @@ export default function Login() {
                       placeholder="your.email@student.edu"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10 h-11 text-sm bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 hover:border-primary/50 hover:bg-gray-50 dark:hover:bg-gray-700 focus:border-primary focus:bg-white dark:focus:bg-gray-800 focus:ring-2 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground transition-all duration-300 shadow-sm"
+                      className="pl-10 h-11 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 text-foreground placeholder:text-muted-foreground transition-all duration-200 rounded-md"
                       data-testid="input-email"
                     />
                   </div>
@@ -128,7 +128,7 @@ export default function Login() {
                       placeholder="Enter password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10 pr-10 h-11 text-sm bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 hover:border-primary/50 hover:bg-gray-50 dark:hover:bg-gray-700 focus:border-primary focus:bg-white dark:focus:bg-gray-800 focus:ring-2 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground transition-all duration-300 shadow-sm"
+                      className="pl-10 pr-10 h-11 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-500/20 dark:focus:ring-blue-400/20 text-foreground placeholder:text-muted-foreground transition-all duration-200 rounded-md"
                       data-testid="input-password"
                     />
                     <Button
