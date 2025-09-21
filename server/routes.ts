@@ -374,6 +374,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Search routes for offline knowledge search
+  app.get("/api/search", async (req, res) => {
+    try {
+      const { q, limit } = req.query;
+      const query = q as string || '';
+      const searchLimit = limit ? parseInt(limit as string) : 10;
+      
+      const results = await storage.searchDocs(query, searchLimit);
+      res.json(results);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/search/docs", async (req, res) => {
+    try {
+      const docs = await storage.getAllSearchDocs();
+      res.json(docs);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/search/docs", async (req, res) => {
+    try {
+      const docData = req.body;
+      const doc = await storage.createSearchDoc(docData);
+      res.json(doc);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.delete("/api/search/docs/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteSearchDoc(id);
+      res.json({ success: true, message: "Document deleted" });
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
   // Custom AI Personality Routes
   app.post("/api/chat/custom-personality", upload.single('file'), async (req, res) => {
     try {

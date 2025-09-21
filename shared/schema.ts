@@ -486,6 +486,24 @@ export const insertLiveSessionSchema = createInsertSchema(liveSessions).omit({
   totalViews: true,
 });
 
+// Search documents for offline knowledge search
+export const searchDocs = pgTable("search_docs", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  url: text("url"), // Optional URL if this was sourced from web
+  tags: jsonb("tags").default([]), // Array of tag strings
+  source: text("source").notNull().default("curated"), // 'curated' or 'web'
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertSearchDocSchema = createInsertSchema(searchDocs).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -519,3 +537,5 @@ export type SkillEndorsement = typeof skillEndorsements.$inferSelect;
 export type InsertSkillEndorsement = z.infer<typeof insertSkillEndorsementSchema>;
 export type LiveSession = typeof liveSessions.$inferSelect;
 export type InsertLiveSession = z.infer<typeof insertLiveSessionSchema>;
+export type SearchDoc = typeof searchDocs.$inferSelect;
+export type InsertSearchDoc = z.infer<typeof insertSearchDocSchema>;

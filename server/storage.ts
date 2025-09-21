@@ -17,6 +17,7 @@ import {
   skillShowcases,
   skillEndorsements,
   liveSessions,
+  searchDocs,
   type User,
   type InsertUser,
   type ScreeningAssessment,
@@ -49,6 +50,8 @@ import {
   type InsertSkillEndorsement,
   type LiveSession,
   type InsertLiveSession,
+  type SearchDoc,
+  type InsertSearchDoc,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, gte, sql, count } from "drizzle-orm";
@@ -149,6 +152,13 @@ export interface IStorage {
 
   // Analytics (anonymized)
   getAnalytics(): Promise<any>;
+
+  // Search documents for offline knowledge search  
+  createSearchDoc(doc: InsertSearchDoc): Promise<SearchDoc>;
+  getAllSearchDocs(): Promise<SearchDoc[]>;
+  searchDocs(query: string, limit?: number): Promise<SearchDoc[]>;
+  updateSearchDoc(id: string, updates: Partial<SearchDoc>): Promise<SearchDoc>;
+  deleteSearchDoc(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -860,6 +870,69 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(liveSessions.id, id));
   }
+
+  // Search documents implementation
+  async createSearchDoc(insertDoc: InsertSearchDoc): Promise<SearchDoc> {
+    const [doc] = await db().insert(searchDocs).values(insertDoc).returning();
+    return doc;
+  }
+
+  async getAllSearchDocs(): Promise<SearchDoc[]> {
+    return db().select().from(searchDocs).orderBy(desc(searchDocs.createdAt));
+  }
+
+  async searchDocs(query: string, limit: number = 10): Promise<SearchDoc[]> {
+    const searchTerms = query.toLowerCase().split(' ').filter(term => term.length > 2);
+    
+    if (searchTerms.length === 0) {
+      return db().select().from(searchDocs).limit(limit);
+    }
+
+    // Simple text search using ILIKE for title and content
+    const titleConditions = searchTerms.map(term => 
+      sql`lower(${searchDocs.title}) LIKE ${'%' + term + '%'}`
+    );
+    const contentConditions = searchTerms.map(term => 
+      sql`lower(${searchDocs.content}) LIKE ${'%' + term + '%'}`
+    );
+
+    return db()
+      .select()
+      .from(searchDocs)
+      .where(
+        sql`(${sql.join(titleConditions, sql` OR `)}) OR (${sql.join(contentConditions, sql` OR `)})`
+      )
+      .orderBy(desc(searchDocs.createdAt))
+      .limit(limit);
+  }
+
+  async updateSearchDoc(id: string, updates: Partial<SearchDoc>): Promise<SearchDoc> {
+    const cleanUpdates: any = {
+      updatedAt: new Date()
+    };
+    
+    if ('title' in updates) cleanUpdates.title = updates.title;
+    if ('content' in updates) cleanUpdates.content = updates.content;
+    if ('url' in updates) cleanUpdates.url = updates.url;
+    if ('tags' in updates) cleanUpdates.tags = updates.tags;
+    if ('source' in updates) cleanUpdates.source = updates.source;
+
+    const [doc] = await db()
+      .update(searchDocs)
+      .set(cleanUpdates)
+      .where(eq(searchDocs.id, id))
+      .returning();
+    
+    if (!doc) {
+      throw new Error('Search document not found');
+    }
+    
+    return doc;
+  }
+
+  async deleteSearchDoc(id: string): Promise<void> {
+    await db().delete(searchDocs).where(eq(searchDocs.id, id));
+  }
 }
 
 // Mock storage for development when database is not available
@@ -1399,6 +1472,75 @@ class MockStorage implements IStorage {
       }
     }
     throw new Error('Session not found');
+  }
+
+  // Search documents implementation for mock storage
+  private mockSearchDocs = new Map<string, SearchDoc>();
+
+  async createSearchDoc(insertDoc: InsertSearchDoc): Promise<SearchDoc> {
+    const id = randomUUID();
+    const now = new Date();
+    const doc: SearchDoc = {
+      id,
+      title: insertDoc.title,
+      content: insertDoc.content,
+      url: insertDoc.url || null,
+      tags: insertDoc.tags || [],
+      source: insertDoc.source || 'curated',
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.mockSearchDocs.set(id, doc);
+    return doc;
+  }
+
+  async getAllSearchDocs(): Promise<SearchDoc[]> {
+    return Array.from(this.mockSearchDocs.values())
+      .sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0));
+  }
+
+  async searchDocs(query: string, limit: number = 10): Promise<SearchDoc[]> {
+    const searchTerms = query.toLowerCase().split(' ').filter(term => term.length > 2);
+    
+    if (searchTerms.length === 0) {
+      return this.getAllSearchDocs().then(docs => docs.slice(0, limit));
+    }
+
+    const allDocs = Array.from(this.mockSearchDocs.values());
+    const matchingDocs = allDocs.filter(doc => {
+      const titleLower = doc.title.toLowerCase();
+      const contentLower = doc.content.toLowerCase();
+      
+      return searchTerms.some(term => 
+        titleLower.includes(term) || contentLower.includes(term)
+      );
+    });
+
+    return matchingDocs
+      .sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0))
+      .slice(0, limit);
+  }
+
+  async updateSearchDoc(id: string, updates: Partial<SearchDoc>): Promise<SearchDoc> {
+    const doc = this.mockSearchDocs.get(id);
+    if (!doc) {
+      throw new Error('Search document not found');
+    }
+
+    const updatedDoc: SearchDoc = {
+      ...doc,
+      ...updates,
+      id: doc.id, // Preserve ID
+      createdAt: doc.createdAt, // Preserve creation date
+      updatedAt: new Date(),
+    };
+
+    this.mockSearchDocs.set(id, updatedDoc);
+    return updatedDoc;
+  }
+
+  async deleteSearchDoc(id: string): Promise<void> {
+    this.mockSearchDocs.delete(id);
   }
 }
 
