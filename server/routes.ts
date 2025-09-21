@@ -8,6 +8,7 @@ import mammoth from "mammoth";
 import { storage } from "./storage";
 import { aiService } from "./services/ai-service";
 import { LocalAIService } from "./services/local-ai";
+import { OfflineFirstAIOrchestrator } from "./services/offline-first-ai-orchestrator";
 import { ScreeningService } from "./services/screening";
 import { CrisisService } from "./services/crisis";
 import { ImageDownloaderService } from "./services/image-downloader";
