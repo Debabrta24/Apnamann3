@@ -110,9 +110,9 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
-      <DialogContent className="p-0 w-full max-w-[95vw] sm:max-w-xl lg:max-w-2xl overflow-hidden my-2 sm:my-8 mx-2 sm:mx-4 rounded-xl bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-slate-700">
+      <DialogContent className="p-0 w-full max-w-[95vw] sm:max-w-xl lg:max-w-2xl max-h-[90vh] overflow-hidden my-2 sm:my-8 mx-2 sm:mx-4 rounded-xl bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-slate-700 flex flex-col">
         {/* Scrollable Content Area */}
-        <div className="px-3 sm:px-4 lg:px-6 pt-3 sm:pt-4 pb-1 sm:pb-2">
+        <div className="px-3 sm:px-4 lg:px-6 pt-3 sm:pt-4 pb-1 sm:pb-2 overflow-y-auto flex-1 min-h-0">
           <DialogHeader className="pb-2 sm:pb-3">
             <div className="flex items-center justify-center mb-2 sm:mb-2">
               <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
@@ -360,7 +360,7 @@ export default function OnboardingPopup({ isOpen, onComplete }: OnboardingPopupP
         </div>
 
         {/* Navigation Buttons - Sticky Footer */}
-        <div className="sticky bottom-0 -mx-3 sm:-mx-4 lg:-mx-6 px-2 sm:px-4 lg:px-6 py-1.5 pb-[env(safe-area-inset-bottom,6px)] bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-t border-slate-200 dark:border-slate-700 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-1.5 rounded-b-lg">
+        <div className="flex-shrink-0 px-2 sm:px-4 lg:px-6 py-1.5 pb-[env(safe-area-inset-bottom,6px)] bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-t border-slate-200 dark:border-slate-700 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-1.5 rounded-b-lg">
           <Button
             variant="outline"
             onClick={handlePrevious}
