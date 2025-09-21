@@ -6,9 +6,8 @@ import { WebSocketServer, WebSocket } from "ws";
 import multer from "multer";
 import mammoth from "mammoth";
 import { storage } from "./storage";
-import { aiService } from "./services/ai-service";
+import { OrchestratorFactory } from "./services/orchestrator-factory";
 import { LocalAIService } from "./services/local-ai";
-import { OfflineFirstAIOrchestrator } from "./services/offline-first-ai-orchestrator";
 import { ScreeningService } from "./services/screening";
 import { CrisisService } from "./services/crisis";
 import { ImageDownloaderService } from "./services/image-downloader";
@@ -126,16 +125,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 { role: 'user', content: data.message, timestamp: new Date() }
               ]);
             } catch (error) {
-              console.error('Local AI error, falling back to regular AI:', error);
-              // Fall back to regular AI with custom prompt
-              response = await aiService.generateResponse([
+              console.error('Local AI error, falling back to orchestrator:', error);
+              // Fall back to orchestrator (which will try external then local)
+              const orchestrator = OrchestratorFactory.getOrchestrator();
+              response = await orchestrator.generateResponse([
                 ...data.chatHistory || [],
                 { role: 'user', content: data.message, timestamp: new Date() }
               ], data.personality);
             }
           } else {
-            // Use regular AI service for default responses
-            response = await aiService.generateResponse([
+            // Use orchestrator for default responses (external + local fallback)
+            const orchestrator = OrchestratorFactory.getOrchestrator();
+            response = await orchestrator.generateResponse([
               ...data.chatHistory || [],
               { role: 'user', content: data.message, timestamp: new Date() }
             ], data.personality);
@@ -355,10 +356,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/chat/guided-exercise", async (req, res) => {
     try {
       const { type } = req.body;
-      const steps = await aiService.generateGuidedExercise(type);
+      const orchestrator = OrchestratorFactory.getOrchestrator();
+      const steps = await orchestrator.generateGuidedExercise(type);
       res.json({ steps });
     } catch (error: any) {
       res.status(400).json({ message: error.message });
+    }
+  });
+
+  // AI capabilities endpoint
+  app.get("/api/ai/capabilities", async (req, res) => {
+    try {
+      const capabilities = OrchestratorFactory.getCapabilities();
+      res.json(capabilities);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
     }
   });
 
