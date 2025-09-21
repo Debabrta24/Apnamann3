@@ -1,17 +1,9 @@
 import { WhatsAppChatParser, PersonalityTraits, ConversationPattern } from './chat-parser';
 
-export interface LocalAIResponse {
-  message: string;
-  supportiveActions: string[];
-  riskLevel: "low" | "moderate" | "high";
-  escalationRequired: boolean;
-}
+// Import types from ai-provider to avoid duplication
+import type { ChatMessage, PsychologicalResponse } from './ai-provider';
 
-export interface ChatMessage {
-  role: "user" | "assistant" | "system";
-  content: string;
-  timestamp?: Date;
-}
+export type LocalAIResponse = PsychologicalResponse;
 
 export class LocalAIService {
   private personality?: PersonalityTraits;
@@ -362,5 +354,51 @@ export class LocalAIService {
 
   hasLearned(): boolean {
     return !!this.personality;
+  }
+
+  /**
+   * Set a custom personality configuration for temporary use
+   * This allows external personality configs to be applied without learning from chat
+   */
+  setCustomPersonality(config: { customPrompt?: string; name?: string; traits?: Record<string, any> }): void {
+    if (!config.customPrompt && !config.name) {
+      return; // No meaningful config provided
+    }
+
+    const customPersonality: PersonalityTraits = {
+      name: config.name || 'Custom',
+      commonPhrases: [],
+      responsePatterns: [],
+      communicationStyle: {
+        emojis: [],
+        punctuation: [],
+        exclamations: [],
+        questions: []
+      },
+      topics: new Map()
+    };
+
+    // If custom prompt provided, create basic response patterns
+    if (config.customPrompt) {
+      customPersonality.responsePatterns.push({
+        keywords: ['help', 'support', 'advice'],
+        responses: [config.customPrompt],
+        context: 'general',
+        sentiment: 'neutral',
+        frequency: 1
+      });
+    }
+
+    // Apply any traits if provided
+    if (config.traits) {
+      if (config.traits.commonPhrases && Array.isArray(config.traits.commonPhrases)) {
+        customPersonality.commonPhrases = config.traits.commonPhrases;
+      }
+      if (config.traits.emojis && Array.isArray(config.traits.emojis)) {
+        customPersonality.communicationStyle.emojis = config.traits.emojis;
+      }
+    }
+
+    this.personality = customPersonality;
   }
 }
