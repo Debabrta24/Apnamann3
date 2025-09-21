@@ -1546,6 +1546,8 @@ class MockStorage implements IStorage {
 
 // Initialize storage - prioritize database when available
 async function initializeStorage(): Promise<IStorage> {
+  let storage: IStorage;
+  
   if (process.env.DATABASE_URL) {
     try {
       console.log('DATABASE_URL found, attempting to connect to PostgreSQL...');
@@ -1557,21 +1559,52 @@ async function initializeStorage(): Promise<IStorage> {
       try {
         await db().execute(sql`SELECT 1 as test`);
         console.log('✅ PostgreSQL connection successful - Using DatabaseStorage');
-        return testStorage;
+        storage = testStorage;
       } catch (connectionError) {
         console.error('❌ PostgreSQL connection failed:', connectionError);
         console.log('Falling back to MockStorage for development');
-        return new MockStorage();
+        storage = new MockStorage();
       }
     } catch (initError) {
       console.error('❌ DatabaseStorage initialization failed:', initError);
       console.log('Falling back to MockStorage for development');
-      return new MockStorage();
+      storage = new MockStorage();
     }
   } else {
     console.log('📝 DATABASE_URL not found in environment variables');
     console.log('Using MockStorage for development');
-    return new MockStorage();
+    storage = new MockStorage();
+  }
+  
+  // Seed initial mental health resources if none exist
+  await seedInitialResources(storage);
+  
+  return storage;
+}
+
+// Seed initial mental health resources for offline capabilities
+async function seedInitialResources(storage: IStorage): Promise<void> {
+  try {
+    const existingDocs = await storage.getAllSearchDocs();
+    
+    if (existingDocs.length === 0) {
+      console.log("🌱 Seeding initial mental health resources for offline capabilities...");
+      
+      // Import seed data
+      const { mentalHealthSeedData } = await import('./seed-data');
+      
+      // Add each resource
+      for (const resource of mentalHealthSeedData) {
+        await storage.createSearchDoc(resource);
+      }
+      
+      console.log(`✅ Successfully seeded ${mentalHealthSeedData.length} mental health resources`);
+    } else {
+      console.log(`📚 Found ${existingDocs.length} existing search resources, skipping seeding`);
+    }
+  } catch (error) {
+    console.error("❌ Error seeding mental health resources:", error);
+    // Don't throw - allow app to continue even if seeding fails
   }
 }
 
