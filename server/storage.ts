@@ -173,9 +173,27 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateUser(id: string, updates: Partial<User>): Promise<User> {
+    const cleanUpdates: any = {
+      updatedAt: new Date()
+    };
+    
+    // Only include fields that are explicitly provided
+    if ('username' in updates) cleanUpdates.username = updates.username;
+    if ('password' in updates) cleanUpdates.password = updates.password;
+    if ('firstName' in updates) cleanUpdates.firstName = updates.firstName;
+    if ('lastName' in updates) cleanUpdates.lastName = updates.lastName;
+    if ('email' in updates) cleanUpdates.email = updates.email;
+    if ('anonymousName' in updates) cleanUpdates.anonymousName = updates.anonymousName ?? null;
+    if ('institution' in updates) cleanUpdates.institution = updates.institution;
+    if ('course' in updates) cleanUpdates.course = updates.course ?? null;
+    if ('year' in updates) cleanUpdates.year = updates.year ?? null;
+    if ('language' in updates) cleanUpdates.language = updates.language;
+    if ('isAdmin' in updates) cleanUpdates.isAdmin = updates.isAdmin;
+    if ('coins' in updates) cleanUpdates.coins = updates.coins;
+    
     const [user] = await db()
       .update(users)
-      .set({ ...updates, updatedAt: new Date() })
+      .set(cleanUpdates)
       .where(eq(users.id, id))
       .returning();
     return user;
@@ -430,9 +448,22 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateCustomPersonality(id: string, updates: Partial<CustomPersonality>): Promise<CustomPersonality> {
+    const cleanUpdates: any = {
+      updatedAt: new Date()
+    };
+    
+    // Only include fields that are explicitly provided
+    if ('name' in updates) cleanUpdates.name = updates.name;
+    if ('description' in updates) cleanUpdates.description = updates.description ?? null;
+    if ('customPrompt' in updates) cleanUpdates.customPrompt = updates.customPrompt;
+    if ('sourceType' in updates) cleanUpdates.sourceType = updates.sourceType;
+    if ('originalFileName' in updates) cleanUpdates.originalFileName = updates.originalFileName ?? null;
+    if ('trainingData' in updates) cleanUpdates.trainingData = updates.trainingData ?? null;
+    if ('isActive' in updates) cleanUpdates.isActive = updates.isActive;
+    
     const [personality] = await db()
       .update(customPersonalities)
-      .set({ ...updates, updatedAt: new Date() })
+      .set(cleanUpdates)
       .where(eq(customPersonalities.id, id))
       .returning();
     return personality;
@@ -547,9 +578,23 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateMedicineAlarm(id: string, updates: Partial<MedicineAlarm>): Promise<MedicineAlarm> {
+    const cleanUpdates: any = {
+      updatedAt: new Date()
+    };
+    
+    // Only include fields that are explicitly provided
+    if ('medicineName' in updates) cleanUpdates.medicineName = updates.medicineName;
+    if ('dosage' in updates) cleanUpdates.dosage = updates.dosage;
+    if ('frequency' in updates) cleanUpdates.frequency = updates.frequency;
+    if ('times' in updates) cleanUpdates.times = updates.times;
+    if ('startDate' in updates) cleanUpdates.startDate = updates.startDate;
+    if ('endDate' in updates) cleanUpdates.endDate = updates.endDate ?? null;
+    if ('isActive' in updates) cleanUpdates.isActive = updates.isActive;
+    if ('notes' in updates) cleanUpdates.notes = updates.notes ?? null;
+    
     const [alarm] = await db()
       .update(medicineAlarms)
-      .set({ ...updates, updatedAt: new Date() })
+      .set(cleanUpdates)
       .where(eq(medicineAlarms.id, id))
       .returning();
     return alarm;
@@ -568,7 +613,7 @@ export class DatabaseStorage implements IStorage {
       .values({
         ...skill,
         description: skill.description ?? null,
-        yearsOfExperience: skill.yearsOfExperience ?? 0,
+        yearsOfExperience: skill.yearsOfExperience ?? null,
         endorsements: 0,
         isVerified: false
       })
@@ -585,12 +630,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateUserSkill(id: string, updates: Partial<UserSkill>): Promise<UserSkill> {
-    const cleanUpdates = {
-      ...updates,
-      description: updates.description === undefined ? null : updates.description,
-      yearsOfExperience: updates.yearsOfExperience === undefined ? null : updates.yearsOfExperience,
+    const cleanUpdates: any = {
       updatedAt: new Date()
     };
+    
+    // Only include fields that are explicitly provided
+    if ('description' in updates) cleanUpdates.description = updates.description ?? null;
+    if ('yearsOfExperience' in updates) cleanUpdates.yearsOfExperience = updates.yearsOfExperience ?? null;
+    if ('proficiencyLevel' in updates) cleanUpdates.proficiencyLevel = updates.proficiencyLevel;
+    if ('isVerified' in updates) cleanUpdates.isVerified = updates.isVerified;
     const [skill] = await db()
       .update(userSkills)
       .set(cleanUpdates)
@@ -638,12 +686,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateSkillShowcase(id: string, updates: Partial<SkillShowcase>): Promise<SkillShowcase> {
-    const cleanUpdates = {
-      ...updates,
-      mediaUrl: updates.mediaUrl === undefined ? null : updates.mediaUrl,
-      externalUrl: updates.externalUrl === undefined ? null : updates.externalUrl,
+    const cleanUpdates: any = {
       updatedAt: new Date()
     };
+    
+    // Only include fields that are explicitly provided
+    if ('title' in updates) cleanUpdates.title = updates.title;
+    if ('description' in updates) cleanUpdates.description = updates.description ?? null;
+    if ('mediaUrl' in updates) cleanUpdates.mediaUrl = updates.mediaUrl ?? null;
+    if ('externalUrl' in updates) cleanUpdates.externalUrl = updates.externalUrl ?? null;
+    if ('tags' in updates) cleanUpdates.tags = updates.tags ?? [];
+    if ('isFeatured' in updates) cleanUpdates.isFeatured = updates.isFeatured;
     const [showcase] = await db()
       .update(skillShowcases)
       .set(cleanUpdates)
@@ -740,16 +793,23 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateLiveSession(id: string, updates: Partial<LiveSession>): Promise<LiveSession> {
-    const cleanUpdates = {
-      ...updates,
-      status: updates.status === undefined ? null : updates.status,
-      scheduledStart: updates.scheduledStart === undefined ? null : updates.scheduledStart,
-      actualStart: updates.actualStart === undefined ? null : updates.actualStart,
-      actualEnd: updates.actualEnd === undefined ? null : updates.actualEnd,
-      streamUrl: updates.streamUrl === undefined ? null : updates.streamUrl,
-      thumbnailUrl: updates.thumbnailUrl === undefined ? null : updates.thumbnailUrl,
+    const cleanUpdates: any = {
       updatedAt: new Date()
     };
+    
+    // Only include fields that are explicitly provided
+    if ('title' in updates) cleanUpdates.title = updates.title;
+    if ('description' in updates) cleanUpdates.description = updates.description ?? null;
+    if ('category' in updates) cleanUpdates.category = updates.category;
+    if ('status' in updates) cleanUpdates.status = updates.status ?? null;
+    if ('scheduledStart' in updates) cleanUpdates.scheduledStart = updates.scheduledStart ?? null;
+    if ('actualStart' in updates) cleanUpdates.actualStart = updates.actualStart ?? null;
+    if ('actualEnd' in updates) cleanUpdates.actualEnd = updates.actualEnd ?? null;
+    if ('streamUrl' in updates) cleanUpdates.streamUrl = updates.streamUrl ?? null;
+    if ('thumbnailUrl' in updates) cleanUpdates.thumbnailUrl = updates.thumbnailUrl ?? null;
+    if ('tags' in updates) cleanUpdates.tags = updates.tags ?? [];
+    if ('isAudio' in updates) cleanUpdates.isAudio = updates.isAudio as boolean;
+    if ('maxParticipants' in updates) cleanUpdates.maxParticipants = updates.maxParticipants as number;
     const [session] = await db()
       .update(liveSessions)
       .set(cleanUpdates)
@@ -1095,6 +1155,8 @@ class MockStorage implements IStorage {
     const mockSkill: UserSkill = {
       id: `skill_${Date.now()}`,
       ...skill,
+      description: skill.description ?? null,
+      yearsOfExperience: skill.yearsOfExperience ?? null,
       endorsements: 0,
       isVerified: false,
       createdAt: new Date(),
@@ -1139,6 +1201,9 @@ class MockStorage implements IStorage {
     const mockShowcase: SkillShowcase = {
       id: `showcase_${Date.now()}`,
       ...showcase,
+      mediaUrl: showcase.mediaUrl ?? null,
+      externalUrl: showcase.externalUrl ?? null,
+      tags: showcase.tags ?? [],
       likes: 0,
       views: 0,
       isFeatured: false,
@@ -1204,6 +1269,7 @@ class MockStorage implements IStorage {
     const mockEndorsement: SkillEndorsement = {
       id: `endorsement_${Date.now()}`,
       ...endorsement,
+      comment: endorsement.comment ?? null,
       createdAt: new Date(),
     };
 
@@ -1231,6 +1297,15 @@ class MockStorage implements IStorage {
     const mockSession: LiveSession = {
       id: `session_${Date.now()}`,
       ...session,
+      status: session.status ?? 'scheduled',
+      scheduledStart: session.scheduledStart ?? null,
+      actualStart: session.actualStart ?? null,
+      actualEnd: session.actualEnd ?? null,
+      streamUrl: session.streamUrl ?? null,
+      thumbnailUrl: session.thumbnailUrl ?? null,
+      tags: session.tags ?? [],
+      isAudio: session.isAudio ?? false,
+      maxParticipants: session.maxParticipants ?? 100,
       currentViewers: 0,
       totalViews: 0,
       createdAt: new Date(),

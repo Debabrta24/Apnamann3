@@ -130,7 +130,7 @@ export class LocalAIService {
     
     // Check for topics the personality is familiar with
     let topicResponse = '';
-    for (const [topic, examples] of this.personality.topics.entries()) {
+    for (const [topic, examples] of Array.from(this.personality.topics.entries())) {
       const topicKeywords = this.getTopicKeywords(topic);
       if (topicKeywords.some(keyword => messageLower.includes(keyword))) {
         const randomExample = examples[Math.floor(Math.random() * examples.length)];
