@@ -198,12 +198,15 @@ Response format: Always respond with JSON containing:
         personalityPrompt += `\n\nAdditional personality instructions: ${personality.customPrompt}`;
       }
 
+      // Check if we have a functioning AI provider
       if (this.config.ai_provider === "gemini" && this.gemini) {
         return await this.generateGeminiResponse(messages, personalityPrompt);
       } else if (this.config.ai_provider === "openai" && this.openai) {
         return await this.generateOpenAIResponse(messages, personalityPrompt);
       } else {
-        throw new Error("No AI provider configured");
+        // No valid provider available, use fallback
+        console.warn("No AI provider available, using fallback response");
+        return this.getFallbackResponse(personality);
       }
     } catch (error) {
       console.error("AI API error:", error);

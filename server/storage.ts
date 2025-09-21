@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import {
   users,
   screeningAssessments,
@@ -807,6 +808,7 @@ class MockStorage implements IStorage {
   private mockTransactions = new Map<string, CoinTransaction[]>();
   private mockLiveSessions = new Map<string, LiveSession[]>();
   private mockCounselors = new Map<string, Counselor>();
+  private mockCrisisAlerts: CrisisAlert[] = [];
 
   constructor() {
     // Initialize with some sample users and coins for testing
@@ -992,9 +994,41 @@ class MockStorage implements IStorage {
   async likeResource(id: string): Promise<void> { }
   async createMoodEntry(mood: InsertMoodEntry): Promise<MoodEntry> { throw new Error('Not implemented in mock'); }
   async getUserMoodHistory(userId: string, days?: number): Promise<MoodEntry[]> { return []; }
-  async createCrisisAlert(alert: InsertCrisisAlert): Promise<CrisisAlert> { throw new Error('Not implemented in mock'); }
-  async getActiveCrisisAlerts(): Promise<CrisisAlert[]> { return []; }
-  async resolveCrisisAlert(id: string, resolvedBy: string, notes?: string): Promise<CrisisAlert> { throw new Error('Not implemented in mock'); }
+  async createCrisisAlert(alert: InsertCrisisAlert): Promise<CrisisAlert> {
+    const mockAlert: CrisisAlert = {
+      id: randomUUID(),
+      userId: alert.userId,
+      triggerType: alert.triggerType,
+      severity: alert.severity,
+      isResolved: false,
+      resolvedBy: null,
+      notes: alert.notes || null,
+      createdAt: new Date(),
+      resolvedAt: null,
+    };
+    this.mockCrisisAlerts.push(mockAlert);
+    return mockAlert;
+  }
+  async getActiveCrisisAlerts(): Promise<CrisisAlert[]> { 
+    return this.mockCrisisAlerts.filter(alert => !alert.isResolved); 
+  }
+  async resolveCrisisAlert(id: string, resolvedBy: string, notes?: string): Promise<CrisisAlert> {
+    const alertIndex = this.mockCrisisAlerts.findIndex(alert => alert.id === id);
+    if (alertIndex === -1) {
+      throw new Error('Crisis alert not found');
+    }
+    
+    const updatedAlert = {
+      ...this.mockCrisisAlerts[alertIndex],
+      isResolved: true,
+      resolvedBy,
+      notes: notes || this.mockCrisisAlerts[alertIndex].notes,
+      resolvedAt: new Date(),
+    };
+    
+    this.mockCrisisAlerts[alertIndex] = updatedAlert;
+    return updatedAlert;
+  }
   async createChatSession(userId: string): Promise<ChatSession> { throw new Error('Not implemented in mock'); }
   async updateChatSession(id: string, messages: any[]): Promise<ChatSession> { throw new Error('Not implemented in mock'); }
   async getChatSession(id: string): Promise<ChatSession | undefined> { return undefined; }
