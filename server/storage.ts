@@ -1738,7 +1738,7 @@ class MockStorage implements IStorage {
     const now = new Date();
     let deletedCount = 0;
     
-    for (const [id, snapshot] of this.mockWebSnapshots.entries()) {
+    for (const [id, snapshot] of Array.from(this.mockWebSnapshots.entries())) {
       if (snapshot.cacheExpiresAt <= now) {
         this.mockWebSnapshots.delete(id);
         deletedCount++;

@@ -26,15 +26,11 @@ class OrchestratorFactory {
   }
 
   /**
-   * Create and configure the orchestrator based on available API keys
+   * Create and configure the orchestrator for offline-only operation
    */
   private static createOrchestrator(): OfflineFirstAIOrchestrator {
-    const hasOpenAIKey = !!(process.env.OPENAI_API_KEY || process.env.OPENAI_KEY);
-    const hasGeminiKey = !!(process.env.GEMINI_API_KEY);
-    const isProduction = process.env.NODE_ENV === 'production';
-
-    // Determine if we should force offline mode
-    const forceOfflineMode = !hasOpenAIKey && !hasGeminiKey;
+    // Always force offline mode - no external API dependencies
+    const forceOfflineMode = true;
 
     const config: Partial<OrchestratorConfig> = {
       forceOfflineMode,
@@ -48,44 +44,15 @@ class OrchestratorFactory {
 
     const orchestrator = new OfflineFirstAIOrchestrator(config);
 
-    // Register external AI provider if API keys are available
-    if (!forceOfflineMode) {
-      try {
-        const externalAdapter = new ExternalAIAdapter();
-        console.log('Registering external AI provider with orchestrator');
-        orchestrator.registerExternalProvider('external', externalAdapter);
-      } catch (error) {
-        console.warn('Failed to register external AI provider:', error);
-      }
-    }
+    // External AI providers disabled for offline-only operation
 
-    // Register Python Healthcare AI as an additional provider (always available)
-    try {
-      const pythonAI = new PythonHealthcareAIAdapter();
-      console.log('Registering Python Healthcare AI provider');
-      orchestrator.registerExternalProvider('python-healthcare', pythonAI);
-      
-      // Try to start the Python server
-      pythonAI.startPythonServer().catch(error => {
-        console.warn('Python AI server startup failed, will be used as fallback only:', error);
-      });
-    } catch (error) {
-      console.warn('Failed to register Python Healthcare AI provider:', error);
-    }
+    // Python Healthcare AI disabled for offline-only operation to ensure fast responses
 
     // Log the orchestrator configuration
-    if (forceOfflineMode) {
-      console.log('🔄 AI Orchestrator initialized in OFFLINE MODE - no external API keys detected');
-      console.log('   ✓ Local AI will handle all requests');
-      console.log('   ✓ Python Healthcare AI available for medical queries');
-      console.log('   ✓ Crisis detection available offline');
-      console.log('   ✓ Guided exercises available offline');
-    } else {
-      console.log('🌐 AI Orchestrator initialized in HYBRID MODE');
-      console.log(`   ✓ External providers: ${hasOpenAIKey ? 'OpenAI ' : ''}${hasGeminiKey ? 'Gemini ' : ''}`);
-      console.log('   ✓ Python Healthcare AI available for medical queries');
-      console.log('   ✓ Local AI fallback enabled');
-    }
+    console.log('🔄 AI Orchestrator initialized in OFFLINE MODE - working without external APIs');
+    console.log('   ✓ Local AI will handle all requests');
+    console.log('   ✓ Crisis detection available offline');
+    console.log('   ✓ Guided exercises available offline');
 
     return orchestrator;
   }
@@ -102,22 +69,19 @@ class OrchestratorFactory {
    * Check if external AI providers are available
    */
   static hasExternalProviders(): boolean {
-    const hasOpenAIKey = !!(process.env.OPENAI_API_KEY || process.env.OPENAI_KEY);
-    const hasGeminiKey = !!(process.env.GEMINI_API_KEY);
-    return hasOpenAIKey || hasGeminiKey;
+    return false; // Always offline mode
   }
 
   /**
    * Get AI capabilities information for frontend
    */
   static getCapabilities() {
-    const hasExternal = this.hasExternalProviders();
     const orchestrator = this.getOrchestrator();
     
     return {
-      offline: !hasExternal,
-      providers: hasExternal ? ['external', 'python-healthcare', 'local'] : ['python-healthcare', 'local'],
-      mode: hasExternal ? 'hybrid' : 'offline',
+      offline: true,
+      providers: ['local'],
+      mode: 'offline',
       status: orchestrator.getProviderStatus()
     };
   }
