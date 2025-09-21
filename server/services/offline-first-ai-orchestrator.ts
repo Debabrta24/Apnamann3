@@ -106,9 +106,30 @@ export class OfflineFirstAIOrchestrator implements IAIProvider {
    * Generate response with intelligent provider selection
    */
   async generateResponse(messages: ChatMessage[], personality?: PersonalityConfig): Promise<PsychologicalResponse> {
+    const userMessage = messages[messages.length - 1]?.content || '';
+    const isHealthcareQuery = this.isHealthcareRelated(userMessage);
+
     // Force offline mode if configured
     if (this.config.forceOfflineMode) {
       console.log('Offline mode forced, using LocalAI');
+      
+      // Try Python healthcare AI first for medical queries
+      if (isHealthcareQuery) {
+        const pythonProvider = this.externalProviders.get('python-healthcare');
+        if (pythonProvider) {
+          try {
+            console.log('Attempting healthcare query with Python AI');
+            return await this.executeWithTimeout(
+              () => pythonProvider.generateResponse(messages, personality),
+              15000, // 15 second timeout for Python AI
+              'Python Healthcare AI'
+            );
+          } catch (error) {
+            console.warn('Python Healthcare AI failed, falling back to LocalAI:', error);
+          }
+        }
+      }
+      
       return this.executeWithTimeout(
         () => this.localProvider.generateResponse(messages, personality),
         this.config.localProviderTimeoutMs,
@@ -149,6 +170,24 @@ export class OfflineFirstAIOrchestrator implements IAIProvider {
     // Fallback to local provider
     if (this.config.enableFallback) {
       console.log('All external providers failed, falling back to LocalAI');
+      
+      // Try Python healthcare AI as additional fallback for medical queries
+      if (isHealthcareQuery) {
+        const pythonProvider = this.externalProviders.get('python-healthcare');
+        if (pythonProvider) {
+          try {
+            console.log('Attempting healthcare fallback with Python AI');
+            return await this.executeWithTimeout(
+              () => pythonProvider.generateResponse(messages, personality),
+              15000, // 15 second timeout for Python AI
+              'Python Healthcare AI (fallback)'
+            );
+          } catch (error) {
+            console.warn('Python Healthcare AI fallback failed:', error);
+          }
+        }
+      }
+      
       try {
         return await this.executeWithTimeout(
           () => this.localProvider.generateResponse(messages, personality),
@@ -452,6 +491,23 @@ export class OfflineFirstAIOrchestrator implements IAIProvider {
     }
 
     return status;
+  }
+
+  /**
+   * Check if a message is healthcare-related
+   */
+  private isHealthcareRelated(message: string): boolean {
+    const healthcareKeywords = [
+      'health', 'medical', 'disease', 'symptom', 'treatment', 'medicine',
+      'doctor', 'hospital', 'diagnosis', 'therapy', 'medication', 'drug',
+      'pain', 'fever', 'infection', 'cancer', 'diabetes', 'heart',
+      'blood', 'surgery', 'vaccine', 'virus', 'bacteria', 'wellness',
+      'nutrition', 'diet', 'exercise', 'mental health', 'depression',
+      'anxiety', 'stress', 'injury', 'emergency', 'first aid'
+    ];
+    
+    const messageLower = message.toLowerCase();
+    return healthcareKeywords.some(keyword => messageLower.includes(keyword));
   }
 
   /**

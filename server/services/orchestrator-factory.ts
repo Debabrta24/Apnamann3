@@ -7,6 +7,7 @@
 
 import { OfflineFirstAIOrchestrator, type OrchestratorConfig } from './offline-first-ai-orchestrator';
 import { ExternalAIAdapter } from './external-ai-adapter';
+import { PythonHealthcareAIAdapter } from './python-ai-adapter';
 import type { IAIProvider } from './ai-provider';
 
 class OrchestratorFactory {
@@ -58,15 +59,31 @@ class OrchestratorFactory {
       }
     }
 
+    // Register Python Healthcare AI as an additional provider (always available)
+    try {
+      const pythonAI = new PythonHealthcareAIAdapter();
+      console.log('Registering Python Healthcare AI provider');
+      orchestrator.registerExternalProvider('python-healthcare', pythonAI);
+      
+      // Try to start the Python server
+      pythonAI.startPythonServer().catch(error => {
+        console.warn('Python AI server startup failed, will be used as fallback only:', error);
+      });
+    } catch (error) {
+      console.warn('Failed to register Python Healthcare AI provider:', error);
+    }
+
     // Log the orchestrator configuration
     if (forceOfflineMode) {
       console.log('🔄 AI Orchestrator initialized in OFFLINE MODE - no external API keys detected');
       console.log('   ✓ Local AI will handle all requests');
+      console.log('   ✓ Python Healthcare AI available for medical queries');
       console.log('   ✓ Crisis detection available offline');
       console.log('   ✓ Guided exercises available offline');
     } else {
       console.log('🌐 AI Orchestrator initialized in HYBRID MODE');
       console.log(`   ✓ External providers: ${hasOpenAIKey ? 'OpenAI ' : ''}${hasGeminiKey ? 'Gemini ' : ''}`);
+      console.log('   ✓ Python Healthcare AI available for medical queries');
       console.log('   ✓ Local AI fallback enabled');
     }
 
@@ -99,7 +116,7 @@ class OrchestratorFactory {
     
     return {
       offline: !hasExternal,
-      providers: hasExternal ? ['external', 'local'] : ['local'],
+      providers: hasExternal ? ['external', 'python-healthcare', 'local'] : ['python-healthcare', 'local'],
       mode: hasExternal ? 'hybrid' : 'offline',
       status: orchestrator.getProviderStatus()
     };
