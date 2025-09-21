@@ -10,7 +10,8 @@ import {
   serial,
   uuid,
   pgEnum,
-  check
+  check,
+  index
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
@@ -498,10 +499,39 @@ export const searchDocs = pgTable("search_docs", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Web snapshots for offline internet search caching
+export const webSnapshots = pgTable("web_snapshots", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  originalUrl: text("original_url").notNull(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  summary: text("summary"), // Brief summary of the content
+  domain: text("domain").notNull(), // Domain of the source (e.g., "reddit.com")
+  searchQuery: text("search_query"), // Original search query that led to this result
+  tags: jsonb("tags").default([]).notNull(), // Array of tag strings
+  lastAccessedAt: timestamp("last_accessed_at").defaultNow().notNull(),
+  cacheExpiresAt: timestamp("cache_expires_at").notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
+}, (table) => ({
+  urlIndex: index().on(table.originalUrl),
+  domainIndex: index().on(table.domain),
+  queryIndex: index().on(table.searchQuery),
+  expiresIndex: index().on(table.cacheExpiresAt)
+}));
+
 export const insertSearchDocSchema = createInsertSchema(searchDocs).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+});
+
+export const insertWebSnapshotSchema = createInsertSchema(webSnapshots).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  lastAccessedAt: true,
 });
 
 // Types
@@ -539,3 +569,5 @@ export type LiveSession = typeof liveSessions.$inferSelect;
 export type InsertLiveSession = z.infer<typeof insertLiveSessionSchema>;
 export type SearchDoc = typeof searchDocs.$inferSelect;
 export type InsertSearchDoc = z.infer<typeof insertSearchDocSchema>;
+export type WebSnapshot = typeof webSnapshots.$inferSelect;
+export type InsertWebSnapshot = z.infer<typeof insertWebSnapshotSchema>;

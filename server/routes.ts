@@ -417,6 +417,78 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Web snapshot routes for offline internet search caching
+  app.get("/api/web-snapshots", async (req, res) => {
+    try {
+      const { q, limit } = req.query;
+      
+      if (q) {
+        // Search web snapshots
+        const query = q as string;
+        const searchLimit = limit ? parseInt(limit as string) : 10;
+        const results = await storage.searchWebSnapshots(query, searchLimit);
+        res.json(results);
+      } else {
+        // Get all active snapshots
+        const snapshots = await storage.getActiveWebSnapshots();
+        res.json(snapshots);
+      }
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/web-snapshots/url", async (req, res) => {
+    try {
+      const { url } = req.query;
+      if (!url) {
+        return res.status(400).json({ message: "URL parameter is required" });
+      }
+      
+      const snapshot = await storage.getWebSnapshotByUrl(url as string);
+      if (snapshot) {
+        // Update last accessed time
+        await storage.updateWebSnapshot(snapshot.id, {
+          lastAccessedAt: new Date()
+        });
+        res.json(snapshot);
+      } else {
+        res.status(404).json({ message: "Web snapshot not found" });
+      }
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/web-snapshots", async (req, res) => {
+    try {
+      const snapshotData = req.body;
+      const snapshot = await storage.createWebSnapshot(snapshotData);
+      res.json(snapshot);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.delete("/api/web-snapshots/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteWebSnapshot(id);
+      res.json({ success: true, message: "Web snapshot deleted" });
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/web-snapshots/cleanup", async (req, res) => {
+    try {
+      const deletedCount = await storage.cleanupExpiredSnapshots();
+      res.json({ success: true, deletedCount, message: `Cleaned up ${deletedCount} expired snapshots` });
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
   // Custom AI Personality Routes
   app.post("/api/chat/custom-personality", upload.single('file'), async (req, res) => {
     try {

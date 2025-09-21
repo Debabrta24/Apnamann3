@@ -18,6 +18,7 @@ import {
   skillEndorsements,
   liveSessions,
   searchDocs,
+  webSnapshots,
   type User,
   type InsertUser,
   type ScreeningAssessment,
@@ -52,6 +53,8 @@ import {
   type InsertLiveSession,
   type SearchDoc,
   type InsertSearchDoc,
+  type WebSnapshot,
+  type InsertWebSnapshot,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, gte, sql, count } from "drizzle-orm";
@@ -159,6 +162,15 @@ export interface IStorage {
   searchDocs(query: string, limit?: number): Promise<SearchDoc[]>;
   updateSearchDoc(id: string, updates: Partial<SearchDoc>): Promise<SearchDoc>;
   deleteSearchDoc(id: string): Promise<void>;
+
+  // Web snapshots for offline internet search caching
+  createWebSnapshot(insertSnapshot: InsertWebSnapshot): Promise<WebSnapshot>;
+  getWebSnapshotByUrl(url: string): Promise<WebSnapshot | null>;
+  searchWebSnapshots(query: string, limit?: number): Promise<WebSnapshot[]>;
+  getActiveWebSnapshots(): Promise<WebSnapshot[]>;
+  updateWebSnapshot(id: string, updates: Partial<WebSnapshot>): Promise<WebSnapshot>;
+  deleteWebSnapshot(id: string): Promise<void>;
+  cleanupExpiredSnapshots(): Promise<number>; // Returns number of deleted snapshots
 }
 
 export class DatabaseStorage implements IStorage {
@@ -933,6 +945,100 @@ export class DatabaseStorage implements IStorage {
   async deleteSearchDoc(id: string): Promise<void> {
     await db().delete(searchDocs).where(eq(searchDocs.id, id));
   }
+
+  // Web snapshots implementation
+  async createWebSnapshot(insertSnapshot: InsertWebSnapshot): Promise<WebSnapshot> {
+    const [snapshot] = await db().insert(webSnapshots).values(insertSnapshot).returning();
+    return snapshot;
+  }
+
+  async getWebSnapshotByUrl(url: string): Promise<WebSnapshot | null> {
+    const [snapshot] = await db()
+      .select()
+      .from(webSnapshots)
+      .where(and(eq(webSnapshots.originalUrl, url), eq(webSnapshots.isActive, true)));
+    return snapshot || null;
+  }
+
+  async searchWebSnapshots(query: string, limit: number = 10): Promise<WebSnapshot[]> {
+    const searchTerms = query.toLowerCase().split(' ').filter(term => term.length > 2);
+    
+    if (searchTerms.length === 0) {
+      return db().select().from(webSnapshots).where(eq(webSnapshots.isActive, true)).limit(limit);
+    }
+
+    // Search in title, content, and summary
+    const titleConditions = searchTerms.map(term => 
+      sql`lower(${webSnapshots.title}) LIKE ${'%' + term + '%'}`
+    );
+    const contentConditions = searchTerms.map(term => 
+      sql`lower(${webSnapshots.content}) LIKE ${'%' + term + '%'}`
+    );
+    const summaryConditions = searchTerms.map(term => 
+      sql`lower(${webSnapshots.summary}) LIKE ${'%' + term + '%'}`
+    );
+
+    return db()
+      .select()
+      .from(webSnapshots)
+      .where(
+        and(
+          eq(webSnapshots.isActive, true),
+          sql`(${sql.join(titleConditions, sql` OR `)}) OR (${sql.join(contentConditions, sql` OR `)}) OR (${sql.join(summaryConditions, sql` OR `)})`
+        )
+      )
+      .orderBy(desc(webSnapshots.lastAccessedAt))
+      .limit(limit);
+  }
+
+  async getActiveWebSnapshots(): Promise<WebSnapshot[]> {
+    return db()
+      .select()
+      .from(webSnapshots)
+      .where(eq(webSnapshots.isActive, true))
+      .orderBy(desc(webSnapshots.lastAccessedAt));
+  }
+
+  async updateWebSnapshot(id: string, updates: Partial<WebSnapshot>): Promise<WebSnapshot> {
+    const cleanUpdates: any = {
+      updatedAt: new Date()
+    };
+    
+    if ('title' in updates) cleanUpdates.title = updates.title;
+    if ('content' in updates) cleanUpdates.content = updates.content;
+    if ('summary' in updates) cleanUpdates.summary = updates.summary;
+    if ('domain' in updates) cleanUpdates.domain = updates.domain;
+    if ('searchQuery' in updates) cleanUpdates.searchQuery = updates.searchQuery;
+    if ('tags' in updates) cleanUpdates.tags = updates.tags;
+    if ('lastAccessedAt' in updates) cleanUpdates.lastAccessedAt = updates.lastAccessedAt;
+    if ('cacheExpiresAt' in updates) cleanUpdates.cacheExpiresAt = updates.cacheExpiresAt;
+    if ('isActive' in updates) cleanUpdates.isActive = updates.isActive;
+
+    const [snapshot] = await db()
+      .update(webSnapshots)
+      .set(cleanUpdates)
+      .where(eq(webSnapshots.id, id))
+      .returning();
+    
+    if (!snapshot) {
+      throw new Error('Web snapshot not found');
+    }
+    
+    return snapshot;
+  }
+
+  async deleteWebSnapshot(id: string): Promise<void> {
+    await db().delete(webSnapshots).where(eq(webSnapshots.id, id));
+  }
+
+  async cleanupExpiredSnapshots(): Promise<number> {
+    const result = await db()
+      .delete(webSnapshots)
+      .where(sql`${webSnapshots.cacheExpiresAt} < NOW()`)
+      .returning({ id: webSnapshots.id });
+    
+    return result.length;
+  }
 }
 
 // Mock storage for development when database is not available
@@ -1541,6 +1647,105 @@ class MockStorage implements IStorage {
 
   async deleteSearchDoc(id: string): Promise<void> {
     this.mockSearchDocs.delete(id);
+  }
+
+  // Web snapshots implementation for mock storage
+  private mockWebSnapshots = new Map<string, WebSnapshot>();
+
+  async createWebSnapshot(insertSnapshot: InsertWebSnapshot): Promise<WebSnapshot> {
+    const id = randomUUID();
+    const now = new Date();
+    const snapshot: WebSnapshot = {
+      id,
+      originalUrl: insertSnapshot.originalUrl,
+      title: insertSnapshot.title,
+      content: insertSnapshot.content,
+      summary: insertSnapshot.summary || null,
+      domain: insertSnapshot.domain,
+      searchQuery: insertSnapshot.searchQuery || null,
+      tags: insertSnapshot.tags || [],
+      lastAccessedAt: now,
+      cacheExpiresAt: insertSnapshot.cacheExpiresAt,
+      isActive: insertSnapshot.isActive !== undefined ? insertSnapshot.isActive : true,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.mockWebSnapshots.set(id, snapshot);
+    return snapshot;
+  }
+
+  async getWebSnapshotByUrl(url: string): Promise<WebSnapshot | null> {
+    const allSnapshots = Array.from(this.mockWebSnapshots.values());
+    const snapshot = allSnapshots.find(s => s.originalUrl === url && s.isActive);
+    return snapshot || null;
+  }
+
+  async searchWebSnapshots(query: string, limit: number = 10): Promise<WebSnapshot[]> {
+    const searchTerms = query.toLowerCase().split(' ').filter(term => term.length > 2);
+    
+    if (searchTerms.length === 0) {
+      return Array.from(this.mockWebSnapshots.values())
+        .filter(s => s.isActive)
+        .sort((a, b) => (b.lastAccessedAt?.getTime() || 0) - (a.lastAccessedAt?.getTime() || 0))
+        .slice(0, limit);
+    }
+
+    const allSnapshots = Array.from(this.mockWebSnapshots.values()).filter(s => s.isActive);
+    const matchingSnapshots = allSnapshots.filter(snapshot => {
+      const titleLower = snapshot.title.toLowerCase();
+      const contentLower = snapshot.content.toLowerCase();
+      const summaryLower = (snapshot.summary || '').toLowerCase();
+      
+      return searchTerms.some(term => 
+        titleLower.includes(term) || contentLower.includes(term) || summaryLower.includes(term)
+      );
+    });
+
+    return matchingSnapshots
+      .sort((a, b) => (b.lastAccessedAt?.getTime() || 0) - (a.lastAccessedAt?.getTime() || 0))
+      .slice(0, limit);
+  }
+
+  async getActiveWebSnapshots(): Promise<WebSnapshot[]> {
+    return Array.from(this.mockWebSnapshots.values())
+      .filter(s => s.isActive)
+      .sort((a, b) => (b.lastAccessedAt?.getTime() || 0) - (a.lastAccessedAt?.getTime() || 0));
+  }
+
+  async updateWebSnapshot(id: string, updates: Partial<WebSnapshot>): Promise<WebSnapshot> {
+    const snapshot = this.mockWebSnapshots.get(id);
+    if (!snapshot) {
+      throw new Error('Web snapshot not found');
+    }
+
+    const updatedSnapshot: WebSnapshot = {
+      ...snapshot,
+      ...updates,
+      id: snapshot.id, // Preserve ID
+      createdAt: snapshot.createdAt, // Preserve creation date
+      updatedAt: new Date(),
+    };
+
+    this.mockWebSnapshots.set(id, updatedSnapshot);
+    return updatedSnapshot;
+  }
+
+  async deleteWebSnapshot(id: string): Promise<void> {
+    this.mockWebSnapshots.delete(id);
+  }
+
+  async cleanupExpiredSnapshots(): Promise<number> {
+    const now = new Date();
+    let deletedCount = 0;
+    
+    for (const [id, snapshot] of this.mockWebSnapshots.entries()) {
+      if (snapshot.cacheExpiresAt <= now) {
+        this.mockWebSnapshots.delete(id);
+        deletedCount++;
+      }
+    }
+    
+    return deletedCount;
   }
 }
 
