@@ -59,12 +59,18 @@ export default function ChatInterface({ selectedAction, selectedPersonality, cha
   });
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ 
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest"
+      });
+    }, 100);
   };
 
   useEffect(() => {
     scrollToBottom();
-  }, [chatMessages]);
+  }, [chatMessages, isTyping]);
 
   // Clear chat when switching between AI and peer modes
   useEffect(() => {
@@ -199,7 +205,7 @@ export default function ChatInterface({ selectedAction, selectedPersonality, cha
 
       <CardContent className="flex-1 flex flex-col p-0">
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-3 sm:space-y-4 bg-gradient-to-b from-muted/20 to-background">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-6 space-y-3 sm:space-y-4 bg-gradient-to-b from-muted/20 to-background max-h-[500px] scroll-smooth">
           {chatMessages.map((message, index) => (
             <div
               key={index}
@@ -223,14 +229,14 @@ export default function ChatInterface({ selectedAction, selectedPersonality, cha
               )}
               
               <div
-                className={`max-w-[75%] sm:max-w-md lg:max-w-xl xl:max-w-2xl p-4 sm:p-5 lg:p-6 xl:p-7 rounded-3xl shadow-md border-3 sm:border-4 lg:border-5 transition-all hover:shadow-xl hover:scale-[1.02] ${
+                className={`max-w-[75%] sm:max-w-md lg:max-w-xl xl:max-w-2xl p-4 sm:p-5 lg:p-6 xl:p-7 rounded-3xl shadow-md border-3 sm:border-4 lg:border-5 transition-all hover:shadow-xl hover:scale-[1.02] word-wrap break-words overflow-hidden ${
                   message.role === "user"
                     ? "bg-primary text-primary-foreground rounded-br-lg border-primary/30"
                     : "bg-card border-border/50 rounded-bl-lg backdrop-blur-sm"
                 }`}
               >
-                <p className="text-sm sm:text-base lg:text-lg whitespace-pre-wrap leading-relaxed">{message.content}</p>
-                <p className="text-xs sm:text-sm opacity-60 mt-3">
+                <p className="text-sm sm:text-base lg:text-lg whitespace-pre-wrap leading-relaxed font-mono break-words">{message.content}</p>
+                <p className="text-xs sm:text-sm opacity-60 mt-3 font-sans">
                   {message.timestamp ? new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}
                 </p>
               </div>
@@ -263,13 +269,13 @@ export default function ChatInterface({ selectedAction, selectedPersonality, cha
                   <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
                   <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce delay-100"></div>
                   <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce delay-200"></div>
-                  <span className="text-xs text-muted-foreground ml-2">{chatType === "live" && selectedUser ? `${selectedUser.name} is typing...` : "AI is thinking..."}</span>
+                  <span className="text-xs text-muted-foreground ml-2 font-sans">{chatType === "live" && selectedUser ? `${selectedUser.name} is typing...` : "AI is thinking..."}</span>
                 </div>
               </div>
             </div>
           )}
           
-          <div ref={messagesEndRef} />
+          <div ref={messagesEndRef} className="h-1" />
         </div>
 
         {/* Message Input */}
