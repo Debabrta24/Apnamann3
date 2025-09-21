@@ -58,7 +58,7 @@ export function useWebSocket(userId: string, onMessage: (message: any) => void) 
         const message = JSON.parse(event.data);
         onMessageCallback(message);
       } catch (error) {
-        console.error("Error parsing WebSocket message:", error);
+        // Silently handle parsing errors in production
       }
     };
 
@@ -81,7 +81,7 @@ export function useWebSocket(userId: string, onMessage: (message: any) => void) 
     };
 
     ws.current.onerror = (error) => {
-      console.error("WebSocket error:", error);
+      // Silently handle WebSocket errors in production
       setIsConnected(false);
     };
   }, [userId, onMessageCallback, reconnectAttempts]);

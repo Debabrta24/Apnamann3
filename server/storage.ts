@@ -1755,7 +1755,6 @@ async function initializeStorage(): Promise<IStorage> {
   
   if (process.env.DATABASE_URL) {
     try {
-      console.log('DATABASE_URL found, attempting to connect to PostgreSQL...');
       
       // Test database connection
       const testStorage = new DatabaseStorage();
@@ -1763,21 +1762,16 @@ async function initializeStorage(): Promise<IStorage> {
       // Perform a simple connection test
       try {
         await db().execute(sql`SELECT 1 as test`);
-        console.log('✅ PostgreSQL connection successful - Using DatabaseStorage');
         storage = testStorage;
       } catch (connectionError) {
         console.error('❌ PostgreSQL connection failed:', connectionError);
-        console.log('Falling back to MockStorage for development');
         storage = new MockStorage();
       }
     } catch (initError) {
       console.error('❌ DatabaseStorage initialization failed:', initError);
-      console.log('Falling back to MockStorage for development');
       storage = new MockStorage();
     }
   } else {
-    console.log('📝 DATABASE_URL not found in environment variables');
-    console.log('Using MockStorage for development');
     storage = new MockStorage();
   }
   
@@ -1793,7 +1787,6 @@ async function seedInitialResources(storage: IStorage): Promise<void> {
     const existingDocs = await storage.getAllSearchDocs();
     
     if (existingDocs.length === 0) {
-      console.log("🌱 Seeding initial mental health resources for offline capabilities...");
       
       // Import seed data
       const { mentalHealthSeedData } = await import('./seed-data');
@@ -1803,9 +1796,7 @@ async function seedInitialResources(storage: IStorage): Promise<void> {
         await storage.createSearchDoc(resource);
       }
       
-      console.log(`✅ Successfully seeded ${mentalHealthSeedData.length} mental health resources`);
     } else {
-      console.log(`📚 Found ${existingDocs.length} existing search resources, skipping seeding`);
     }
   } catch (error) {
     console.error("❌ Error seeding mental health resources:", error);

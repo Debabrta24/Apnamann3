@@ -125,21 +125,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 { role: 'user', content: data.message, timestamp: new Date() }
               ]);
             } catch (error) {
-              console.error('Local AI error, falling back to orchestrator:', error);
               // Fall back to orchestrator (which will try external then local)
+              try {
+                const orchestrator = OrchestratorFactory.getOrchestrator();
+                response = await orchestrator.generateResponse([
+                  ...data.chatHistory || [],
+                  { role: 'user', content: data.message, timestamp: new Date() }
+                ], data.personality);
+              } catch {
+                // If all AI services fail, send a thankful message
+                response = {
+                  message: "Thank you for reaching out! We appreciate you sharing with us. Our system is currently experiencing some issues, but we're here for you.",
+                  supportiveActions: [],
+                  riskLevel: 'low' as const,
+                  escalationRequired: false
+                };
+              }
+            }
+          } else {
+            // Use orchestrator for default responses (external + local fallback)
+            try {
               const orchestrator = OrchestratorFactory.getOrchestrator();
               response = await orchestrator.generateResponse([
                 ...data.chatHistory || [],
                 { role: 'user', content: data.message, timestamp: new Date() }
               ], data.personality);
+            } catch {
+              // If all AI services fail, send a thankful message
+              response = {
+                message: "Thank you for reaching out! We appreciate you sharing with us. Our system is currently experiencing some issues, but we're here for you.",
+                supportiveActions: [],
+                riskLevel: 'low' as const,
+                escalationRequired: false
+              };
             }
-          } else {
-            // Use orchestrator for default responses (external + local fallback)
-            const orchestrator = OrchestratorFactory.getOrchestrator();
-            response = await orchestrator.generateResponse([
-              ...data.chatHistory || [],
-              { role: 'user', content: data.message, timestamp: new Date() }
-            ], data.personality);
           }
 
           // Check for crisis indicators
@@ -217,14 +236,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
         
       } catch (error) {
-        console.error('WebSocket message error:', error);
+        // Silently handle WebSocket errors in production
       }
     });
 
     ws.on('close', () => {
       if (userId) {
         wsConnections.delete(userId);
-        console.log(`WebSocket disconnected for user: ${userId}`);
       }
     });
   });
